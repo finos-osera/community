@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Manifesto · Securing the open source commons without lock-in</title>
+<link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="/img/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#00253F;--cyan:#00B5E2;--blue:#0086BF;--teal:#3FB6A8;--teald:#487A7B;--ink:#16222E;--grey:#5B6770;--line:#E7EDF2;--bg:#FFFFFF;--soft:#F4F8FB;--mist:#E9F6FB;--mist2:#EAF7F3;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);line-height:1.7;background:#fff;-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}
+h1,h2,h3{font-family:'Montserrat',sans-serif;color:var(--navy);letter-spacing:-.01em}
+.wrap{max-width:840px;margin:0 auto;padding:0 28px}
+header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:66px;max-width:1140px;margin:0 auto;padding:0 28px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand a{display:flex;align-items:center;line-height:0}
+.brand-logo{height:36px;width:auto;display:block}
+.brand-footer .brand-logo{height:40px}
+.brand span{color:var(--grey);font-weight:500;font-size:13px}
+footer .brand span{color:#9fd4ec}
+.btn{display:inline-block;font-weight:600;font-size:14px;padding:11px 20px;border-radius:999px;background:var(--navy);color:#fff !important}
+.btn:hover{background:#003a5e}
+.hero{background:radial-gradient(900px 460px at 85% -10%, var(--mist), transparent 60%),linear-gradient(180deg,#fff,var(--soft));border-bottom:1px solid var(--line);padding:78px 0 66px}
+.hero .eyebrow{color:var(--blue);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:12px;margin-bottom:16px}
+.hero h1{font-size:46px;font-weight:800;line-height:1.12;max-width:17ch}
+.hero p{color:var(--grey);font-size:19px;margin-top:20px;max-width:58ch}
+.hero .companion{margin-top:22px;font-size:13.5px;color:var(--grey)}
+section{padding:60px 0;border-bottom:1px solid var(--line)}
+.lead{font-size:21px;line-height:1.5;color:var(--navy);font-weight:700;font-family:'Montserrat'}
+h2{font-size:28px;font-weight:800;margin-bottom:8px}
+.kick{color:var(--blue);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:12px;margin-bottom:14px}
+p.body{font-size:16.5px;margin-top:15px;color:var(--ink)}
+.pull{border-left:5px solid var(--teal);background:var(--mist2);padding:22px 26px;border-radius:0 16px 16px 0;margin:28px 0;font-size:20px;font-weight:700;color:var(--navy);line-height:1.45;font-family:'Montserrat'}
+.principle{padding:20px 0;border-bottom:1px solid var(--line);display:flex;gap:20px}
+.principle:last-child{border-bottom:none}
+.principle .num{flex:0 0 44px;width:44px;height:44px;border-radius:12px;background:linear-gradient(140deg,var(--navy),var(--blue));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;font-family:'Montserrat'}
+.principle h3{font-size:18px}
+.principle p{font-size:15px;color:var(--grey);margin-top:4px}
+.commit{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:24px}
+@media(max-width:680px){.commit{grid-template-columns:1fr}.hero h1{font-size:34px}}
+.col{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px}
+.col.ask{background:var(--soft)}
+.col h3{font-size:16px;margin-bottom:10px}
+.col ul{list-style:none}
+.col li{font-size:14.5px;color:var(--ink);padding:7px 0 7px 22px;position:relative}
+.col li::before{content:"";position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--teal)}
+.sigs{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:24px}
+@media(max-width:680px){.sigs{grid-template-columns:1fr 1fr}}
+.sig{border:1px solid var(--line);border-radius:14px;background:#fff;height:88px;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-family:'Montserrat';font-weight:800;color:var(--navy);font-size:15px;line-height:1.2;transition:.15s}
+.sig:hover{border-color:var(--blue);transform:translateY(-2px)}
+.sigline{margin-top:16px;font-size:13px;color:var(--grey)}
+.cta{background:var(--soft);text-align:center;border:none}
+.cta h2{font-size:30px}
+.cta .btn{margin-top:22px;font-size:15px;padding:14px 26px}
+.cta .small{margin-top:14px;font-size:13px;color:var(--grey)}
+footer{background:var(--navy);color:#cfe0ec;padding:40px 0;font-size:13px}
+footer a{color:#9fd4ec}
+.sign{margin-top:18px;font-style:italic;color:var(--grey);font-size:14.5px}
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="brand"><a href="https://www.finos.org/"><img src="/img/finos-logo.png" alt="FINOS" class="brand-logo"></a><span>· OSERA</span></div>
+    <div><a href="index.html" style="color:var(--ink);font-weight:600;font-size:14px;margin-right:22px">Home</a><a href="index.html#involved" class="btn">Get involved</a></div>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">The Manifesto</div>
+    <h1>Securing the commons must not create the next lock-in.</h1>
+    <p>Open source is the shared foundation of modern finance — and of modern life. In the AI era, defending it is urgent. How we defend it matters just as much as that we do.</p>
+    <div class="companion">A companion to the Linux Foundation's open letter on open source security. <a href="https://www.linuxfoundation.org/press">Read the open letter →</a></div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <p class="lead">The same open source software runs the world's banks, insurers, hospitals, power grids and governments. It was built, and is largely maintained, in the open — by a global community, for everyone.</p>
+    <p class="body">AI has not changed which vulnerabilities exist; it has changed how fast known ones are weaponised. A serious, well-funded response is arriving — much of it from individual vendors, each with its own approach. We welcome the investment and the urgency. But we have seen this pattern before: when something essential is fixed behind closed doors, access to the fix can quietly become a toll.</p>
+    <div class="pull">If the security of shared infrastructure is enclosed by any single company, we will have traded an open risk for a private one. That is a bargain the world should not accept.</div>
+    <p class="body">A network is only as safe as its weakest link. Keeping the defence of the commons open is not idealism — it is sound risk management, and a neutral, sovereign alternative to depending on any one provider.</p>
+  </div>
+</section>
+
+<section style="background:var(--soft)">
+  <div class="wrap">
+    <div class="kick">Our stand</div>
+    <h2>Fix it in the open. Keep it free. Let it move.</h2>
+    <p class="body">This is the neutral home for open source supply-chain security, formed within FINOS and the Linux Foundation. Incubated in financial services, where the regulatory bar is highest, it is built to serve any regulated enterprise. We work in step with <strong>[CONFIDENTIAL LF PROJECT]</strong> — the Linux Foundation's cross-industry security response team — and alongside the vendors building important tools. We are not here to compete with them. We are here to make sure their good work stays portable, verifiable, and free of lock-in for the institutions, and the public, that depend on it.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kick">Our principles</div>
+    <h2>How open source security should work in the AI era</h2>
+    <div style="margin-top:22px">
+      <div class="principle"><div class="num">1</div><div><h3>No monopolies, no capture</h3><p>No single organisation should control how open source is patched. We strengthen the commons; we do not enclose it.</p></div></div>
+      <div class="principle"><div class="num">2</div><div><h3>Upstream first</h3><p>Wherever possible, fixes flow back to the original projects — free, public, and available to the whole community.</p></div></div>
+      <div class="principle"><div class="num">3</div><div><h3>Coordination is the hard part</h3><p>Anyone can write a patch. The real work is triage, testing and responsible disclosure — and that takes collective action.</p></div></div>
+      <div class="principle"><div class="num">4</div><div><h3>Evidence with every fix</h3><p>A fix should arrive with proof — its origin, contents and testing — so consumers can trust it and show their regulators they did.</p></div></div>
+      <div class="principle"><div class="num">5</div><div><h3>Automation reduces toil, not accountability</h3><p>AI can do more of the work, but a human still owns the decision to ship. Speed must never outrun responsibility.</p></div></div>
+      <div class="principle"><div class="num">6</div><div><h3>Organise globally</h3><p>Open source crosses every border. So must its defence — for institutions of every size, in every country.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--soft)">
+  <div class="wrap">
+    <div class="kick">In practice</div>
+    <h2>What we commit to — and what we ask</h2>
+    <div class="commit">
+      <div class="col">
+        <h3>We commit to</h3>
+        <ul>
+          <li>Offer fixes upstream and keep public forks public.</li>
+          <li>Attach a clear evidence trail to every fix as our tooling matures.</li>
+          <li>Set open standards so a fix is portable across any provider.</li>
+          <li>Make mutualised remediation affordable — a fraction of going it alone.</li>
+          <li>Stay neutral: vendors are partners, never gatekeepers.</li>
+        </ul>
+      </div>
+      <div class="col ask">
+        <h3>We ask the industry to</h3>
+        <ul>
+          <li>Favour open, portable remediation over closed, single-source fixes.</li>
+          <li>Insist that the patches you buy can be verified and moved.</li>
+          <li>Contribute back to the projects you depend on.</li>
+          <li>Join a global effort — wherever you are, whatever your size.</li>
+          <li>Treat the security of the commons as shared, not proprietary.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kick">Signatories</div>
+    <h2>Institutions standing behind this Manifesto</h2>
+    <p class="body" style="margin-top:8px">Leading global institutions and technology partners have signed in support of an open, non-lock-in approach to open source supply-chain security. Signing is a statement of principle — distinct from, and broader than, formal membership of the alliance.</p>
+    <div class="sigs">
+      <div class="sig">Morgan&nbsp;Stanley</div><div class="sig">RBC</div><div class="sig">Deutsche&nbsp;Bank</div><div class="sig">Citi</div><div class="sig">Moderne</div>
+    </div>
+    <p class="sigline">The signatory list is open and growing. To add your institution, <a href="index.html#involved">get involved</a> or email <a href="mailto:membership@finos.org">membership@finos.org</a>.</p>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <h2>Stand with us.</h2>
+    <p class="body" style="max-width:58ch;margin-left:auto;margin-right:auto">This effort is forming now, within FINOS. If you believe the defence of the open source commons should stay open, add your institution to it.</p>
+    <a href="index.html#involved" class="btn">Get involved</a>
+    <p class="small">A FINOS initiative, part of the Linux Foundation · complementary to [CONFIDENTIAL LF PROJECT] and the LF's <a href="https://www.linuxfoundation.org/press">open letter</a>.</p>
+    <p class="sign">Built in the open. Governed by FINOS. For everyone.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;max-width:1140px;margin:0 auto;padding:0 28px;align-items:center">
+    <div class="brand brand-footer"><a href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo"></a><span>· OSERA</span></div>
+    <div style="text-align:right"><a href="index.html">Home</a> · <a href="https://www.finos.org/">finos.org</a> · <a href="mailto:membership@finos.org">membership@finos.org</a></div>
+  </div>
+  <div style="max-width:1140px;margin:12px auto 0;padding:0 28px;color:#7fa6bd;font-size:12px">Working name pending selection and trademark clearance. Confidential draft for review. Signatory marks shown as text pending sign-off of brand usage.</div>
+</footer>
+</body>
+</html>
