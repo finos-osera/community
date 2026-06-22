@@ -59,6 +59,17 @@ h1.big .g{background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-back
 .hero .lf a{font-weight:600}
 @media(max-width:760px){h1.big{font-size:36px}}
 .heroart{width:100%;height:auto}
+/* risk navigator */
+.tool-showcase{display:grid;grid-template-columns:.85fr 1.15fr;gap:34px;align-items:center;margin-top:38px}
+@media(max-width:900px){.tool-showcase{grid-template-columns:1fr}}
+.tool-copy h3{font-size:22px}
+.tool-copy p{font-size:15.5px;color:var(--grey);margin-top:12px}
+.tool-copy ul{list-style:none;margin-top:18px}
+.tool-copy li{font-size:14px;color:var(--ink);padding:7px 0 7px 22px;position:relative}
+.tool-copy li::before{content:"";position:absolute;left:0;top:15px;width:8px;height:8px;border-radius:50%;background:var(--cyan)}
+.tool-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.tool-shot{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 18px 44px rgba(16,34,46,.12)}
+.tool-shot img{display:block;width:100%;height:auto}
 /* generic cards */
 .grid{display:grid;gap:22px;margin-top:40px}
 .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:repeat(2,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
@@ -173,6 +184,7 @@ footer a{color:#9fd4ec}
     <div class="navlinks">
       <a href="#how">How it works</a>
       <a href="#platform">Platform</a>
+      <a href="https://finos-backpatch.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a>
       <a href="#workstreams">Workstreams</a>
       <a href="#involved">Get involved</a>
       <a href="manifesto.html" class="btn ghost">Manifesto</a>
@@ -190,6 +202,7 @@ footer a{color:#9fd4ec}
       <p class="sub">A neutral, openly-governed home where institutions and their technology partners keep critical open source patched, consumable and compliant — produced once, together.</p>
       <div class="cta">
         <a href="#involved" class="btn primary">Get involved</a>
+        <a href="https://finos-backpatch.github.io/risk-navigator" class="btn cyan" target="_blank" rel="noopener">Explore Risk Navigator</a>
         <a href="manifesto.html" class="btn ghost">Read the Manifesto</a>
       </div>
       <div class="lf">A FINOS initiative, part of the Linux Foundation — the complement to <strong>[CONFIDENTIAL LF PROJECT]</strong>, the LF's cross-industry security response team. <a href="https://www.linuxfoundation.org/press">Learn more →</a></div>
@@ -261,6 +274,33 @@ footer a{color:#9fd4ec}
       </div>
     </div>
     <div class="flownote">Source is public by default; only the built, member-ready release artifacts sit behind membership. Releases are time-bound — a managed bridge to a current, supported version, not a licence to stay behind. Cryptographic signing, full SBOMs and VEX are planned (Workstream 1).</div>
+  </div>
+</section>
+
+<!-- RISK NAVIGATOR -->
+<section id="risk-navigator">
+  <div class="wrap">
+    <div class="eyebrow">Available tooling</div>
+    <h2 style="font-size:34px">Prioritise open source remediation with Risk Navigator</h2>
+    <p class="lead">Risk Navigator turns dependency and vulnerability data into a practical remediation view: what is exposed, which projects are affected, and where upgrades or backpatches should be prioritised.</p>
+    <div class="tool-showcase">
+      <div class="tool-copy">
+        <h3>From vulnerable libraries to action</h3>
+        <p>Use the overview to inspect vulnerable packages, CVEs, affected projects, safe versions, and backpatch candidates before bringing work into the OSERA formation process.</p>
+        <ul>
+          <li>Rank libraries by CVSS, KEV, EPSS, project footprint, and upgrade path.</li>
+          <li>See which applications are directly or transitively exposed.</li>
+          <li>Identify candidates for upgrade guidance, OpenRewrite recipes, or backpatch work.</li>
+        </ul>
+        <div class="tool-actions">
+          <a class="btn primary" href="https://finos-backpatch.github.io/risk-navigator" target="_blank" rel="noopener">Open Risk Navigator</a>
+          <a class="btn ghost" href="#workstreams">See related workstreams</a>
+        </div>
+      </div>
+      <a class="tool-shot" href="https://finos-backpatch.github.io/risk-navigator" target="_blank" rel="noopener" aria-label="Open Risk Navigator overview">
+        <img src="/img/risk-navigator-prioritization.png" alt="Risk Navigator prioritization interface showing vulnerable libraries, CVEs, affected projects, and remediation details">
+      </a>
+    </div>
   </div>
 </section>
 
@@ -370,7 +410,7 @@ footer a{color:#9fd4ec}
         <h3>Backpatching governance</h3>
         <p>What to maintain, who produces it, under what SLA — openly governed, upstream-first.</p>
         <ul>
-          <li>Risk-based prioritisation &amp; intake</li>
+          <li><a href="https://finos-backpatch.github.io/risk-navigator" target="_blank" rel="noopener">Risk-based prioritisation &amp; intake</a></li>
           <li>SLA tiers, SOW &amp; producer selection</li>
           <li>Artifact-naming &amp; release spec</li>
           <li>Per-project funding pools</li>
@@ -380,7 +420,7 @@ footer a{color:#9fd4ec}
       <div class="card w2">
         <div class="num">WS2 · potential</div>
         <h3>Regulated consumption standards &amp; tools</h3>
-        <p>Consuming fixes in time across a regulated estate — and proving it. Builds on FINOS <a href="https://calm.finos.org/">CALM</a> and the Open SDLC Controls Framework.</p>
+        <p>Consuming fixes in time across a regulated estate — and proving it. Risk Navigator is an early reference tool for prioritisation and remediation planning, alongside FINOS <a href="https://calm.finos.org/">CALM</a> and the Open SDLC Controls Framework.</p>
         <ul>
           <li>Consumption evidence pack</li>
           <li>Mapped to DORA, NIS2 &amp; CRA</li>
@@ -533,7 +573,7 @@ footer a{color:#9fd4ec}
     <div class="band">
       <h2>Stand with us.</h2>
       <p>Keep the defence of the open source commons open, verifiable and portable. Propose a project, offer to maintain, or add your institution to the effort.</p>
-      <div class="cta"><a href="#involved" class="btn cyan">Get involved</a><a href="manifesto.html" class="btn ghost" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Read the Manifesto</a></div>
+      <div class="cta"><a href="#involved" class="btn cyan">Get involved</a><a href="https://finos-backpatch.github.io/risk-navigator" class="btn ghost" target="_blank" rel="noopener" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Open Risk Navigator</a><a href="manifesto.html" class="btn ghost" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Read the Manifesto</a></div>
     </div>
   </div>
 </section>
@@ -545,7 +585,7 @@ footer a{color:#9fd4ec}
       <div class="disc"><strong>Working name pending selection &amp; trademark clearance.</strong> Leading candidates (viability-ordered): Uplift, Mainspring. Confidential draft microsite for review. Complementary to, and not a substitute for, the Linux Foundation's [CONFIDENTIAL LF PROJECT] announcement and open letter.</div>
     </div>
     <div style="text-align:right">
-      <a href="manifesto.html">Manifesto</a> · <a href="https://www.finos.org/">finos.org</a><br>
+      <a href="manifesto.html">Manifesto</a> · <a href="https://finos-backpatch.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a><br>
       <a href="mailto:membership@finos.org">membership@finos.org</a><br>
       <span style="color:#7fa6bd">Part of the Linux Foundation</span>
     </div>
