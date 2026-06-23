@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "npx --yes serve . -l 3000",
-    "build": "rm -rf build && mkdir -p build && cp index.html guiding-principles.html build/ && cp -r img build/"
+    "build": "rm -rf build && mkdir -p build && cp index.html guiding-principles.html press-release.html build/ && cp -r img build/"
   },
   "engines": {
     "node": ">=20.0"

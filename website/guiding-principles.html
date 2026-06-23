@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Guiding Principles · Securing the open source commons without lock-in</title>
+<title>Guiding Principles · OSERA | Open Source Enterprise Resiliency Alliance</title>
 <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
 <link rel="shortcut icon" href="/img/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,11 +20,14 @@ h1,h2,h3{font-family:'Montserrat',sans-serif;color:var(--navy);letter-spacing:-.
 header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
 nav{display:flex;align-items:center;justify-content:space-between;height:66px;max-width:1140px;margin:0 auto;padding:0 28px}
 .brand{display:flex;align-items:center;gap:10px}
-.brand a{display:flex;align-items:center;line-height:0}
+.brand .logo-link{display:flex;align-items:center;line-height:0}
 .brand-logo{height:36px;width:auto;display:block}
 .brand-footer .brand-logo{height:40px}
-.brand span{color:var(--grey);font-weight:500;font-size:13px}
-footer .brand span{color:#9fd4ec}
+.site-brand{display:flex;flex-direction:column;justify-content:center;gap:1px;text-decoration:none;line-height:1.1}
+.site-brand .mark{color:var(--navy);font-weight:800;font-size:15px;letter-spacing:.02em}
+.site-brand .full-name{font-weight:600;color:var(--grey);font-size:11px;letter-spacing:0}
+footer .site-brand .mark{color:#fff}
+footer .brand .full-name{color:#cfe0ec}
 .navlinks{display:flex;gap:24px;align-items:center;white-space:nowrap}
 .navlinks a{color:var(--ink);font-weight:600;font-size:14px;text-decoration:none}
 .navlinks a:hover{color:var(--blue)}
@@ -33,7 +36,13 @@ footer .brand span{color:#9fd4ec}
 .btn.primary:hover{background:#003a5e}
 .btn.ghost{background:#fff;color:var(--navy) !important;border-color:var(--line)}
 .btn.ghost:hover{border-color:var(--blue);color:var(--blue) !important}
+.navlinks .page-link{background:var(--soft);color:var(--grey) !important;border-color:var(--line)}
+.navlinks .page-link:hover{background:#fff;border-color:var(--blue);color:var(--blue) !important}
+.btn.active{background:var(--navy);color:#fff !important;border-color:var(--navy)}
+.btn.active:hover{background:#003a5e;color:#fff !important}
+@media(max-width:1080px){.brand .full-name{display:none}}
 @media(max-width:940px){.navlinks a:not(.btn){display:none}}
+@media(max-width:760px){.navlinks .page-link:not(.active){display:none}}
 .hero{background:radial-gradient(900px 460px at 85% -10%, var(--mist), transparent 60%),linear-gradient(180deg,#fff,var(--soft));border-bottom:1px solid var(--line);padding:78px 0 66px}
 .hero .eyebrow{color:var(--blue);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:12px;margin-bottom:16px}
 .hero h1{font-size:46px;font-weight:800;line-height:1.12;max-width:17ch}
@@ -72,18 +81,19 @@ footer a{color:#9fd4ec}
 .sign{margin-top:18px;font-style:italic;color:var(--grey);font-size:14.5px}
 </style>
 </head>
-<body>
+<body id="top">
 
 <header>
   <nav>
-    <div class="brand"><a href="https://www.finos.org/"><img src="/img/finos-logo.png" alt="FINOS" class="brand-logo"></a><span>· OSERA</span></div>
+    <div class="brand"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo.png" alt="FINOS" class="brand-logo"></a><a class="site-brand" href="index.html#top" aria-label="OSERA home"><span class="mark">· OSERA</span></a></div>
     <div class="navlinks">
       <a href="index.html#how">How it works</a>
       <a href="index.html#platform">Platform</a>
       <a href="https://finos-backpatch.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a>
       <a href="index.html#workstreams">Workstreams</a>
       <a href="index.html#involved">Get involved</a>
-      <a href="guiding-principles.html" class="btn ghost">Guiding Principles</a>
+      <a href="guiding-principles.html" class="btn active page-link" aria-current="page">Guiding Principles</a>
+      <a href="press-release.html" class="btn ghost page-link">Press</a>
       <a href="index.html#involved" class="btn primary">Join us</a>
     </div>
   </nav>
@@ -93,8 +103,8 @@ footer a{color:#9fd4ec}
   <div class="wrap">
     <div class="eyebrow">Guiding Principles</div>
     <h1>Securing the commons must not create the next lock-in.</h1>
-    <p>Open source is the shared foundation of modern finance — and of modern life. In the AI era, defending it is urgent. How we defend it matters just as much as that we do.</p>
-    <div class="companion">A companion to the Linux Foundation's open letter on open source security. <a href="https://www.linuxfoundation.org/press">Read the open letter →</a></div>
+    <p>OSERA, the Open Source Enterprise Resiliency Alliance, exists because open source is the shared foundation of modern finance — and of modern life. In the AI era, defending it is urgent. How we defend it matters just as much as that we do.</p>
+    <div class="companion">A companion to the Linux Foundation's open letter on open source security. <a href="press-release.html">Read the press release →</a></div>
   </div>
 </div>
 
@@ -183,8 +193,8 @@ footer a{color:#9fd4ec}
 
 <footer>
   <div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;max-width:1140px;margin:0 auto;padding:0 28px;align-items:center">
-    <div class="brand brand-footer"><a href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo"></a><span>· OSERA</span></div>
-    <div style="text-align:right"><a href="index.html">Home</a> · <a href="https://finos-backpatch.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a> · <a href="mailto:membership@finos.org">membership@finos.org</a></div>
+    <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo"></a><a class="site-brand" href="index.html#top" aria-label="OSERA home"><span class="mark">· OSERA</span><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
+    <div style="text-align:right"><a href="index.html">Home</a> · <a href="press-release.html">Press Release</a> · <a href="https://finos-backpatch.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a> · <a href="mailto:membership@finos.org">membership@finos.org</a></div>
   </div>
   <div style="max-width:1140px;margin:12px auto 0;padding:0 28px;color:#7fa6bd;font-size:12px">Working name pending selection and trademark clearance. Confidential draft for review. Signatory marks shown as text pending sign-off of brand usage.</div>
 </footer>
