@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FINOS · OSERA</title>
+<title>FINOS · OSERA | Open Source Enterprise Resiliency Alliance</title>
 <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
 <link rel="shortcut icon" href="/img/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,12 +28,20 @@ section{padding:84px 0}
 /* NAV */
 header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
 nav{display:flex;align-items:center;justify-content:space-between;height:66px;gap:18px}
-.brand{display:flex;align-items:center;gap:10px;white-space:nowrap}
-.brand a{display:flex;align-items:center;line-height:0}
+.brand{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.brand .logo-link{display:flex;align-items:center;line-height:0}
 .brand-logo{height:36px;width:auto;display:block}
-.brand-footer .brand-logo{height:40px}
-.brand span{color:var(--grey);font-weight:500;font-size:13px}
-footer .brand span{color:#9fd4ec}
+.finos-logo{height:36px}
+.osera-logo{height:32px;width:auto;display:block}
+.brand-footer .finos-logo{height:40px}
+.brand-footer .osera-logo{height:34px}
+.brand-divider{width:1px;height:32px;background:var(--line);display:block}
+.site-brand{display:flex;flex-direction:column;justify-content:center;gap:1px;text-decoration:none;line-height:1.1}
+.site-brand .mark{color:var(--navy);font-weight:800;font-size:15px;letter-spacing:.02em}
+.site-brand .full-name{font-weight:600;color:var(--grey);font-size:11px;letter-spacing:0}
+footer .site-brand .mark{color:#fff}
+footer .brand .full-name{color:#cfe0ec}
+footer .brand-divider{background:rgba(255,255,255,.28)}
 .navlinks{display:flex;gap:24px;align-items:center;white-space:nowrap}
 .navlinks a{color:var(--ink);font-weight:600;font-size:14px}
 .navlinks a:hover{color:var(--blue)}
@@ -44,7 +52,14 @@ footer .brand span{color:#9fd4ec}
 .btn.ghost:hover{border-color:var(--blue);color:var(--blue) !important}
 .btn.cyan{background:var(--cyan);color:var(--navy) !important}
 .btn.cyan:hover{background:#00a3cb;color:#fff !important}
+.navlinks .page-link{background:var(--soft);color:var(--grey) !important;border-color:var(--line)}
+.navlinks .page-link:hover{background:#fff;border-color:var(--blue);color:var(--blue) !important}
+.btn.active{background:var(--navy);color:#fff !important;border-color:var(--navy)}
+.btn.active:hover{background:#003a5e;color:#fff !important}
+@media(max-width:1080px){.brand .full-name{display:none}}
 @media(max-width:940px){.navlinks a:not(.btn){display:none}}
+@media(max-width:760px){.navlinks .page-link:not(.active){display:none}}
+@media(max-width:620px){.brand{gap:8px}.finos-logo{height:30px}.osera-logo{height:26px}.brand-divider{height:28px}}
 /* HERO */
 .hero{background:radial-gradient(900px 500px at 88% -10%, var(--mist), transparent 60%),linear-gradient(180deg,#fff,var(--soft));border-bottom:1px solid var(--line)}
 .hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;padding:80px 28px 84px}
@@ -176,18 +191,19 @@ footer a{color:#9fd4ec}
 .addproj .ps{font-size:11px;color:var(--grey);margin-top:3px}
 </style>
 </head>
-<body>
+<body id="top">
 
 <header>
   <div class="wrap"><nav>
-    <div class="brand"><a href="https://www.finos.org/"><img src="/img/finos-logo.png" alt="FINOS" class="brand-logo"></a><span>· OSERA</span></div>
+    <div class="brand"><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-color.svg" alt="OSERA" class="osera-logo"></a></div>
     <div class="navlinks">
       <a href="#how">How it works</a>
       <a href="#platform">Platform</a>
       <a href="https://finos-backpatch.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a>
       <a href="#workstreams">Workstreams</a>
       <a href="#involved">Get involved</a>
-      <a href="guiding-principles.html" class="btn ghost">Guiding Principles</a>
+      <a href="guiding-principles.html" class="btn ghost page-link">Guiding Principles</a>
+      <a href="press-release.html" class="btn ghost page-link">Press</a>
       <a href="#involved" class="btn primary">Join us</a>
     </div>
   </nav></div>
@@ -197,15 +213,15 @@ footer a{color:#9fd4ec}
 <section class="hero" style="padding:0">
   <div class="wrap">
     <div>
-      <span class="tagpill"><span class="dot"></span> Introducing OSERA · a FINOS alliance · OSFF London, 25 June 2026</span>
+      <span class="tagpill"><span class="dot"></span> Introducing OSERA · Open Source Enterprise Resiliency Alliance · OSFF London, 25 June 2026</span>
       <h1 class="big">Open source supply resiliency at scale. <span class="g">Without the lock-in.</span></h1>
-      <p class="sub">A neutral, openly-governed home where institutions and their technology partners keep critical open source patched, consumable and compliant — produced once, together.</p>
+      <p class="sub"><strong>OSERA is the Open Source Enterprise Resiliency Alliance:</strong> a neutral, openly-governed home where institutions and their technology partners keep critical open source patched, consumable and compliant — produced once, together.</p>
       <div class="cta">
         <a href="#involved" class="btn primary">Get involved</a>
         <a href="guiding-principles.html" class="btn ghost">Read the Guiding Principles</a>
         <a href="https://finos-backpatch.github.io/risk-navigator" class="btn cyan" target="_blank" rel="noopener">Explore Risk Navigator</a>
       </div>
-      <div class="lf">A FINOS initiative, part of the Linux Foundation — the complement to <strong>[CONFIDENTIAL LF PROJECT]</strong>, the LF's cross-industry security response team. <a href="https://www.linuxfoundation.org/press">Learn more →</a></div>
+      <div class="lf">A FINOS initiative, part of the Linux Foundation — the complement to <strong>[CONFIDENTIAL LF PROJECT]</strong>, the LF's cross-industry security response team. <a href="press-release.html">Read the press release →</a></div>
     </div>
     <div>
       <svg class="heroart" viewBox="0 0 460 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A shared network of institutions and maintainers around a protected commons">
@@ -562,7 +578,7 @@ footer a{color:#9fd4ec}
       <div class="ev"><div class="when">Q2 2026</div><p>Spearheaded by <strong>Moderne</strong>, the effort is brought to the FINOS community — in the open, not as a product — and a member formation group convenes to design a mutualised, openly-governed model.</p></div>
       <div class="ev"><div class="when">May–June 2026</div><p>A working pipeline ships: critical Java lines maintained as backpatch releases and validated end-to-end by member institutions.</p></div>
       <div class="ev"><div class="when">June 2026</div><p>The Linux Foundation announces [CONFIDENTIAL LF PROJECT] — the cross-industry security response team and maintainer of last resort.</p></div>
-      <div class="ev"><div class="when">25 June 2026</div><p>FINOS presents the effort at the <a href="https://www.finos.org/hosted-events/2026-06-25-osff-london">Open Source in Finance Forum</a>, London — the complement to [CONFIDENTIAL LF PROJECT].</p></div>
+      <div class="ev"><div class="when">25 June 2026</div><p>FINOS presents the effort at the <a href="https://www.finos.org/hosted-events/2026-06-25-osff-london">Open Source in Finance Forum</a>, London — the complement to [CONFIDENTIAL LF PROJECT]. <a href="press-release.html">Read the press release</a>.</p></div>
     </div>
   </div>
 </section>
@@ -573,7 +589,7 @@ footer a{color:#9fd4ec}
     <div class="band">
       <h2>Stand with us.</h2>
       <p>Keep the defence of the open source commons open, verifiable and portable. Propose a project, offer to maintain, or add your institution to the effort.</p>
-      <div class="cta"><a href="#involved" class="btn cyan">Get involved</a><a href="https://finos-backpatch.github.io/risk-navigator" class="btn ghost" target="_blank" rel="noopener" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Open Risk Navigator</a><a href="guiding-principles.html" class="btn ghost" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Read the Guiding Principles</a></div>
+      <div class="cta"><a href="#involved" class="btn cyan">Get involved</a><a href="https://finos-backpatch.github.io/risk-navigator" class="btn ghost" target="_blank" rel="noopener" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Open Risk Navigator</a><a href="guiding-principles.html" class="btn ghost" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Read the Guiding Principles</a><a href="press-release.html" class="btn ghost" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Press Release</a></div>
     </div>
   </div>
 </section>
@@ -581,11 +597,11 @@ footer a{color:#9fd4ec}
 <footer>
   <div class="wrap">
     <div>
-      <div class="brand brand-footer"><a href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo"></a><span>· OSERA</span></div>
+      <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-white.svg" alt="OSERA" class="osera-logo"><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
       <div class="disc"><strong>Working name pending selection &amp; trademark clearance.</strong> Leading candidates (viability-ordered): Uplift, Mainspring. Confidential draft microsite for review. Complementary to, and not a substitute for, the Linux Foundation's [CONFIDENTIAL LF PROJECT] announcement and open letter.</div>
     </div>
     <div style="text-align:right">
-      <a href="guiding-principles.html">Guiding Principles</a> · <a href="https://finos-backpatch.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a><br>
+      <a href="guiding-principles.html">Guiding Principles</a> · <a href="press-release.html">Press Release</a> · <a href="https://finos-backpatch.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a><br>
       <a href="mailto:membership@finos.org">membership@finos.org</a><br>
       <span style="color:#7fa6bd">Part of the Linux Foundation</span>
     </div>
