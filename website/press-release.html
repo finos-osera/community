@@ -19,15 +19,20 @@ h1,h2,h3{font-family:'Montserrat',sans-serif;color:var(--navy);letter-spacing:-.
 .wrap{max-width:920px;margin:0 auto;padding:0 28px}
 header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
 nav{display:flex;align-items:center;justify-content:space-between;height:66px;max-width:1140px;margin:0 auto;padding:0 28px;gap:18px}
-.brand{display:flex;align-items:center;gap:10px;white-space:nowrap}
+.brand{display:flex;align-items:center;gap:12px;white-space:nowrap}
 .brand .logo-link{display:flex;align-items:center;line-height:0}
 .brand-logo{height:36px;width:auto;display:block}
-.brand-footer .brand-logo{height:40px}
+.finos-logo{height:36px}
+.osera-logo{height:32px;width:auto;display:block}
+.brand-footer .finos-logo{height:40px}
+.brand-footer .osera-logo{height:34px}
+.brand-divider{width:1px;height:32px;background:var(--line);display:block}
 .site-brand{display:flex;flex-direction:column;justify-content:center;gap:1px;text-decoration:none;line-height:1.1}
 .site-brand .mark{color:var(--navy);font-weight:800;font-size:15px;letter-spacing:.02em}
 .site-brand .full-name{font-weight:600;color:var(--grey);font-size:11px;letter-spacing:0}
 footer .site-brand .mark{color:#fff}
 footer .brand .full-name{color:#cfe0ec}
+footer .brand-divider{background:rgba(255,255,255,.28)}
 .navlinks{display:flex;gap:24px;align-items:center;white-space:nowrap}
 .navlinks a{color:var(--ink);font-weight:600;font-size:14px}
 .navlinks a:hover{color:var(--blue);text-decoration:none}
@@ -43,6 +48,7 @@ footer .brand .full-name{color:#cfe0ec}
 @media(max-width:1080px){.brand .full-name{display:none}}
 @media(max-width:940px){.navlinks a:not(.btn){display:none}}
 @media(max-width:760px){.navlinks .page-link:not(.active){display:none}}
+@media(max-width:620px){.brand{gap:8px}.finos-logo{height:30px}.osera-logo{height:26px}.brand-divider{height:28px}}
 .hero{background:radial-gradient(900px 460px at 85% -10%, var(--mist), transparent 60%),linear-gradient(180deg,#fff,var(--soft));border-bottom:1px solid var(--line);padding:78px 0 66px}
 .eyebrow{color:var(--blue);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:12px;margin-bottom:16px}
 .hero h1{font-size:46px;font-weight:800;max-width:18ch}
@@ -73,7 +79,7 @@ footer a{color:#9fd4ec}
 
 <header>
   <nav>
-    <div class="brand"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo.png" alt="FINOS" class="brand-logo"></a><a class="site-brand" href="index.html#top" aria-label="OSERA home"><span class="mark">· OSERA</span></a></div>
+    <div class="brand"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-color.svg" alt="OSERA" class="osera-logo"></a></div>
     <div class="navlinks">
       <a href="index.html#how">How it works</a>
       <a href="index.html#platform">Platform</a>
@@ -144,7 +150,7 @@ footer a{color:#9fd4ec}
 
 <footer>
   <div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;max-width:1140px;margin:0 auto;padding:0 28px;align-items:center">
-    <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo"></a><a class="site-brand" href="index.html#top" aria-label="OSERA home"><span class="mark">· OSERA</span><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
+    <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-white.svg" alt="OSERA" class="osera-logo"><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
     <div style="text-align:right"><a href="index.html">Home</a> · <a href="guiding-principles.html">Guiding Principles</a> · <a href="https://finos-backpatch.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a> · <a href="mailto:membership@finos.org">membership@finos.org</a></div>
   </div>
   <div style="max-width:1140px;margin:12px auto 0;padding:0 28px;color:#7fa6bd;font-size:12px">Working name pending selection and trademark clearance. Placeholder page for review.</div>
