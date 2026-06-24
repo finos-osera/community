@@ -159,11 +159,8 @@ h1.big .g{background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-back
 @media(max-width:820px){.forms{grid-template-columns:1fr}}
 .formcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;border-top:5px solid var(--blue)}
 .formcard.b{border-top-color:var(--teal)}
-.field{margin-bottom:13px}
-.field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;color:var(--navy)}
-.field input,.field select,.field textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:11px;font-family:inherit;font-size:14px;background:var(--soft)}
-.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);background:#fff}
-.thanks{display:none;background:var(--mist2);border:1px solid #cfe9e2;border-radius:14px;padding:18px;color:var(--teald);font-size:14px;font-weight:600}
+.hubspot-form-container{min-height:480px}
+.hubspot-form-container iframe.hs-form-iframe{display:block;width:100%;min-height:480px;border:none}
 /* fit + timeline */
 .fit{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:40px}
 @media(max-width:760px){.fit{grid-template-columns:1fr}}
@@ -511,32 +508,11 @@ footer a{color:#9fd4ec}
     <div class="eyebrow">Get involved</div>
     <h2 style="font-size:34px">Propose a project — or offer to maintain one</h2>
     <p class="lead">Open to institutions of every size and to technology firms with upstream expertise, anywhere in the world.</p>
-    <div class="forms">
+    <div class="forms" style="grid-template-columns:1fr;max-width:760px">
       <div class="formcard">
-        <h3>Propose a project</h3>
-        <p style="font-size:13.5px;color:var(--grey);margin:6px 0 16px">Nominate a [package, version] for the alliance to consider maintaining.</p>
-        <form onsubmit="return done(this)">
-          <div class="field"><label>Project / package</label><input required placeholder="e.g. Apache Commons Collections"></div>
-          <div class="field"><label>Version(s) / line</label><input required placeholder="e.g. 3.2.x"></div>
-          <div class="field"><label>Ecosystem</label><select><option>Java / Maven</option><option>JavaScript / npm</option><option>Python / PyPI</option><option>Go</option><option>.NET / NuGet</option><option>Other</option></select></div>
-          <div class="field"><label>Why it matters (footprint, known CVE, EOL status)</label><textarea rows="2" placeholder="Mass-embedded; CVE-XXXX-XXXX; upstream EOL…"></textarea></div>
-          <div class="field"><label>Your organisation &amp; work email</label><input required placeholder="Jane Smith · jane@bank.com · Global Bank"></div>
-          <button class="btn primary" type="submit" style="width:100%;padding:13px">Submit project</button>
-        </form>
-        <div class="thanks">Thank you — your project nomination has reached the FINOS team. We'll follow up about prioritisation and intake.</div>
-      </div>
-      <div class="formcard b">
-        <h3>Offer to maintain</h3>
-        <p style="font-size:13.5px;color:var(--grey);margin:6px 0 16px">Put your firm forward as a tech producer for specific projects or ecosystems.</p>
-        <form onsubmit="return done(this)">
-          <div class="field"><label>Name &amp; organisation</label><input required placeholder="Jane Smith · Acme OSS"></div>
-          <div class="field"><label>Work email</label><input required type="email" placeholder="jane@acme.dev"></div>
-          <div class="field"><label>Projects / ecosystems you can maintain</label><input required placeholder="e.g. Spring, Netty; Java/Maven"></div>
-          <div class="field"><label>Your credentials (GitHub, prior maintainership, CVEs fixed)</label><textarea rows="2" placeholder="github.com/… · committer on … · advisories …"></textarea></div>
-          <div class="field"><label>Capacity</label><select><option>Available now</option><option>Within 1 month</option><option>Exploring</option></select></div>
-          <button class="btn cyan" type="submit" style="width:100%;padding:13px">Offer to maintain</button>
-        </form>
-        <div class="thanks">Thank you — your maintainer profile has reached the FINOS team. We'll be in touch about producer selection.</div>
+        <h3>Get involved</h3>
+        <p style="font-size:13.5px;color:var(--grey);margin:6px 0 16px">Use the form below to propose a project for the alliance to consider maintaining, offer your firm as a tech producer, or share your interest in joining the effort. The FINOS team will follow up with next steps.</p>
+        <div id="hubspot-osera-form" class="hubspot-form-container"></div>
       </div>
     </div>
     <div style="margin-top:24px;background:#fff;border:1px solid var(--line);border-radius:18px;border-top:5px solid var(--gold);padding:24px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between">
@@ -608,8 +584,70 @@ footer a{color:#9fd4ec}
   </div>
 </footer>
 
+<script charset="utf-8" type="text/javascript" src="https://js.hsforms.net/forms/embed/v2.js"></script>
 <script>
-function done(f){f.style.display='none';f.parentElement.querySelector('.thanks').style.display='block';return false;}
+  hbspt.forms.create({
+    region: 'na1',
+    portalId: '2419532',
+    formId: '6bf877f4-5016-4eac-9c49-cb303c5633bc',
+    target: '#hubspot-osera-form',
+    css: `
+      .hs-form { font-family: Inter, system-ui, sans-serif !important; }
+      .hs-form fieldset { max-width: 100% !important; border: none !important; margin: 0 !important; padding: 0 !important; }
+      .hs-form .hs-form-field { margin-bottom: 13px !important; float: none !important; width: 100% !important; }
+      .hs-form .form-columns-2 .hs-form-field { width: 100% !important; }
+      @media (min-width: 500px) { .hs-form .form-columns-2 .hs-form-field { width: 48% !important; } }
+
+      .hs-form label, .hs-form legend, .hs-form .hs-field-desc, .hs-form .hs-richtext, .hs-form .hs-richtext p {
+        color: #16222E !important; font-size: 12.5px !important; font-weight: 600 !important; line-height: 1.4 !important;
+      }
+      .hs-form .hs-form-required { color: #0086BF !important; }
+
+      .hs-form input:not([type=submit]):not([type=checkbox]):not([type=radio]), .hs-form select, .hs-form textarea {
+        width: 100% !important; box-sizing: border-box !important; padding: 11px 13px !important;
+        border: 1px solid #E7EDF2 !important; border-radius: 11px !important; font-size: 14px !important;
+        font-family: inherit !important; color: #16222E !important; -webkit-text-fill-color: #16222E !important;
+        background: #F4F8FB !important;
+      }
+      .hs-form input:not([type=submit]):not([type=checkbox]):not([type=radio]):focus, .hs-form select:focus, .hs-form textarea:focus {
+        outline: none !important; border-color: #0086BF !important; background: #fff !important;
+      }
+      .hs-form input::placeholder, .hs-form textarea::placeholder { color: #5B6770 !important; opacity: 1 !important; }
+
+      .hs-form .hs-fieldtype-checkbox > .input, .hs-form .hs-fieldtype-checkbox ul.inputs-list { padding-left: 0 !important; margin-left: 0 !important; }
+      .hs-form ul.inputs-list, .hs-form ul.inputs-list.multi-container {
+        list-style: none !important; list-style-type: none !important; padding: 0 !important; margin: 10px 0 0 !important;
+      }
+      .hs-form ul.inputs-list > li, .hs-form ul.inputs-list > li.hs-form-checkbox {
+        list-style: none !important; list-style-type: none !important; margin: 0 0 12px 0 !important;
+        padding: 0 !important; margin-left: 0 !important; display: block !important;
+      }
+      .hs-form ul.inputs-list > li:last-child { margin-bottom: 0 !important; }
+      .hs-form ul.inputs-list > li::before, .hs-form ul.inputs-list > li::marker { display: none !important; content: none !important; }
+      .hs-form ul.inputs-list label.hs-form-checkbox-display {
+        display: flex !important; align-items: flex-start !important; gap: 10px !important;
+        margin: 0 !important; padding: 0 !important; font-weight: 500 !important; cursor: pointer !important;
+      }
+      .hs-form ul.inputs-list label.hs-form-checkbox-display > span { flex: 1 !important; line-height: 1.5 !important; padding-top: 1px !important; }
+      .hs-form input[type=checkbox] {
+        flex-shrink: 0 !important; width: 16px !important; height: 16px !important; min-width: 16px !important;
+        margin: 3px 0 0 !important; padding: 0 !important; accent-color: #00253F !important;
+      }
+      .hs-form .hs-form-checkbox-display, .hs-form .hs-form-radio-display {
+        color: #16222E !important; font-size: 14px !important; font-weight: 500 !important; line-height: 1.5 !important;
+      }
+
+      .hs-form .hs-submit { margin-top: 18px !important; }
+      .hs-form .hs-button, .hs-form input[type=submit] {
+        display: block !important; width: 100% !important; box-sizing: border-box !important;
+        background: #00253F !important; color: #fff !important; -webkit-text-fill-color: #fff !important;
+        border: none !important; border-radius: 999px !important; padding: 13px 20px !important;
+        font-size: 14px !important; font-weight: 600 !important; font-family: inherit !important;
+        line-height: 1.2 !important; cursor: pointer !important; min-height: 44px !important;
+      }
+      .hs-form .hs-button:hover, .hs-form input[type=submit]:hover { background: #003a5e !important; }
+    `
+  });
 </script>
 </body>
 </html>
