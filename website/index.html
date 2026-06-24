@@ -52,7 +52,10 @@ footer .brand-divider{background:rgba(255,255,255,.28)}
 .btn.ghost:hover{border-color:var(--blue);color:var(--blue) !important}
 .btn.cyan{background:var(--cyan);color:var(--navy) !important}
 .btn.cyan:hover{background:#00a3cb;color:#fff !important}
-.btn.disabled{background:var(--soft);color:var(--grey) !important;border-color:var(--line);cursor:default;pointer-events:none}
+.btn.disabled{background:var(--soft);color:var(--grey) !important;border-color:var(--line);cursor:default}
+.press-soon{position:relative}
+.press-soon:hover::after,.press-soon:focus::after{content:"Coming soon";position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);background:var(--navy);color:#fff;border-radius:8px;padding:6px 10px;font-size:12px;white-space:nowrap;box-shadow:0 8px 20px rgba(0,37,63,.18);z-index:80}
+.press-soon:hover::before,.press-soon:focus::before{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);border:5px solid transparent;border-bottom-color:var(--navy);z-index:81}
 .navlinks .page-link{background:var(--soft);color:var(--grey) !important;border-color:var(--line)}
 .navlinks .page-link:hover{background:#fff;border-color:var(--blue);color:var(--blue) !important}
 .btn.active{background:var(--navy);color:#fff !important;border-color:var(--navy)}
@@ -179,8 +182,10 @@ h1.big .g{background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-back
 .band .cta{display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap}
 footer{background:var(--navy);color:#cfe0ec;padding:46px 0}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;font-size:13.5px}
+footer .footer-inner{flex-direction:column;align-items:center;text-align:center;gap:18px}
 footer a{color:#9fd4ec}
-.disc{font-size:12px;color:#7fa6bd;margin-top:14px;max-width:90ch}
+.disc{font-size:13px;color:#7fa6bd;max-width:78ch}
+.footer-nav{color:#7fa6bd}
 .availgrid{grid-template-columns:repeat(5,1fr)}
 @media(max-width:900px){.availgrid{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.availgrid{grid-template-columns:1fr}}
@@ -203,7 +208,7 @@ footer a{color:#9fd4ec}
       <a href="#workstreams">Workstreams</a>
       <a href="#involved">Get involved</a>
       <a href="guiding-principles.html" class="btn ghost page-link">Guiding Principles</a>
-      <span class="btn disabled page-link" aria-disabled="true">Press coming soon</span>
+      <span class="btn disabled page-link press-soon" role="button" tabindex="0" aria-disabled="true" title="Press release coming soon">Press</span>
       <a href="#involved" class="btn primary">Join us</a>
     </div>
   </nav></div>
@@ -574,12 +579,10 @@ footer a{color:#9fd4ec}
 </section>
 
 <footer>
-  <div class="wrap">
-    <div>
-      <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-white.svg" alt="OSERA" class="osera-logo"><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
-      <div class="disc">OSERA is a FINOS initiative, part of the Linux Foundation, and is complementary to Akrites and the Linux Foundation's open source security work.</div>
-    </div>
-    <div style="text-align:right">
+  <div class="wrap footer-inner">
+    <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-white.svg" alt="OSERA" class="osera-logo"><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
+    <div class="disc">OSERA is a FINOS initiative, part of the Linux Foundation, and is complementary to Akrites and the Linux Foundation's open source security work.</div>
+    <div class="footer-nav">
       <a href="guiding-principles.html">Guiding Principles</a> · <span style="color:#7fa6bd">Press release coming soon</span> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a><br>
       <a href="mailto:membership@finos.org">membership@finos.org</a><br>
       <span style="color:#7fa6bd">Part of the Linux Foundation</span>
