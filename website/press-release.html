@@ -41,10 +41,6 @@ footer .brand-divider{background:rgba(255,255,255,.28)}
 .btn.primary:hover{background:#003a5e;text-decoration:none}
 .btn.ghost{background:#fff;color:var(--navy) !important;border-color:var(--line)}
 .btn.ghost:hover{border-color:var(--blue);color:var(--blue) !important;text-decoration:none}
-.btn.disabled{background:var(--soft);color:var(--grey) !important;border-color:var(--line);cursor:default}
-.press-soon{position:relative}
-.press-soon:hover::after,.press-soon:focus::after{content:"Coming soon";position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);background:var(--navy);color:#fff;border-radius:8px;padding:6px 10px;font-size:12px;white-space:nowrap;box-shadow:0 8px 20px rgba(0,37,63,.18);z-index:80}
-.press-soon:hover::before,.press-soon:focus::before{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);border:5px solid transparent;border-bottom-color:var(--navy);z-index:81}
 .navlinks .page-link{background:var(--soft);color:var(--grey) !important;border-color:var(--line)}
 .navlinks .page-link:hover{background:#fff;border-color:var(--blue);color:var(--blue) !important;text-decoration:none}
 .btn.active{background:var(--navy);color:#fff !important;border-color:var(--navy)}
@@ -94,7 +90,7 @@ footer a{color:#9fd4ec}
       <a href="index.html#workstreams">Workstreams</a>
       <a href="index.html#involved">Get involved</a>
       <a href="guiding-principles.html" class="btn ghost page-link">Guiding Principles</a>
-      <span class="btn disabled page-link press-soon" role="button" tabindex="0" aria-disabled="true" title="Press release coming soon">Press</span>
+      <a href="press-release.html" class="btn active page-link" aria-current="page">Press</a>
       <a href="index.html#involved" class="btn primary">Join us</a>
     </div>
   </nav>
@@ -103,17 +99,17 @@ footer a{color:#9fd4ec}
 <div class="hero">
   <div class="wrap">
     <div class="eyebrow">Press Release</div>
-    <h1>OSERA launch announcement coming soon.</h1>
-    <p><strong>OSERA is the Open Source Enterprise Resiliency Alliance</strong>, a FINOS initiative for keeping critical open source patched, consumable and compliant through neutral, openly-governed collaboration.</p>
-    <div class="status"><span class="dot"></span> Formal announcements pending</div>
+    <h1>OSERA launch announcement.</h1>
+    <p><strong>OSERA is the Open Source Enterprise Resiliency Alliance</strong>, a FINOS initiative helping regulated institutions close patch coverage gaps and operationalize open source remediation at scale.</p>
+    <div class="status"><span class="dot"></span> OSERA press release copy pending</div>
   </div>
 </div>
 
 <section>
   <div class="wrap">
     <p class="lead">OSERA launches at Open Source in Finance Forum London on 25 June 2026.</p>
-    <p class="body">The formal FINOS press release and the related Linux Foundation announcement are expected shortly. Until then, the OSERA homepage and Guiding Principles provide the current public overview and participation path.</p>
-    <div class="callout">For launch updates, follow FINOS communications and return here once the formal announcement is available.</div>
+    <p class="body">The final OSERA press release copy will be added here when approved. In the meantime, the Linux Foundation has launched <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a>, the complementary upstream security response initiative.</p>
+    <div class="callout">Read the supporting Linux Foundation announcement: <a href="https://www.linuxfoundation.org/press/linux-foundation-and-industry-leaders-launch-akrites-to-defend-critical-open-source-software-against-ai-enabled-cyber-threats" target="_blank" rel="noopener">Linux Foundation and industry leaders launch Akrites</a>.</div>
   </div>
 </section>
 
@@ -126,9 +122,9 @@ footer a{color:#9fd4ec}
         <h3>About OSERA</h3>
         <ul>
           <li>Neutral, openly-governed collaboration under FINOS</li>
-          <li>Critical open source maintenance for regulated enterprises</li>
-          <li>Portable, verifiable remediation without lock-in</li>
-          <li>Complementary to Akrites and Linux Foundation security work</li>
+          <li>Patch coverage gaps closed with open back-patches</li>
+          <li>Portable, verifiable remediation for regulated enterprises</li>
+          <li>Downstream operationalization complementary to Akrites</li>
         </ul>
       </div>
       <div class="card">
@@ -136,6 +132,8 @@ footer a{color:#9fd4ec}
         <ul>
           <li><a href="index.html">OSERA homepage</a></li>
           <li><a href="guiding-principles.html">Guiding Principles</a></li>
+          <li><a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a></li>
+          <li><a href="https://www.linuxfoundation.org/press/linux-foundation-and-industry-leaders-launch-akrites-to-defend-critical-open-source-software-against-ai-enabled-cyber-threats" target="_blank" rel="noopener">Linux Foundation Akrites announcement</a></li>
           <li><a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a></li>
           <li><a href="https://www.finos.org/hosted-events/2026-06-25-osff-london">Open Source in Finance Forum London</a></li>
         </ul>
@@ -146,8 +144,8 @@ footer a{color:#9fd4ec}
 
 <section class="cta">
   <div class="wrap">
-    <h2>Press release coming soon</h2>
-    <p>In the meantime, use the OSERA homepage and Guiding Principles for the public narrative and participation path.</p>
+    <h2>OSERA press release copy pending</h2>
+    <p>This page is the OSERA press-release destination. Supporting Akrites and Linux Foundation links are available above while final OSERA copy is being added.</p>
     <div class="actions">
       <a href="index.html" class="btn primary">OSERA Home</a>
       <a href="guiding-principles.html" class="btn ghost">Guiding Principles</a>
@@ -158,7 +156,7 @@ footer a{color:#9fd4ec}
 <footer>
   <div class="footer-inner">
     <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-white.svg" alt="OSERA" class="osera-logo"><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
-    <div class="footer-note">OSERA is a FINOS initiative, part of the Linux Foundation, and is complementary to Akrites and the Linux Foundation's open source security work.</div>
+    <div class="footer-note">OSERA is a FINOS initiative, part of the Linux Foundation, focused on open, portable remediation for regulated enterprises and complementary to <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a>.</div>
     <div class="footer-nav"><a href="index.html">Home</a> · <a href="guiding-principles.html">Guiding Principles</a> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a> · <a href="mailto:membership@finos.org">membership@finos.org</a></div>
   </div>
 </footer>

@@ -52,10 +52,6 @@ footer .brand-divider{background:rgba(255,255,255,.28)}
 .btn.ghost:hover{border-color:var(--blue);color:var(--blue) !important}
 .btn.cyan{background:var(--cyan);color:var(--navy) !important}
 .btn.cyan:hover{background:#00a3cb;color:#fff !important}
-.btn.disabled{background:var(--soft);color:var(--grey) !important;border-color:var(--line);cursor:default}
-.press-soon{position:relative}
-.press-soon:hover::after,.press-soon:focus::after{content:"Coming soon";position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);background:var(--navy);color:#fff;border-radius:8px;padding:6px 10px;font-size:12px;white-space:nowrap;box-shadow:0 8px 20px rgba(0,37,63,.18);z-index:80}
-.press-soon:hover::before,.press-soon:focus::before{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);border:5px solid transparent;border-bottom-color:var(--navy);z-index:81}
 .navlinks .page-link{background:var(--soft);color:var(--grey) !important;border-color:var(--line)}
 .navlinks .page-link:hover{background:#fff;border-color:var(--blue);color:var(--blue) !important}
 .btn.active{background:var(--navy);color:#fff !important;border-color:var(--navy)}
@@ -72,6 +68,7 @@ footer .brand-divider{background:rgba(255,255,255,.28)}
 .tagpill.launch-note{align-items:flex-start;max-width:720px;background:#fff7e5;border-color:#efd18c;color:#6f4e00;font-size:14px;line-height:1.45;padding:12px 16px;border-radius:14px;box-shadow:0 6px 18px rgba(185,131,20,.12)}
 .tagpill .dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
 .tagpill.launch-note .dot{flex:0 0 auto;margin-top:6px;background:var(--gold)}
+.tagpill.launch-note .launch-copy{display:block}
 h1.big{font-size:50px;font-weight:800;margin-top:20px;max-width:15ch}
 h1.big .g{background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p.sub{font-size:19px;color:var(--grey);margin-top:20px;max-width:48ch}
@@ -208,7 +205,7 @@ footer a{color:#9fd4ec}
       <a href="#workstreams">Workstreams</a>
       <a href="#involved">Get involved</a>
       <a href="guiding-principles.html" class="btn ghost page-link">Guiding Principles</a>
-      <span class="btn disabled page-link press-soon" role="button" tabindex="0" aria-disabled="true" title="Press release coming soon">Press</span>
+      <a href="press-release.html" class="btn ghost page-link">Press</a>
       <a href="#involved" class="btn primary">Join us</a>
     </div>
   </nav></div>
@@ -218,15 +215,15 @@ footer a{color:#9fd4ec}
 <section class="hero" style="padding:0">
   <div class="wrap">
     <div>
-      <span class="tagpill launch-note"><span class="dot"></span> 25 June 2026 - We're excited to launch OSERA. Stay tuned for our formal press release and a Linux Foundation announcement shortly.</span>
-      <h1 class="big">Open source supply resiliency at scale. <span class="g">Without the lock-in.</span></h1>
-      <p class="sub"><strong>OSERA is the Open Source Enterprise Resiliency Alliance:</strong> a neutral, openly-governed home where institutions and their technology partners keep critical open source patched, consumable and compliant — produced once, together.</p>
+      <span class="tagpill launch-note"><span class="dot"></span><span class="launch-copy">26 June 2026 - OSERA launches alongside Akrites. Read the <a href="press-release.html">OSERA press release</a>.</span></span>
+      <h1 class="big">From open patches to enterprise rollout. <span class="g">Without lock-in.</span></h1>
+      <p class="sub"><strong>OSERA is the Open Source Enterprise Resiliency Alliance:</strong> a FINOS initiative helping regulated institutions close patch coverage gaps and operationalize remediation at scale. We help members prioritize vulnerabilities, sponsor open back-patches where needed, define shared consumption standards, and apply patches from upstream, vendors, Akrites, and OSERA with greater consistency and evidence.</p>
       <div class="cta">
         <a href="#involved" class="btn primary">Get involved</a>
         <a href="guiding-principles.html" class="btn ghost">Read the Guiding Principles</a>
         <a href="https://finos-osera.github.io/risk-navigator" class="btn cyan" target="_blank" rel="noopener">Explore Risk Navigator</a>
       </div>
-      <div class="lf">A FINOS initiative, part of the Linux Foundation - the complement to <strong>Akrites</strong>, the LF's cross-industry security response team. Press release coming soon.</div>
+      <div class="lf"><a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a> coordinates upstream security response; OSERA helps regulated enterprises operationalize remediation downstream. <a href="press-release.html">OSERA press page</a>.</div>
     </div>
     <div>
       <svg class="heroart" viewBox="0 0 460 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A shared network of institutions and maintainers around a protected commons">
@@ -542,11 +539,11 @@ footer a{color:#9fd4ec}
     <div class="fit">
       <div class="card" style="border-top:5px solid var(--cyan)">
         <h3>Akrites · Linux Foundation</h3>
-        <p style="margin-top:10px">The cross-industry security response team: one coordinated disclosure process and a maintainer of last resort, so upstream maintainers face one trusted partner instead of a flood of duplicate, AI-generated reports.</p>
+        <p style="margin-top:10px">The upstream security response layer: coordinated vulnerability discovery, remediation, disclosure, and maintainer engagement so fixes can reach open source projects responsibly.</p>
       </div>
       <div class="card" style="border-top:5px solid var(--teal)">
         <h3>OSERA · FINOS</h3>
-        <p style="margin-top:10px">The industry-specific complement: prioritisation, mutualised maintenance, regulated consumption and open standards - routing its coordinated disclosure through Akrites. Independent governance; no duplication.</p>
+        <p style="margin-top:10px">The downstream operationalization layer: prioritization, standards, validation, back-patch sponsorship, vendor alignment, and rollout patterns for regulated enterprises.</p>
       </div>
     </div>
   </div>
@@ -561,8 +558,8 @@ footer a{color:#9fd4ec}
       <div class="ev"><div class="when">Early 2026</div><p>FINOS member institutions recognise they each pay, independently, to keep the same open source dependencies alive — forking, patching or buying support for identical CVEs.</p></div>
       <div class="ev"><div class="when">Q2 2026</div><p>Spearheaded by <strong>Moderne</strong>, the effort is brought to the FINOS community — in the open, not as a product — and a member formation group convenes to design a mutualised, openly-governed model.</p></div>
       <div class="ev"><div class="when">May–June 2026</div><p>A working pipeline ships: critical Java lines maintained as backpatch releases and validated end-to-end by member institutions.</p></div>
-      <div class="ev"><div class="when">June 2026</div><p>The Linux Foundation prepares Akrites - the cross-industry security response team and maintainer of last resort.</p></div>
-      <div class="ev"><div class="when">25 June 2026</div><p>FINOS presents the effort at the <a href="https://www.finos.org/hosted-events/2026-06-25-osff-london">Open Source in Finance Forum</a>, London - the complement to Akrites. Press release coming soon.</p></div>
+      <div class="ev"><div class="when">June 2026</div><p>The Linux Foundation launches <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a> - the upstream security response and maintenance layer for critical open source. <a href="https://www.linuxfoundation.org/press/linux-foundation-and-industry-leaders-launch-akrites-to-defend-critical-open-source-software-against-ai-enabled-cyber-threats" target="_blank" rel="noopener">Read the Linux Foundation announcement</a>.</p></div>
+      <div class="ev"><div class="when">25 June 2026</div><p>FINOS presents OSERA at the <a href="https://www.finos.org/hosted-events/2026-06-25-osff-london">Open Source in Finance Forum</a>, London - the downstream operationalization layer for regulated enterprises. <a href="press-release.html">Read the OSERA press page</a>.</p></div>
     </div>
   </div>
 </section>
@@ -572,8 +569,8 @@ footer a{color:#9fd4ec}
   <div class="wrap">
     <div class="band">
       <h2>Stand with us.</h2>
-      <p>Keep the defence of the open source commons open, verifiable and portable. Propose a project, offer to maintain, or add your institution to the effort.</p>
-      <div class="cta"><a href="#involved" class="btn cyan">Get involved</a><a href="https://finos-osera.github.io/risk-navigator" class="btn ghost" target="_blank" rel="noopener" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Open Risk Navigator</a><a href="guiding-principles.html" class="btn ghost" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Read the Guiding Principles</a><span class="btn disabled" aria-disabled="true" style="background:rgba(255,255,255,.12);color:#cfe6f2 !important;border-color:rgba(255,255,255,.28)">Press release coming soon</span></div>
+      <p>Keep remediation open, verifiable, portable, and consumable at scale. Propose a project, offer to maintain, or add your institution to the effort.</p>
+      <div class="cta"><a href="#involved" class="btn cyan">Get involved</a><a href="https://finos-osera.github.io/risk-navigator" class="btn ghost" target="_blank" rel="noopener" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Open Risk Navigator</a><a href="guiding-principles.html" class="btn ghost" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Read the Guiding Principles</a><a href="press-release.html" class="btn ghost" style="background:transparent;color:#fff !important;border-color:rgba(255,255,255,.4)">Press</a></div>
     </div>
   </div>
 </section>
@@ -581,9 +578,9 @@ footer a{color:#9fd4ec}
 <footer>
   <div class="wrap footer-inner">
     <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-white.svg" alt="OSERA" class="osera-logo"><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
-    <div class="disc">OSERA is a FINOS initiative, part of the Linux Foundation, and is complementary to Akrites and the Linux Foundation's open source security work.</div>
+    <div class="disc">OSERA is a FINOS initiative, part of the Linux Foundation, focused on open, portable remediation for regulated enterprises and complementary to <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a>.</div>
     <div class="footer-nav">
-      <a href="guiding-principles.html">Guiding Principles</a> · <span style="color:#7fa6bd">Press release coming soon</span> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a><br>
+      <a href="guiding-principles.html">Guiding Principles</a> · <a href="press-release.html">Press</a> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a><br>
       <a href="mailto:membership@finos.org">membership@finos.org</a><br>
       <span style="color:#7fa6bd">Part of the Linux Foundation</span>
     </div>
