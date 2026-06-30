@@ -54,18 +54,22 @@ footer .brand-divider{background:rgba(255,255,255,.28)}
 .btn.cyan:hover{background:#00a3cb;color:#fff !important}
 .navlinks .page-link{background:var(--soft);color:var(--grey) !important;border-color:var(--line)}
 .navlinks .page-link:hover{background:#fff;border-color:var(--blue);color:var(--blue) !important}
+.nav-github{display:flex;align-items:center;color:var(--ink)}
+.nav-github:hover{color:var(--blue)}
+.nav-github svg{width:22px;height:22px;display:block}
 .btn.active{background:var(--navy);color:#fff !important;border-color:var(--navy)}
 .btn.active:hover{background:#003a5e;color:#fff !important}
 @media(max-width:1080px){.brand .full-name{display:none}}
-@media(max-width:940px){.navlinks a:not(.btn){display:none}}
+@media(max-width:940px){.navlinks a:not(.btn):not(.nav-github){display:none}}
 @media(max-width:760px){.navlinks .page-link:not(.active){display:none}}
 @media(max-width:620px){.brand{gap:8px}.finos-logo{height:30px}.osera-logo{height:26px}.brand-divider{height:28px}}
 /* HERO */
 .hero{background:radial-gradient(900px 500px at 88% -10%, var(--mist), transparent 60%),linear-gradient(180deg,#fff,var(--soft));border-bottom:1px solid var(--line)}
-.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;padding:80px 28px 84px}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;padding:48px 28px 84px}
 @media(max-width:880px){.hero .wrap{grid-template-columns:1fr;gap:24px}}
 .tagpill{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);color:var(--teald);font-weight:600;font-size:12.5px;padding:7px 14px;border-radius:999px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-.tagpill.launch-note{align-items:flex-start;max-width:720px;background:#fff7e5;border-color:#efd18c;color:#6f4e00;font-size:14px;line-height:1.45;padding:12px 16px;border-radius:14px;box-shadow:0 6px 18px rgba(185,131,20,.12)}
+.tagpill.launch-note{display:flex;width:100%;max-width:none;align-items:flex-start;background:#fff7e5;border-color:#efd18c;color:#6f4e00;font-size:14px;line-height:1.45;padding:12px 16px;border-radius:14px;box-shadow:0 6px 18px rgba(185,131,20,.12)}
+.hero .launch-row{display:block;padding:26px 28px 0}
 .tagpill .dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
 .tagpill.launch-note .dot{flex:0 0 auto;margin-top:6px;background:var(--gold)}
 .tagpill.launch-note .launch-copy{display:block}
@@ -191,6 +195,11 @@ footer a{color:#9fd4ec}
 .addproj .plus{font-size:30px;font-weight:800;line-height:1;color:var(--blue)}
 .addproj .pl{font-size:12.5px;font-weight:700;color:var(--navy);margin-top:8px}
 .addproj .ps{font-size:11px;color:var(--grey);margin-top:3px}
+/* press */
+.presscard{display:flex;flex-direction:column;height:100%;text-decoration:none}
+.presscard .outlet{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+.presscard h3{font-size:16px;margin:9px 0 14px;color:var(--navy)}
+.presscard .more{margin-top:auto;margin-bottom:0}
 </style>
 </head>
 <body id="top">
@@ -203,19 +212,21 @@ footer a{color:#9fd4ec}
       <a href="#platform">Platform</a>
       <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a>
       <a href="#workstreams">Workstreams</a>
-      <a href="#involved">Get involved</a>
-      <a href="guiding-principles.html" class="btn ghost page-link">Guiding Principles</a>
-      <a href="https://www.finos.org/press/intent-to-form-osera-open-source-supply-chain-resiliency" class="btn ghost page-link" target="_blank" rel="noopener">Press</a>
-      <a href="#involved" class="btn primary">Join us</a>
+      <a href="guiding-principles.html">Guiding Principles</a>
+      <a href="#press">In the press</a>
+      <a href="#involved" class="btn primary">Get involved</a>
+      <a href="https://github.com/finos-osera" class="nav-github" target="_blank" rel="noopener" aria-label="OSERA on GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.021C22 6.484 17.522 2 12 2z"/></svg></a>
     </div>
   </nav></div>
 </header>
 
 <!-- HERO -->
 <section class="hero" style="padding:0">
+  <div class="wrap launch-row">
+    <span class="tagpill launch-note"><span class="dot"></span><span class="launch-copy">26 June 2026 - FINOS announces the intent to form OSERA alongside Akrites. Read the <a href="https://www.finos.org/press/intent-to-form-osera-open-source-supply-chain-resiliency" target="_blank" rel="noopener">OSERA announcement</a>.</span></span>
+  </div>
   <div class="wrap">
     <div>
-      <span class="tagpill launch-note"><span class="dot"></span><span class="launch-copy">26 June 2026 - FINOS announces the intent to form OSERA alongside Akrites. Read the <a href="https://www.finos.org/press/intent-to-form-osera-open-source-supply-chain-resiliency" target="_blank" rel="noopener">OSERA announcement</a>.</span></span>
       <h1 class="big">Secure open source. In production. <span class="g">At scale.</span></h1>
       <p class="sub"><strong>OSERA is the Open Source Enterprise Resiliency Alliance:</strong> 
         a FINOS initiative helping regulated institutions close patch coverage gaps 
@@ -500,6 +511,7 @@ footer a{color:#9fd4ec}
       <div class="proj"><div class="lg">Spring Framework</div><div class="v mono">5.3.39+backpatch.001</div><div class="e">Java · app framework</div></div>
       <a class="addproj" href="#involved" title="Propose a project to maintain"><span class="plus">+</span><span class="pl">Propose a project</span><span class="ps">Add one we should maintain</span></a>
     </div>
+    <p class="center" style="margin-top:28px"><a href="https://github.com/finos-osera" class="more" target="_blank" rel="noopener">Explore projects →</a></p>
     <div class="flownote">Participants resolve them through their existing corporate proxy with the coordinates they already use — no code or CI changes. Each line is time-bound. Signing, full SBOM and VEX are on the roadmap (WS1).</div>
   </div>
 </section>
@@ -567,6 +579,52 @@ footer a{color:#9fd4ec}
       <div class="ev"><div class="when">May–June 2026</div><p>A working pipeline ships: critical Java lines maintained as backpatch releases and validated end-to-end by participating banks.</p></div>
       <div class="ev"><div class="when">June 2026</div><p>The Linux Foundation launches <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a> - the upstream security response and maintenance layer for critical open source. <a href="https://www.linuxfoundation.org/press/linux-foundation-and-industry-leaders-launch-akrites-to-defend-critical-open-source-software-against-ai-enabled-cyber-threats" target="_blank" rel="noopener">Read the Linux Foundation announcement</a>.</p></div>
       <div class="ev"><div class="when">26 June 2026</div><p>FINOS announces the intent to form OSERA with support from Deutsche Bank, Goldman Sachs, Moderne, Morgan Stanley, RBC, Sonatype, and TD Bank Group. <a href="https://www.finos.org/press/intent-to-form-osera-open-source-supply-chain-resiliency" target="_blank" rel="noopener">Read the OSERA announcement</a>.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- IN THE PRESS -->
+<section id="press">
+  <div class="wrap">
+    <div class="eyebrow">In the press</div>
+    <h2 style="font-size:34px">OSERA in the news</h2>
+    <p class="lead">Coverage of the intent to form OSERA and the financial-services pilot behind it.</p>
+    <div class="grid g3">
+      <a class="card presscard" href="https://www.finos.org/press/intent-to-form-osera-open-source-supply-chain-resiliency" target="_blank" rel="noopener">
+        <div class="outlet">FINOS</div>
+        <h3>FINOS Announces Intent to Form OSERA, a Global Financial Services-Led Alliance for Open Source Supply-Chain Resiliency</h3>
+        <span class="more">Read →</span>
+      </a>
+      <a class="card presscard" href="https://www.linuxfoundation.org/press/finos-announces-intent-to-form-osera-a-global-financial-services-led-alliance-for-open-source-supply-chain-resiliency-in-the-era-of-ai" target="_blank" rel="noopener">
+        <div class="outlet">The Linux Foundation</div>
+        <h3>FINOS Announces Intent to Form OSERA for Open Source Supply-Chain Resiliency in the Era of AI</h3>
+        <span class="more">Read →</span>
+      </a>
+      <a class="card presscard" href="https://www.finextra.com/pressarticle/110258/global-banks-back-project-to-strengthen-open-source-resilience" target="_blank" rel="noopener">
+        <div class="outlet">Finextra</div>
+        <h3>Global banks back project to strengthen open source resilience</h3>
+        <span class="more">Read →</span>
+      </a>
+      <a class="card presscard" href="https://ffnews.com/news/global-banking-giants-launch-project-osera-to-secure-open-source-supply-chains-against-ai-threats" target="_blank" rel="noopener">
+        <div class="outlet">FF News</div>
+        <h3>Global Banking Giants Launch Project OSERA to Secure Open Source Supply Chains Against AI Threats</h3>
+        <span class="more">Read →</span>
+      </a>
+      <a class="card presscard" href="https://www.comparethecloud.net/news/six-global-banks-complete-open-source-security-pilot-as-finos-announces-project-osera" target="_blank" rel="noopener">
+        <div class="outlet">Compare the Cloud</div>
+        <h3>Six global banks complete open source security pilot as FINOS announces Project OSERA</h3>
+        <span class="more">Read →</span>
+      </a>
+      <a class="card presscard" href="https://thepaypers.com/fintech/news/finos-announces-plan-to-launch-open-source-resiliency-alliance" target="_blank" rel="noopener">
+        <div class="outlet">The Paypers</div>
+        <h3>FINOS announces plan to launch open source resiliency alliance</h3>
+        <span class="more">Read →</span>
+      </a>
+      <a class="card presscard" href="https://www.ithome.com.tw/news/176958" target="_blank" rel="noopener">
+        <div class="outlet">iThome</div>
+        <h3>Linux 基金會旗下 FINOS 規畫成立開源企業韌性聯盟 OSERA，協助金融業修補開源套件</h3>
+        <span class="more">Read →</span>
+      </a>
     </div>
   </div>
 </section>
