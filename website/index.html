@@ -161,11 +161,29 @@ h1.big .g{background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-back
 .ws li::before{content:"›";position:absolute;left:0;color:var(--blue);font-weight:800}
 .ws .plan{color:var(--grey);font-style:italic}
 .partner{display:inline-block;margin-top:12px;font-size:11px;font-weight:700;color:var(--gold);background:#FBF6DC;border-radius:999px;padding:5px 12px}
+.standards-callout{margin-top:28px;background:#fff;border:1px solid var(--line);border-radius:18px;border-top:5px solid var(--cyan);padding:24px 28px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+.standards-callout p{font-size:15px;color:var(--ink);max-width:62ch;margin:0}
+.standards-callout a{font-weight:600}
+.standards-callout img{height:28px;width:auto;display:block}
 /* forms */
 .forms{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px}
 @media(max-width:820px){.forms{grid-template-columns:1fr}}
 .formcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;border-top:5px solid var(--blue)}
 .formcard.b{border-top-color:var(--teal)}
+.membercard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;border-top:5px solid var(--gold);display:flex;flex-direction:column;height:100%}
+.membercard h3{font-size:18px}
+.membercard .subhead{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);margin-top:16px}
+.membercard p{font-size:14px;color:var(--grey);margin-top:10px}
+.membercard .tier-table-wrap{margin-top:14px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.membercard .tier-table{width:100%;min-width:280px;border-collapse:collapse;font-size:11px;line-height:1.35}
+.membercard .tier-table th,.membercard .tier-table td{border:1px solid var(--line);padding:6px 7px;text-align:center;vertical-align:middle}
+.membercard .tier-table thead th{background:var(--soft);font-weight:700;color:var(--navy);font-size:11px}
+.membercard .tier-table thead th:first-child{background:var(--mist);text-align:left}
+.membercard .tier-table tbody th{font-weight:500;color:var(--ink);text-align:left;background:#fff}
+.membercard .tier-table .yes{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1.5px solid var(--green);color:var(--green);font-size:10px;font-weight:800;line-height:1}
+.membercard .tier-table .fee{font-weight:700;color:var(--navy);white-space:nowrap;font-size:11px}
+.membercard .tier-table .note{font-size:10px;color:var(--grey);line-height:1.25}
+.membercard .member-actions{display:flex;flex-direction:column;gap:10px;margin-top:auto;padding-top:24px}
 .hubspot-form-container{min-height:480px}
 .hubspot-form-container iframe.hs-form-iframe{display:block;width:100%;min-height:480px;border:none}
 /* fit + timeline */
@@ -212,6 +230,7 @@ footer a{color:#9fd4ec}
       <a href="#platform">Platform</a>
       <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a>
       <a href="#workstreams">Workstreams</a>
+      <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation standards</a>
       <a href="guiding-principles.html">Guiding Principles</a>
       <a href="#press">In the press</a>
       <a href="#involved" class="btn primary">Get involved</a>
@@ -495,6 +514,12 @@ footer a{color:#9fd4ec}
         </ul>
       </div>
     </div>
+    <div class="standards-callout">
+      <p>An initial draft of proposed patching standards is available at <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">standards.osera.finos.org</a></p>
+      <a href="https://standards.osera.finos.org" target="_blank" rel="noopener" aria-label="FINOS Labs — remediation standards">
+        <img src="https://raw.githubusercontent.com/finos/contrib-toolbox/master/images/badge-labs.png" alt="FINOS Labs">
+      </a>
+    </div>
   </div>
 </section>
 
@@ -548,20 +573,86 @@ footer a{color:#9fd4ec}
 <section id="involved" class="sec-soft">
   <div class="wrap">
     <div class="eyebrow">Get involved</div>
-    <h2 style="font-size:34px">Propose a project — or offer to maintain one</h2>
+    <h2 style="font-size:34px">Fund the effort or maintain projects</h2>
     <p class="lead">Open to institutions of every size and to technology firms with upstream expertise, anywhere in the world.</p>
-    <div class="forms" style="grid-template-columns:1fr;max-width:760px">
+    <div class="forms">
+      <div class="membercard">
+        <h3>Become an OSERA member</h3>
+        <div class="subhead">Member benefits</div>
+        <p>Two simple tiers and benefits for existing FINOS members</p>
+        <div class="tier-table-wrap">
+          <table class="tier-table">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Premier</th>
+                <th scope="col">General</th>
+                <th scope="col">FINOS Member</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Annual fee</th>
+                <td class="fee">$100k</td>
+                <td class="fee">$10k–$40k</td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row">Approve / sunset projects</th>
+                <td><span class="yes" aria-label="Included">✓</span></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row">Approve scope, SLAs &amp; maintainer bids</th>
+                <td><span class="yes" aria-label="Included">✓</span></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row">Governing board seat</th>
+                <td><span class="yes" aria-label="Included">✓</span></td>
+                <td class="note">1 for the whole class</td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row">Committees seat</th>
+                <td><span class="yes" aria-label="Included">✓</span></td>
+                <td class="note">1 for the whole class</td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row">Patched release access</th>
+                <td><span class="yes" aria-label="Included">✓</span></td>
+                <td><span class="yes" aria-label="Included">✓</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row">Propose new projects</th>
+                <td><span class="yes" aria-label="Included">✓</span></td>
+                <td><span class="yes" aria-label="Included">✓</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <th scope="row">Working group participation</th>
+                <td><span class="yes" aria-label="Included">✓</span></td>
+                <td><span class="yes" aria-label="Included">✓</span></td>
+                <td><span class="yes" aria-label="Included">✓</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="subhead" style="margin-top:28px">Governance</div>
+        <p style="margin-top:10px">See full <a href="https://cdn.platform.linuxfoundation.org/agreements/osera.pdf" target="_blank" rel="noopener">charter and not-for-execution participation agreement</a>. Click below to start the enrollment process.</p>
+        <div class="member-actions">
+          <a class="btn primary" href="https://enrollment.lfx.linuxfoundation.org/?project=osera" target="_blank" rel="noopener">Already a member - join now</a>
+          <a class="btn ghost" href="mailto:membership@finos.org?subject=Joining%20OSERA">Not a FINOS member? - membership@finos.org</a>
+        </div>
+      </div>
       <div class="formcard">
         <h3>Get involved</h3>
         <p style="font-size:13.5px;color:var(--grey);margin:6px 0 16px">Use the form below to propose a project for the alliance to consider maintaining, offer your firm as a tech producer, or share your interest in joining the effort. The FINOS team will follow up with next steps.</p>
         <div id="hubspot-osera-form" class="hubspot-form-container"></div>
-      </div>
-    </div>
-    <div style="margin-top:24px;background:#fff;border:1px solid var(--line);border-radius:18px;border-top:5px solid var(--gold);padding:24px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between">
-      <div style="max-width:54ch"><h3 style="font-size:18px">Just want to back it?</h3><p style="font-size:14px;color:var(--grey);margin-top:6px">Join the funding effort and back the projects you depend on — pooled, per-project, pay for what you use.</p></div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn primary" href="mailto:membership@finos.org?subject=Joining%20OSERA">Not a FINOS member? - membership@finos.org</a>
-        <a class="btn ghost" href="mailto:membersuccess@finos.org?subject=Getting%20plugged%20into%20OSERA">Already a member? - membersuccess@finos.org</a>
       </div>
     </div>
     <p style="font-size:12.5px;color:var(--grey);margin-top:14px">Form submissions route to <a href="mailto:membership@finos.org">membership@finos.org</a>. Prefer to talk first? Join the weekly Supply Chain Resiliency formation call.</p>
@@ -663,8 +754,12 @@ footer a{color:#9fd4ec}
       .hs-form { font-family: Inter, system-ui, sans-serif !important; }
       .hs-form fieldset { max-width: 100% !important; border: none !important; margin: 0 !important; padding: 0 !important; }
       .hs-form .hs-form-field { margin-bottom: 13px !important; float: none !important; width: 100% !important; }
-      .hs-form .form-columns-2 .hs-form-field { width: 100% !important; }
-      @media (min-width: 500px) { .hs-form .form-columns-2 .hs-form-field { width: 48% !important; } }
+      .hs-form .form-columns-1,
+      .hs-form .form-columns-2,
+      .hs-form .form-columns-3 { max-width: 100% !important; width: 100% !important; }
+      .hs-form .form-columns-2 .hs-form-field,
+      .hs-form .form-columns-3 .hs-form-field { width: 100% !important; float: none !important; }
+      .hs-form .hs-form-field .input { width: 100% !important; }
 
       .hs-form label, .hs-form legend, .hs-form .hs-field-desc, .hs-form .hs-richtext, .hs-form .hs-richtext p {
         color: #16222E !important; font-size: 12.5px !important; font-weight: 600 !important; line-height: 1.4 !important;
