@@ -1,0 +1,10 @@
+<!-- Copy to ~/.m2/settings.xml — do not commit credentials -->
+<settings>
+  <servers>
+    <server>
+      <id>osera-playground</id>
+      <username><!-- Nexus deploy user --></username>
+      <password><!-- Nexus deploy password or token --></password>
+    </server>
+  </servers>
+</settings>
