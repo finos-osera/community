@@ -2,8 +2,11 @@
 # End-to-end pilot pipeline: openvex → sbom → stage → sign → deploy → verify.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 SCRIPTS="$ROOT/scripts"
+RELEASE="$SCRIPTS/release"
+PUBLISH="$SCRIPTS/publish"
+SIGN="$SCRIPTS/sign"
 
 MANIFEST=""
 STAGING=""
@@ -47,7 +50,8 @@ usage: $0 --staging DIR --module-dir DIR --jar JAR --pom POM
 Generates the release manifest from git when --manifest is omitted, or when a
 deprecated releases/h2/{version}.yaml path is passed after eval "\$(build-h2.sh)".
 
-Signing is skipped by default (config/nexus-playground.env). Use --sign to enable GPG steps.
+Signing is skipped by default (config/nexus-playground.env). Use --sign to enable
+OpenPGP vendor + FINOS steps (see scripts/sign/ and signing-setup.md).
 EOF
       exit 0
       ;;
@@ -87,7 +91,7 @@ fi
 
 if [[ -z "$MANIFEST" ]]; then
   if [[ -n "$REPO_DIR" && -n "$TAG" && -n "$GROUP_ID" && -n "$ARTIFACT_ID" ]]; then
-    MANIFEST="$("$SCRIPTS/generate-release-manifest.sh" \
+    MANIFEST="$("$RELEASE/generate-release-manifest.sh" \
       --repo-dir "$REPO_DIR" \
       --tag "$TAG" \
       --group-id "$GROUP_ID" \
@@ -102,7 +106,7 @@ elif [[ ! -f "$MANIFEST" ]]; then
   exit 1
 fi
 
-# shellcheck source=lib/common.sh
+# shellcheck source=../lib/common.sh
 source "$SCRIPTS/lib/common.sh"
 load_nexus_config
 
@@ -119,16 +123,16 @@ version="$(manifest_field "$MANIFEST" '.coordinate.version')"
 sbom_tmp="$(mktemp "${TMPDIR:-/tmp}/osera-sbom.XXXXXX.json")"
 trap 'rm -f "$sbom_tmp"' EXIT
 
-"$SCRIPTS/generate-openvex.sh" --manifest "$MANIFEST"
-"$SCRIPTS/generate-sbom.sh" --mode maven --module-dir "$MODULE_DIR" --output "$sbom_tmp"
+"$RELEASE/generate-openvex.sh" --manifest "$MANIFEST"
+"$RELEASE/generate-sbom.sh" --mode maven --module-dir "$MODULE_DIR" --output "$sbom_tmp"
 
 if [[ -n "$BASELINE_JAR" ]]; then
-  "$SCRIPTS/check-bytecode.sh" --jar "$JAR" --baseline-jar "$BASELINE_JAR"
+  "$RELEASE/check-bytecode.sh" --jar "$JAR" --baseline-jar "$BASELINE_JAR"
 else
-  "$SCRIPTS/check-bytecode.sh" --jar "$JAR"
+  "$RELEASE/check-bytecode.sh" --jar "$JAR"
 fi
 
-"$SCRIPTS/stage-artifacts.sh" \
+"$PUBLISH/stage-artifacts.sh" \
   --manifest "$MANIFEST" \
   --staging "$STAGING" \
   --jar "$JAR" \
@@ -136,20 +140,20 @@ fi
   --sbom "$sbom_tmp"
 
 if ! $SKIP_SIGN; then
-  "$SCRIPTS/vendor-sign.sh" --staging "$STAGING" --artifact-id "$artifactId" --version "$version"
-  "$SCRIPTS/finos-cosign.sh" --staging "$STAGING" --artifact-id "$artifactId" --version "$version"
+  "$SIGN/vendor-sign.sh" --staging "$STAGING" --artifact-id "$artifactId" --version "$version"
+  "$SIGN/finos-cosign.sh" --staging "$STAGING" --artifact-id "$artifactId" --version "$version"
 fi
 
 if ! $SKIP_DEPLOY; then
   deploy_args=(--manifest "$MANIFEST" --staging "$STAGING")
   $DRY_RUN && deploy_args+=(--dry-run)
-  "$SCRIPTS/publish-to-nexus.sh" "${deploy_args[@]}"
+  "$PUBLISH/publish-to-nexus.sh" "${deploy_args[@]}"
 fi
 
 if ! $SKIP_VERIFY; then
   verify_args=(--manifest "$MANIFEST" --staging "$STAGING")
   $SKIP_DEPLOY && verify_args+=(--skip-nexus)
-  "$SCRIPTS/verify-publish.sh" "${verify_args[@]}"
+  "$PUBLISH/verify-publish.sh" "${verify_args[@]}"
 fi
 
 echo "pipeline complete"

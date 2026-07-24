@@ -2,8 +2,8 @@
 # Generate CycloneDX SBOM without editing backpatch repo POMs.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-# shellcheck source=lib/common.sh
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+# shellcheck source=../lib/common.sh
 source "$ROOT/scripts/lib/common.sh"
 
 MODE="maven"

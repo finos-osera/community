@@ -2,11 +2,11 @@
 # Generate release manifest YAML from git tags/commits (baseline..publish).
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 SCRIPTS="$ROOT/scripts"
-# shellcheck source=lib/common.sh
+# shellcheck source=../lib/common.sh
 source "$SCRIPTS/lib/common.sh"
-# shellcheck source=lib/generate_release_manifest.sh
+# shellcheck source=../lib/generate_release_manifest.sh
 source "$SCRIPTS/lib/generate_release_manifest.sh"
 
 REPO_DIR=""
@@ -66,7 +66,7 @@ manifest_path="$(generate_release_manifest \
 echo "wrote $manifest_path" >&2
 
 if $WITH_SIDECARS; then
-  "$SCRIPTS/generate-openvex.sh" --manifest "$manifest_path"
+  "$SCRIPTS/release/generate-openvex.sh" --manifest "$manifest_path"
 fi
 
 echo "$manifest_path"

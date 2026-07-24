@@ -2,8 +2,8 @@
 # Vendor detached GPG signatures (.asc) for staged release files.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-# shellcheck source=lib/common.sh
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+# shellcheck source=../lib/common.sh
 source "$ROOT/scripts/lib/common.sh"
 
 STAGING=""
@@ -33,21 +33,13 @@ done
 
 require_cmd gpg
 
-prefix="$STAGING/${ARTIFACT_ID}-${VERSION}"
-files=(
-  "${prefix}.jar"
-  "${prefix}.pom"
-  "${prefix}-cyclonedx.json"
-  "${prefix}.openvex.json"
-  "${prefix}-recipient-guidance.yaml"
-)
+gpg_sign_args=(--batch --yes --armor --detach-sign --local-user "$VENDOR_GPG_KEY_ID")
+if [[ -n "${VENDOR_GPG_PASSPHRASE:-}" ]]; then
+  gpg_sign_args+=(--pinentry-mode loopback --passphrase "$VENDOR_GPG_PASSPHRASE")
+fi
 
-for file in "${files[@]}"; do
-  [[ -f "$file" ]] || continue
-  gpg --batch --yes --armor --detach-sign \
-    --local-user "$VENDOR_GPG_KEY_ID" \
-    --output "${file}.asc" \
-    "$file"
+while IFS= read -r file; do
+  gpg "${gpg_sign_args[@]}" --output "${file}.asc" "$file"
   gpg --verify "${file}.asc" "$file"
   echo "vendor-signed $file"
-done
+done < <(existing_sign_targets "$STAGING" "$ARTIFACT_ID" "$VERSION")

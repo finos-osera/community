@@ -4,12 +4,12 @@
 # Uses Maven only (no ./build.sh compile — that target fails on JDK 9+).
 # Requires JDK 17; JDK 21+ cannot compile the Java-7-target h2 POM.
 #
-# When sourced via: eval "$(playground/release-pilot/scripts/build-h2.sh)"
+# When sourced via: eval "$(playground/release-pilot/scripts/release/build-h2.sh)"
 # only variable assignments are printed to stdout; logs go to stderr.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-# shellcheck source=lib/common.sh
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+# shellcheck source=../lib/common.sh
 source "$ROOT/scripts/lib/common.sh"
 
 TAG="${TAG:-v1.4.200+backpatch.001}"

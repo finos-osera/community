@@ -2,8 +2,8 @@
 # FINOS co-signatures (.asc.finos) for vendor-signed staged files.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-# shellcheck source=lib/common.sh
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+# shellcheck source=../lib/common.sh
 source "$ROOT/scripts/lib/common.sh"
 
 STAGING=""
@@ -33,17 +33,7 @@ done
 
 require_cmd gpg
 
-prefix="$STAGING/${ARTIFACT_ID}-${VERSION}"
-files=(
-  "${prefix}.jar"
-  "${prefix}.pom"
-  "${prefix}-cyclonedx.json"
-  "${prefix}.openvex.json"
-  "${prefix}-recipient-guidance.yaml"
-)
-
-for file in "${files[@]}"; do
-  [[ -f "$file" ]] || continue
+while IFS= read -r file; do
   [[ -f "${file}.asc" ]] || {
     echo "error: missing vendor signature for $file — run vendor-sign.sh first" >&2
     exit 1
@@ -55,4 +45,4 @@ for file in "${files[@]}"; do
     "$file"
   gpg --verify "${file}.asc.finos" "$file"
   echo "finos co-signed $file"
-done
+done < <(existing_sign_targets "$STAGING" "$ARTIFACT_ID" "$VERSION")

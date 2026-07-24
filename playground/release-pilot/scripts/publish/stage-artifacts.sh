@@ -2,8 +2,8 @@
 # Copy build outputs and sidecars into an operator staging directory.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-# shellcheck source=lib/common.sh
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+# shellcheck source=../lib/common.sh
 source "$ROOT/scripts/lib/common.sh"
 
 MANIFEST=""
@@ -54,7 +54,7 @@ cp "$POM_SOURCE" "$pom_dest"
 cp "$SBOM_SOURCE" "$sbom_dest"
 
 [[ -f "$openvex_src" ]] || {
-  echo "error: missing OpenVEX — run scripts/generate-openvex.sh first" >&2
+  echo "error: missing OpenVEX — run scripts/release/generate-openvex.sh first" >&2
   exit 1
 }
 cp "$openvex_src" "$openvex_dest"

@@ -2,8 +2,8 @@
 # Generate OpenVEX JSON and recipient-guidance.yaml from a release manifest.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-# shellcheck source=lib/common.sh
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+# shellcheck source=../lib/common.sh
 source "$ROOT/scripts/lib/common.sh"
 
 MANIFEST=""

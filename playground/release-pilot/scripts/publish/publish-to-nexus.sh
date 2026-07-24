@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # Upload staged artifacts to Nexus via mvn deploy:deploy-file.
+# OpenPGP sidecars (.asc / .asc.finos) are PUT next to each file (Maven Central
+# layout). Classifier-based asc uploads are rejected by Nexus as invalid mavenPath.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-# shellcheck source=lib/common.sh
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+# shellcheck source=../lib/common.sh
 source "$ROOT/scripts/lib/common.sh"
 load_nexus_config
 
@@ -19,6 +21,8 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       echo "usage: $0 --manifest PATH --staging DIR [--dry-run]"
       echo "env: NEXUS_URL, REPOSITORY_ID (defaults from config/nexus-playground.env)"
+      echo "     NEXUS_USERNAME, NEXUS_PASSWORD (optional; else ~/.m2/settings.xml)"
+      echo "When OSERA_SKIP_SIGN=0, requires .asc + .asc.finos and uploads them as siblings."
       exit 0
       ;;
     *) usage "$0 --manifest PATH --staging DIR [--dry-run]" ;;
@@ -35,15 +39,72 @@ prefix="$STAGING/${artifactId}-${version}"
 pom_file="${prefix}.pom"
 jar_file="${prefix}.jar"
 
+require_signatures=true
+if skip_sign_by_default; then
+  require_signatures=false
+fi
+
+if $require_signatures; then
+  while IFS= read -r file; do
+    require_signature_sidecars "$file"
+  done < <(existing_sign_targets "$STAGING" "$artifactId" "$version")
+fi
+
+# Resolve deploy credentials for signature PUTs (Maven uses settings.xml itself).
+# load_nexus_credentials is provided by scripts/lib/common.sh.
+
+nexus_version_url() {
+  nexus_gav_base_url "$groupId" "$artifactId" "$version"
+}
+
+# PUT a file into the GAV directory using the exact basename (e.g. foo.jar.asc).
+put_nexus_file() {
+  local local_file="$1"
+  local remote_name="$2"
+  local url
+  url="$(nexus_version_url)/${remote_name}"
+
+  if $DRY_RUN; then
+    echo "dry-run: PUT $url ← $local_file"
+    return 0
+  fi
+
+  require_cmd curl
+  echo "uploading signature sidecar: $remote_name"
+  curl -sS -L --fail-with-body \
+    --user "${NEXUS_USERNAME}:${NEXUS_PASSWORD}" \
+    -H "Content-Type: application/octet-stream" \
+    --upload-file "$local_file" \
+    "$url"
+  echo
+}
+
+put_signature_sidecars() {
+  local file="$1"
+  local base
+  base="$(basename "$file")"
+
+  if [[ -f "${file}.asc" ]]; then
+    put_nexus_file "${file}.asc" "${base}.asc"
+  elif $require_signatures; then
+    echo "error: missing vendor signature: ${file}.asc" >&2
+    exit 1
+  fi
+
+  if [[ -f "${file}.asc.finos" ]]; then
+    put_nexus_file "${file}.asc.finos" "${base}.asc.finos"
+  elif $require_signatures; then
+    echo "error: missing FINOS co-signature: ${file}.asc.finos" >&2
+    exit 1
+  fi
+}
+
 # Sidecar / attachment deploy — never generate or redeploy a POM (avoids Nexus 409).
 deploy_attachment() {
   local file="$1" packaging="$2" classifier="${3:-}"
   local -a extra=(-DgeneratePom=false)
   if [[ -n "$classifier" ]]; then
     extra+=(-Dclassifier="$classifier")
-  fi
-  if [[ -f "${file}.asc" && -f "${file}.asc.finos" ]]; then
-    extra+=(-Dfiles="${file}.asc,${file}.asc.finos" -Dtypes=asc,asc -Dclassifiers=vendor,finos)
   fi
 
   if $DRY_RUN; then
@@ -65,9 +126,6 @@ deploy_attachment() {
 # Primary JAR + POM in a single deploy (never deploy pom twice).
 deploy_primary() {
   local -a extra=(-DpomFile="$pom_file" -DgeneratePom=false)
-  if [[ -f "${jar_file}.asc" && -f "${jar_file}.asc.finos" ]]; then
-    extra+=(-Dfiles="${jar_file}.asc,${jar_file}.asc.finos" -Dtypes=asc,asc -Dclassifiers=vendor,finos)
-  fi
 
   if $DRY_RUN; then
     echo "dry-run: mvn deploy:deploy-file -Dfile=$jar_file -DpomFile=$pom_file -Dpackaging=jar -DgeneratePom=false"
@@ -88,18 +146,24 @@ deploy_primary() {
 [[ -f "$jar_file" ]] || { echo "error: missing $jar_file" >&2; exit 1; }
 [[ -f "$pom_file" ]] || { echo "error: missing $pom_file" >&2; exit 1; }
 
-deploy_primary
-deploy_attachment "${prefix}-cyclonedx.json" json cyclonedx
-deploy_attachment "${prefix}.openvex.json" json openvex
-[[ -f "${prefix}-recipient-guidance.yaml" ]] && \
-  deploy_attachment "${prefix}-recipient-guidance.yaml" yaml recipient-guidance
+if $require_signatures || [[ -f "${jar_file}.asc" ]]; then
+  load_nexus_credentials
+fi
 
-for ext in asc asc.finos; do
-  [[ -f "${prefix}-cyclonedx.json.${ext}" ]] && \
-    deploy_attachment "${prefix}-cyclonedx.json.${ext}" "$ext" cyclonedx
-  [[ -f "${prefix}.openvex.json.${ext}" ]] && \
-    deploy_attachment "${prefix}.openvex.json.${ext}" "$ext" openvex
-done
+deploy_primary
+put_signature_sidecars "$jar_file"
+put_signature_sidecars "$pom_file"
+
+deploy_attachment "${prefix}-cyclonedx.json" json cyclonedx
+put_signature_sidecars "${prefix}-cyclonedx.json"
+
+deploy_attachment "${prefix}.openvex.json" json openvex
+put_signature_sidecars "${prefix}.openvex.json"
+
+if [[ -f "${prefix}-recipient-guidance.yaml" ]]; then
+  deploy_attachment "${prefix}-recipient-guidance.yaml" yaml recipient-guidance
+  put_signature_sidecars "${prefix}-recipient-guidance.yaml"
+fi
 
 echo "publish complete for ${groupId}:${artifactId}:${version}"
 echo "nexus: ${NEXUS_URL}"

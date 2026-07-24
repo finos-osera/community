@@ -11,7 +11,7 @@ Operator playbook for building, documenting, and publishing backpatch releases. 
 | FORK-003 | Baseline Tags | [fork-003](https://standards.osera.finos.org/standards/fork-003-baseline-tags/) |
 | EVD-001 | Change and Test Surface | [evd-001](https://standards.osera.finos.org/standards/evd-001-change-and-test-surface/) |
 
-End-to-end orchestrator: `release-pilot/scripts/publish-staging.sh` (after `build-h2.sh` for the h2 pilot). Deploy defaults: [`release-pilot/config/nexus-playground.env`](release-pilot/config/nexus-playground.env).
+End-to-end orchestrator: `release-pilot/scripts/publish/publish-staging.sh` (after `scripts/release/build-h2.sh` for the h2 pilot). Deploy defaults: [`release-pilot/config/nexus-playground.env`](release-pilot/config/nexus-playground.env).
 
 ---
 
@@ -105,7 +105,7 @@ End-to-end orchestrator: `release-pilot/scripts/publish-staging.sh` (after `buil
 
 ### Signing (proposed — not in OSERA catalog)
 
-**Status: deferred.** Vendor GPG + FINOS co-sign: [backpatch-signing.md](backpatch-signing.md). Scripts exist (`vendor-sign.sh`, `finos-cosign.sh`) but `OSERA_SKIP_SIGN=1` skips them in playground.
+**Status: implemented in pilot, off by default.** Vendor OpenPGP + FINOS co-sign: [backpatch-signing.md](backpatch-signing.md). Ops + keygen: [release-pilot/signing-setup.md](release-pilot/signing-setup.md). `OSERA_SKIP_SIGN=1` skips sign/deploy/verify signature checks unless `--sign` / `OSERA_SKIP_SIGN=0`.
 
 ---
 
@@ -115,16 +115,17 @@ End-to-end orchestrator: `release-pilot/scripts/publish-staging.sh` (after `buil
 | ------- | ----- |
 | URL | `https://finos-osera.repo.sonatype.app/repository/playground/` |
 | Maven server id | `osera-playground` |
-| Signatures | Skipped (`OSERA_SKIP_SIGN=1`) |
+| Signatures | Skipped by default (`OSERA_SKIP_SIGN=1`) |
 
 ---
 
 ## Pilot docs
 
 - [Playground publish test](release-pilot/nexus-playground.md)
+- [Signing setup](release-pilot/signing-setup.md)
 - [H2 walkthrough](release-pilot/h2-pilot.md)
 - [Artifact layout](release-pilot/artifact-layout.md)
 
 ---
 
-*2026-07-23 — standards mapped to release-pilot; h2 playground publish validated.*
+*2026-07-24 — standards mapped to release-pilot; signing under scripts/sign.*

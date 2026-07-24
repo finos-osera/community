@@ -16,6 +16,13 @@ yarn-error.log*
 .env.*
 !.env.example
 
+# Release pilot staging output
+playground/release-pilot/staging/
+/tmp/osera-staging-*
+
+# Release pilot playground OpenPGP material (local keygen output)
+playground/release-pilot/signing/
+
 # OS
 .DS_Store
 Thumbs.db

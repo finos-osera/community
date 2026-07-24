@@ -6,17 +6,17 @@ First live publish target for release-pilot: the `playground` hosted repository 
 **Browse UI:** [finos-osera.repo.sonatype.app → playground](https://finos-osera.repo.sonatype.app/#browse/browse:playground)  
 **Maven** `repositoryId`**:** `osera-playground` (must match `~/.m2/settings.xml`)
 
-Defaults live in `[config/nexus-playground.env](config/nexus-playground.env)`. Scripts load this automatically.
+Defaults live in [`config/nexus-playground.env`](config/nexus-playground.env). Scripts load this automatically.
 
 ---
 
 ## Prerequisites
 
 1. **Nexus credentials** — deploy user/token with write access to `playground`.
-2. `~/.m2/settings.xml` — copy from `[templates/settings.xml.template](templates/settings.xml.template)`; set `<id>osera-playground</id>` and credentials.
-3. **Tooling** — `java`, `mvn`, `git`, `jq` (optional: `yq` or `python3`+PyYAML for manifest YAML; `cyclonedx` CLI for SBOM validation).
+2. `~/.m2/settings.xml` — copy from [`templates/settings.xml.template`](templates/settings.xml.template); set `<id>osera-playground</id>` and credentials.
+3. **Tooling** — `java`, `mvn`, `git`, `jq` (optional: `yq` or `python3`+PyYAML for manifest YAML; `cyclonedx` CLI for SBOM validation; `gpg` when signing).
 
-**Signing:** skipped for this phase (`OSERA_SKIP_SIGN=1` in config). Do not pass `--sign`.
+**Signing:** skipped by default (`OSERA_SKIP_SIGN=1`). To exercise signatures, see [signing-setup.md](signing-setup.md).
 
 ---
 
@@ -28,8 +28,8 @@ From repo root:
 PILOT=playground/release-pilot
 STAGING=/tmp/osera-staging-h2
 
-eval "$($PILOT/scripts/build-h2.sh)"
-$PILOT/scripts/publish-staging.sh \
+eval "$($PILOT/scripts/release/build-h2.sh)"
+$PILOT/scripts/publish/publish-staging.sh \
   --repo-dir "$repo_dir" --tag "$tag" \
   --group-id com.h2database --artifact-id h2 \
   --staging "$STAGING" \
@@ -39,7 +39,7 @@ $PILOT/scripts/publish-staging.sh \
 Dry run (no upload):
 
 ```bash
-$PILOT/scripts/publish-staging.sh \
+$PILOT/scripts/publish/publish-staging.sh \
   --repo-dir "$repo_dir" --tag "$tag" \
   --group-id com.h2database --artifact-id h2 \
   --staging "$STAGING" \
@@ -51,8 +51,8 @@ Deploy only (after staging; manifest at `/tmp/osera-releases/h2/1.4.200+backpatc
 
 ```bash
 MANIFEST=/tmp/osera-releases/h2/1.4.200+backpatch.001.yaml
-$PILOT/scripts/publish-to-nexus.sh --manifest "$MANIFEST" --staging "$STAGING"
-$PILOT/scripts/verify-publish.sh --manifest "$MANIFEST" --staging "$STAGING"
+$PILOT/scripts/publish/publish-to-nexus.sh --manifest "$MANIFEST" --staging "$STAGING"
+$PILOT/scripts/publish/verify-publish.sh --manifest "$MANIFEST" --staging "$STAGING"
 ```
 
 ---
@@ -66,7 +66,7 @@ After a successful publish:
 | ---------- | -------------------------------------------------------------- |
 | GAV        | `com.h2database:h2:1.4.200+backpatch.001`                      |
 | Sidecars   | `-cyclonedx.json`, `.openvex.json`, `-recipient-guidance.yaml` |
-| Signatures | none (playground test phase)                                   |
+| Signatures | none unless `OSERA_SKIP_SIGN=0` / `--sign`                     |
 
 
 Resolve check:
@@ -86,7 +86,7 @@ The `playground` repo rejects overwriting an existing GAV ([REL-003](https://sta
 
 **Fix:** in Nexus UI, delete the **entire version folder** (not just individual files), then re-run publish. Or bump `+backpatch.NNN` in the manifest/tag.
 
-The publish script deploys **JAR + POM once** (`-DpomFile` + `-DgeneratePom=false`). Sidecars use `-DgeneratePom=false` so Maven does not attempt a second POM upload.
+The publish script deploys **JAR + POM once** (`-DpomFile` + `-DgeneratePom=false`). Sidecars use `-DgeneratePom=false` so Maven does not attempt a second POM upload. OpenPGP files are uploaded as **siblings** (`*.jar.asc`, `*.jar.asc.finos`) via HTTP PUT — not as Maven classifiers (`*-vendor.asc`), which Nexus rejects (`Invalid mavenPath`).
 
 ---
 
@@ -102,4 +102,4 @@ Step-by-step walkthrough: [h2-pilot.md](h2-pilot.md)
 
 ---
 
-*2026-07-23 — playground repo; signing deferred to a later phase.*
+*2026-07-24 — script paths under release/publish/sign.*

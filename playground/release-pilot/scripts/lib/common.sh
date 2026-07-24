@@ -101,17 +101,65 @@ usage() {
 }
 
 load_nexus_config() {
-  local root
+  local root preset_skip preset_url preset_repo
   root="$(release_pilot_root)"
+  # Preserve caller exports — config file supplies defaults only.
+  preset_skip="${OSERA_SKIP_SIGN-}"
+  preset_url="${NEXUS_URL-}"
+  preset_repo="${REPOSITORY_ID-}"
   if [[ -f "$root/config/nexus-playground.env" ]]; then
     # shellcheck disable=SC1090
     set -a
     source "$root/config/nexus-playground.env"
     set +a
   fi
+  [[ -n "$preset_skip" ]] && OSERA_SKIP_SIGN="$preset_skip"
+  [[ -n "$preset_url" ]] && NEXUS_URL="$preset_url"
+  [[ -n "$preset_repo" ]] && REPOSITORY_ID="$preset_repo"
   export NEXUS_URL="${NEXUS_URL:-https://finos-osera.repo.sonatype.app/repository/playground/}"
   export REPOSITORY_ID="${REPOSITORY_ID:-osera-playground}"
   export OSERA_SKIP_SIGN="${OSERA_SKIP_SIGN:-1}"
+}
+
+# Populate NEXUS_USERNAME / NEXUS_PASSWORD from env or ~/.m2/settings.xml.
+load_nexus_credentials() {
+  if [[ -n "${NEXUS_USERNAME:-}" && -n "${NEXUS_PASSWORD:-}" ]]; then
+    return 0
+  fi
+  local settings="${M2_SETTINGS:-$HOME/.m2/settings.xml}"
+  [[ -f "$settings" ]] || {
+    echo "error: set NEXUS_USERNAME/NEXUS_PASSWORD or provide $settings" >&2
+    return 1
+  }
+  require_cmd python3
+  eval "$(
+    REPOSITORY_ID="$REPOSITORY_ID" SETTINGS="$settings" python3 - <<'PY'
+import os
+import shlex
+import xml.etree.ElementTree as ET
+
+settings = os.environ["SETTINGS"]
+repo_id = os.environ["REPOSITORY_ID"]
+root = ET.parse(settings).getroot()
+for server in root.findall("servers/server"):
+    if (server.findtext("id") or "") != repo_id:
+        continue
+    user = server.findtext("username") or ""
+    password = server.findtext("password") or ""
+    if not user or not password:
+        raise SystemExit(f"error: empty credentials for <id>{repo_id}</id> in {settings}")
+    print(f"export NEXUS_USERNAME={shlex.quote(user)}")
+    print(f"export NEXUS_PASSWORD={shlex.quote(password)}")
+    raise SystemExit(0)
+raise SystemExit(f"error: no <server><id>{repo_id}</id> in {settings}")
+PY
+  )"
+}
+
+nexus_gav_base_url() {
+  local group_id="$1" artifact_id="$2" version="$3"
+  local group_path="${group_id//.//}"
+  printf '%s%s/%s/%s' "${NEXUS_URL%/}/" "$group_path" "$artifact_id" "$version"
 }
 
 skip_sign_by_default() {
@@ -119,6 +167,38 @@ skip_sign_by_default() {
     1|true|yes|YES|on|ON) return 0 ;;
     *) return 1 ;;
   esac
+}
+
+# Print staged artifact paths that must receive vendor + FINOS detached signatures.
+staged_sign_targets() {
+  local staging="$1" artifact_id="$2" version="$3"
+  local prefix="$staging/${artifact_id}-${version}"
+  printf '%s\n' \
+    "${prefix}.jar" \
+    "${prefix}.pom" \
+    "${prefix}-cyclonedx.json" \
+    "${prefix}.openvex.json" \
+    "${prefix}-recipient-guidance.yaml"
+}
+
+# Echo existing staged files that require signatures (skip missing optional sidecars).
+existing_sign_targets() {
+  local staging="$1" artifact_id="$2" version="$3" file
+  while IFS= read -r file; do
+    [[ -f "$file" ]] && printf '%s\n' "$file"
+  done < <(staged_sign_targets "$staging" "$artifact_id" "$version")
+}
+
+require_signature_sidecars() {
+  local file="$1"
+  [[ -f "${file}.asc" ]] || {
+    echo "error: missing vendor signature: ${file}.asc" >&2
+    return 1
+  }
+  [[ -f "${file}.asc.finos" ]] || {
+    echo "error: missing FINOS co-signature: ${file}.asc.finos" >&2
+    return 1
+  }
 }
 
 java_major_version() {

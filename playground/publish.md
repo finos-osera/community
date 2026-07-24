@@ -13,7 +13,7 @@ How backpatch releases reach the consortium Nexus hub: build evidence, supply-ch
 
 Tag-driven releases: `v<UPSTREAM>+backpatch.NNN` ([REL-003](https://standards.osera.finos.org/standards/rel-003-version-metadata/)). `.baseline` tags are not published ([FORK-003](https://standards.osera.finos.org/standards/fork-003-baseline-tags/)).
 
-Each coordinate includes JAR, POM, CycloneDX SBOM, and OpenVEX ([FEED-001](https://standards.osera.finos.org/standards/feed-001-openvex-cyclonedx/)). **Signing is deferred** for the current playground test; see [backpatch-signing.md](backpatch-signing.md) for the planned model.
+Each coordinate includes JAR, POM, CycloneDX SBOM, and OpenVEX ([FEED-001](https://standards.osera.finos.org/standards/feed-001-openvex-cyclonedx/)). Signing is optional in playground (`OSERA_SKIP_SIGN=1` by default); proposal: [backpatch-signing.md](backpatch-signing.md); ops: [release-pilot/signing-setup.md](release-pilot/signing-setup.md).
 
 Tooling: [release-pilot/](release-pilot/README.md) (outside `finos-osera/backpatch-*` forks).
 
@@ -26,7 +26,8 @@ Tooling: [release-pilot/](release-pilot/README.md) (outside `finos-osera/backpat
 | Principles (REL, FEED) | [release-process.md](release-process.md) |
 | **Playground publish test** | [release-pilot/nexus-playground.md](release-pilot/nexus-playground.md) |
 | Pilot scripts | [release-pilot/README.md](release-pilot/README.md) |
-| Signing (later) | [backpatch-signing.md](backpatch-signing.md) |
+| Signing (proposal) | [backpatch-signing.md](backpatch-signing.md) |
+| Signing (ops) | [release-pilot/signing-setup.md](release-pilot/signing-setup.md) |
 | Infrastructure | [infra-setup.md](infra-setup.md) · [infra-budget.md](infra-budget.md) |
 
 ---
@@ -37,8 +38,8 @@ Configure `~/.m2/settings.xml` from [release-pilot/templates/settings.xml.templa
 
 ```bash
 PILOT=playground/release-pilot
-eval "$($PILOT/scripts/build-h2.sh)"
-$PILOT/scripts/publish-staging.sh \
+eval "$($PILOT/scripts/release/build-h2.sh)"
+$PILOT/scripts/publish/publish-staging.sh \
   --repo-dir "$repo_dir" --tag "$tag" \
   --group-id com.h2database --artifact-id h2 \
   --staging /tmp/osera-staging-h2 \
@@ -49,4 +50,4 @@ Full checklist: [release-pilot/nexus-playground.md](release-pilot/nexus-playgrou
 
 ---
 
-*2026-07-23 — playground test target; unsigned artifacts for now.*
+*2026-07-24 — playground test target; signing optional via release-pilot.*
