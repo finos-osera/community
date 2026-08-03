@@ -13,7 +13,7 @@ For coordinate `groupId:artifactId:version` (example: `com.h2database:h2:1.4.200
 
 **Version metadata** ([REL-003](https://standards.osera.finos.org/standards/rel-003-version-metadata/)): `<UPSTREAM>+backpatch.NNN`. Increment `NNN` to republish — never overwrite.
 
-**Multi-module repos:** each published module gets its own coordinate row.
+**Multi-module repos:** each published module gets its own coordinate row (Spring: one GAV per `spring-*` plus `spring-framework-bom`). POM-only packaging is supported for BOMs (`--packaging pom`).
 
 **Staging:** `scripts/publish/stage-artifacts.sh` copies files into an operator directory outside backpatch forks. Nothing supply-chain-related is committed into `finos-osera/backpatch-*`.
 

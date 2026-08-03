@@ -16,6 +16,38 @@ require_cmd() {
   }
 }
 
+# True when DIR is a usable git work tree (rejects empty/husk .git leftovers).
+git_worktree_ok() {
+  local dir="$1"
+  [[ -d "$dir/.git" ]] || return 1
+  git -C "$dir" rev-parse --is-inside-work-tree >/dev/null 2>&1
+}
+
+# Clone REPO_URL into WORK_DIR, or re-clone when WORK_DIR has a broken .git husk.
+# Optional 3rd arg is a log label (default: ensure-git-clone).
+ensure_git_clone() {
+  local work_dir="$1" repo_url="$2" label="${3:-ensure-git-clone}"
+
+  require_cmd git
+
+  if git_worktree_ok "$work_dir"; then
+    return 0
+  fi
+
+  if [[ -e "$work_dir" ]]; then
+    echo "${label}: ${work_dir} is not a valid git work tree — removing and re-cloning" >&2
+    rm -rf "$work_dir"
+  fi
+
+  echo "${label}: cloning ${repo_url} → ${work_dir}" >&2
+  git clone "$repo_url" "$work_dir" >&2
+
+  git_worktree_ok "$work_dir" || {
+    echo "error: clone succeeded but ${work_dir} is still not a valid git work tree" >&2
+    return 1
+  }
+}
+
 manifest_to_json() {
   local manifest="$1"
   yaml_to_json "$manifest"
@@ -170,11 +202,14 @@ skip_sign_by_default() {
 }
 
 # Print staged artifact paths that must receive vendor + FINOS detached signatures.
+# packaging: jar (default) | pom (BOM / pom-only; no .jar target)
 staged_sign_targets() {
-  local staging="$1" artifact_id="$2" version="$3"
+  local staging="$1" artifact_id="$2" version="$3" packaging="${4:-jar}"
   local prefix="$staging/${artifact_id}-${version}"
+  if [[ "$packaging" == "jar" ]]; then
+    printf '%s\n' "${prefix}.jar"
+  fi
   printf '%s\n' \
-    "${prefix}.jar" \
     "${prefix}.pom" \
     "${prefix}-cyclonedx.json" \
     "${prefix}.openvex.json" \
@@ -183,10 +218,10 @@ staged_sign_targets() {
 
 # Echo existing staged files that require signatures (skip missing optional sidecars).
 existing_sign_targets() {
-  local staging="$1" artifact_id="$2" version="$3" file
+  local staging="$1" artifact_id="$2" version="$3" packaging="${4:-jar}" file
   while IFS= read -r file; do
     [[ -f "$file" ]] && printf '%s\n' "$file"
-  done < <(staged_sign_targets "$staging" "$artifact_id" "$version")
+  done < <(staged_sign_targets "$staging" "$artifact_id" "$version" "$packaging")
 }
 
 require_signature_sidecars() {
@@ -251,6 +286,85 @@ ensure_h2_java_home() {
   echo "action: install JDK 17, then run:" >&2
   echo "  export JAVA_HOME=\$(/usr/libexec/java_home -v 17)" >&2
   echo "  brew install openjdk@17   # if missing on macOS" >&2
+  return 1
+}
+
+# Accept candidate JAVA_HOME only when its major version is in the allow-list.
+# macOS /usr/libexec/java_home -v 1.8 can return a newer JDK when 8 is missing.
+spring_java_home_usable() {
+  local home="$1" major
+  [[ -x "${home}/bin/java" ]] || return 1
+  major="$(java_major_version "$home")"
+  case "$major" in
+    8|11|17) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# backpatch-spring-framework 5.3.x: Gradle 7.5.1 needs a JDK ≤ 17 to *run*.
+# Prefer 8 (.sdkmanrc), then 11, then 17. JDK 17 uses spring-jdk-compat.init.gradle.
+ensure_spring_java_home() {
+  local major candidate homebrew_prefix="/opt/homebrew" version brew_pkg
+
+  if [[ -n "${JAVA_HOME:-}" ]] && spring_java_home_usable "$JAVA_HOME"; then
+    major="$(java_major_version "$JAVA_HOME")"
+    echo "java: using JAVA_HOME=${JAVA_HOME} (JDK ${major} for backpatch-spring-framework)" >&2
+    return 0
+  fi
+
+  if [[ -n "${JAVA_HOME:-}" && -x "${JAVA_HOME}/bin/java" ]]; then
+    major="$(java_major_version "$JAVA_HOME")"
+    echo "warn: JAVA_HOME=${JAVA_HOME} is JDK ${major}; Gradle 7.5.1 needs JDK 8/11/17" >&2
+  else
+    echo "java: selecting JDK 8/11/17 for backpatch-spring-framework…" >&2
+  fi
+
+  if [[ -x /usr/libexec/java_home ]]; then
+    for version in 1.8 11 17; do
+      candidate="$(/usr/libexec/java_home -v "$version" 2>/dev/null || true)"
+      if spring_java_home_usable "$candidate"; then
+        major="$(java_major_version "$candidate")"
+        # Reject false matches (e.g. -v 1.8 → JDK 23 when 8 is not installed).
+        case "$version" in
+          1.8) [[ "$major" == "8" ]] || continue ;;
+          11) [[ "$major" == "11" ]] || continue ;;
+          17) [[ "$major" == "17" ]] || continue ;;
+        esac
+        export JAVA_HOME="$candidate"
+        echo "java: using JAVA_HOME=${JAVA_HOME} (JDK ${major} via /usr/libexec/java_home -v ${version})" >&2
+        return 0
+      fi
+    done
+  fi
+
+  if [[ ! -d "$homebrew_prefix/opt" && -d /usr/local/opt ]]; then
+    homebrew_prefix="/usr/local"
+  fi
+  for brew_pkg in openjdk@8 openjdk@11 openjdk@17; do
+    candidate="${homebrew_prefix}/opt/${brew_pkg}/libexec/openjdk.jdk/Contents/Home"
+    if spring_java_home_usable "$candidate"; then
+      export JAVA_HOME="$candidate"
+      echo "java: using JAVA_HOME=${JAVA_HOME} (via Homebrew ${brew_pkg})" >&2
+      return 0
+    fi
+  done
+
+  # Homebrew Cellar path (versioned) when the opt symlink is missing.
+  for candidate in \
+    "${homebrew_prefix}"/Cellar/openjdk@17/*/libexec/openjdk.jdk/Contents/Home \
+    "${homebrew_prefix}"/Cellar/openjdk@11/*/libexec/openjdk.jdk/Contents/Home \
+    "${homebrew_prefix}"/Cellar/openjdk@8/*/libexec/openjdk.jdk/Contents/Home; do
+    if spring_java_home_usable "$candidate"; then
+      export JAVA_HOME="$candidate"
+      echo "java: using JAVA_HOME=${JAVA_HOME} (via Homebrew Cellar)" >&2
+      return 0
+    fi
+  done
+
+  echo "error: JDK 8/11/17 is required to build backpatch-spring-framework (Gradle 7.5.1 cannot run on JDK 21+)." >&2
+  echo "action: install JDK 17, then run:" >&2
+  echo "  brew install openjdk@17" >&2
+  echo "  export JAVA_HOME=\$(/usr/libexec/java_home -v 17)" >&2
   return 1
 }
 

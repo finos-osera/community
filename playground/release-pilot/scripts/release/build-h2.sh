@@ -44,10 +44,7 @@ ensure_h2_java_home
 
 echo "build-h2: tag=${TAG} work_dir=${WORK_DIR}" >&2
 
-if [[ ! -d "$WORK_DIR/.git" ]]; then
-  echo "build-h2: cloning ${REPO_URL} → ${WORK_DIR}" >&2
-  git clone "$REPO_URL" "$WORK_DIR" >&2
-fi
+ensure_git_clone "$WORK_DIR" "$REPO_URL" "build-h2"
 
 echo "build-h2: fetching tags and checking out ${TAG}" >&2
 git -C "$WORK_DIR" fetch --tags >&2

@@ -14,7 +14,7 @@ Defaults live in [`config/nexus-playground.env`](config/nexus-playground.env). S
 
 1. **Nexus credentials** — deploy user/token with write access to `playground`.
 2. `~/.m2/settings.xml` — copy from [`templates/settings.xml.template`](templates/settings.xml.template); set `<id>osera-playground</id>` and credentials.
-3. **Tooling** — `java`, `mvn`, `git`, `jq` (optional: `yq` or `python3`+PyYAML for manifest YAML; `cyclonedx` CLI for SBOM validation; `gpg` when signing).
+3. **Tooling** — `java`, `mvn`, `git`, `jq` (optional: `yq` or `python3`+PyYAML for manifest YAML; `cyclonedx` CLI for SBOM validation; `gpg` when signing). Spring builds use the repo’s `./gradlew` (no system Gradle required).
 
 **Signing:** skipped by default (`OSERA_SKIP_SIGN=1`). To exercise signatures, see [signing-setup.md](signing-setup.md).
 
@@ -34,6 +34,21 @@ $PILOT/scripts/publish/publish-staging.sh \
   --group-id com.h2database --artifact-id h2 \
   --staging "$STAGING" \
   --module-dir "$module_dir" --jar "$jar" --pom "$pom"
+```
+
+## Publish test (Spring Framework pilot)
+
+Publishes all `org.springframework:spring-*` modules plus `spring-framework-bom` for tag `v5.3.39+backpatch.001`:
+
+```bash
+PILOT=playground/release-pilot
+STAGING=/tmp/osera-staging-spring
+
+eval "$($PILOT/scripts/release/build-spring.sh)"
+$PILOT/scripts/publish/publish-spring-staging.sh \
+  --repo-dir "$repo_dir" --tag "$tag" \
+  --modules-file "$modules_file" \
+  --staging "$STAGING"
 ```
 
 Dry run (no upload):
@@ -59,7 +74,7 @@ $PILOT/scripts/publish/verify-publish.sh --manifest "$MANIFEST" --staging "$STAG
 
 ## Expected coordinate
 
-After a successful publish:
+After a successful **h2** publish:
 
 
 | Field      | Value                                                          |
@@ -69,7 +84,9 @@ After a successful publish:
 | Signatures | none unless `OSERA_SKIP_SIGN=0` / `--sign`                     |
 
 
-Resolve check:
+After a successful **Spring** publish: one GAV per module under `org.springframework` at `5.3.39+backpatch.001` (e.g. `spring-webmvc`, `spring-framework-bom`).
+
+Resolve check (h2):
 
 ```bash
 mvn dependency:get \
@@ -86,7 +103,7 @@ The `playground` repo rejects overwriting an existing GAV ([REL-003](https://sta
 
 **Fix:** in Nexus UI, delete the **entire version folder** (not just individual files), then re-run publish. Or bump `+backpatch.NNN` in the manifest/tag.
 
-The publish script deploys **JAR + POM once** (`-DpomFile` + `-DgeneratePom=false`). Sidecars use `-DgeneratePom=false` so Maven does not attempt a second POM upload. OpenPGP files are uploaded as **siblings** (`*.jar.asc`, `*.jar.asc.finos`) via HTTP PUT — not as Maven classifiers (`*-vendor.asc`), which Nexus rejects (`Invalid mavenPath`).
+The publish script deploys **JAR + POM once** (`-DpomFile` + `-DgeneratePom=false`), or **POM-only** for BOMs (`--packaging pom`). Sidecars use `-DgeneratePom=false` so Maven does not attempt a second POM upload. OpenPGP files are uploaded as **siblings** (`*.jar.asc`, `*.jar.asc.finos`) via HTTP PUT — not as Maven classifiers (`*-vendor.asc`), which Nexus rejects (`Invalid mavenPath`).
 
 ---
 
@@ -98,8 +115,8 @@ export REPOSITORY_ID=osera-playground
 export OSERA_SKIP_SIGN=1
 ```
 
-Step-by-step walkthrough: [h2-pilot.md](h2-pilot.md)
+Step-by-step: [h2-pilot.md](h2-pilot.md) · [spring-pilot.md](spring-pilot.md)
 
 ---
 
-*2026-07-24 — script paths under release/publish/sign.*
+*2026-08-03 — Spring Gradle multi-module publish path.*

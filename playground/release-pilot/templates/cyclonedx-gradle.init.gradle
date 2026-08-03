@@ -1,0 +1,28 @@
+// CycloneDX init script for release-pilot Gradle builds (no fork edits).
+// Applied via: ./gradlew -I templates/cyclonedx-gradle.init.gradle :<module>:cyclonedxBom
+initscript {
+	repositories {
+		mavenCentral()
+		gradlePluginPortal()
+	}
+	dependencies {
+		classpath "org.cyclonedx:cyclonedx-gradle-plugin:1.8.2"
+	}
+}
+
+allprojects { project ->
+	project.afterEvaluate {
+		def hasJava = project.plugins.hasPlugin("java") ||
+			project.plugins.hasPlugin("java-library") ||
+			project.plugins.hasPlugin("java-platform")
+		if (!hasJava) {
+			return
+		}
+		project.apply plugin: org.cyclonedx.gradle.CycloneDxPlugin
+		project.tasks.matching { it.name == "cyclonedxBom" }.configureEach {
+			outputName = "bom"
+			outputFormat = "json"
+			destination = project.file("${project.buildDir}/reports")
+		}
+	}
+}

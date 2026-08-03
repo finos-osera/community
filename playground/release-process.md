@@ -11,7 +11,7 @@ Operator playbook for building, documenting, and publishing backpatch releases. 
 | FORK-003 | Baseline Tags | [fork-003](https://standards.osera.finos.org/standards/fork-003-baseline-tags/) |
 | EVD-001 | Change and Test Surface | [evd-001](https://standards.osera.finos.org/standards/evd-001-change-and-test-surface/) |
 
-End-to-end orchestrator: `release-pilot/scripts/publish/publish-staging.sh` (after `scripts/release/build-h2.sh` for the h2 pilot). Deploy defaults: [`release-pilot/config/nexus-playground.env`](release-pilot/config/nexus-playground.env).
+End-to-end orchestrators: `release-pilot/scripts/publish/publish-staging.sh` (h2) and `publish-spring-staging.sh` (Spring). Deploy defaults: [`release-pilot/config/nexus-playground.env`](release-pilot/config/nexus-playground.env).
 
 ---
 
@@ -19,16 +19,16 @@ End-to-end orchestrator: `release-pilot/scripts/publish/publish-staging.sh` (aft
 
 ### [REL-001](https://standards.osera.finos.org/standards/rel-001-build-process/) Provider Build Process
 
-**Status: partially implemented** (h2 pilot only).
+**Status: partially implemented** (h2 + Spring pilots).
 
 | Requirement | Pilot behavior |
 | ----------- | -------------- |
-| Reproducible build from publish tag | `build-h2.sh` clones `finos-osera/backpatch-h2`, checks out `v<UPSTREAM>+backpatch.NNN`, runs `mvn clean package -Dmaven.test.skip=true` |
+| Reproducible build from publish tag | `build-h2.sh` / `build-spring.sh` clone the fork, check out `v<UPSTREAM>+backpatch.NNN`, build with Maven or Gradle |
 | Toolchain outside fork | All scripts live in `playground/release-pilot/` — no edits to backpatch repos |
-| Build JDK | `ensure_h2_java_home` in `lib/common.sh` forces JDK **17** (h2 POM targets Java 7; JDK 21+ fails). Path is auto-detected via `/usr/libexec/java_home -v 17` or Homebrew `openjdk@17` |
+| Build JDK | `ensure_h2_java_home` forces JDK **17**; `ensure_spring_java_home` prefers **17** (8/11 also OK for Spring 5.3.x source 8) |
 | Evidence / audit log | Not implemented — no `publish-log.yaml` or CI attestations yet |
 
-**Why partial:** only `backpatch-h2` has a build script (`build-h2.sh`). Other repos will need per-repo builders before fleet rollout.
+**Why partial:** only h2 and Spring have build scripts. Other repos will need per-repo builders before fleet rollout.
 
 ---
 
@@ -39,10 +39,11 @@ End-to-end orchestrator: `release-pilot/scripts/publish/publish-staging.sh` (aft
 | Requirement | Pilot behavior |
 | ----------- | -------------- |
 | Patched JAR matches baseline bytecode level | `check-bytecode.sh` compares **major class-file version** of one sample `.class` via `javap` |
-| Baseline JAR input | Optional `--baseline-jar`; **not passed** in default `publish-staging.sh` flow — script logs major version and warns |
+| Baseline JAR input | Optional `--baseline-jar`; **not passed** in default publish flows — script logs major version and warns |
 | Fail on mismatch | Only when `--baseline-jar` is supplied |
+| POM-only artifacts | Skipped for `spring-framework-bom` |
 
-**Why stub:** REL-002 needs a baseline artifact per coordinate (typically built from the `.baseline` tag). The pilot has not wired baseline JAR extraction or enforcement yet. JDK 17 selection in REL-001 is an indirect guard for h2, not a generic REL-002 implementation.
+**Why stub:** REL-002 needs a baseline artifact per coordinate (typically built from the `.baseline` tag). The pilot has not wired baseline JAR extraction or enforcement yet.
 
 ---
 
@@ -52,12 +53,11 @@ End-to-end orchestrator: `release-pilot/scripts/publish/publish-staging.sh` (aft
 
 | Requirement | Pilot behavior |
 | ----------- | -------------- |
-| Version format `<UPSTREAM>+backpatch.NNN` | Publish tag `v1.4.200+backpatch.001` → Maven coordinate `com.h2database:h2:1.4.200+backpatch.001` in generated manifest |
+| Version format `<UPSTREAM>+backpatch.NNN` | Publish tag → Maven coordinate in generated manifest; Spring overrides Gradle `version` via `-Pversion=` |
 | Immutable coordinates | Nexus `playground` repo rejects redeploy (**409**); fix by deleting the version folder or bumping `+backpatch.NNN` — see [nexus-playground.md](release-pilot/nexus-playground.md) |
 | Provenance in manifest | `generate-release-manifest.sh` writes `tag`, `baselineTag`, `provenance.upstreamUrl`, `provenance.oseraCommit` from git commits between tags |
+| Multi-module | Spring: one manifest + GAV per `spring-*` module and `spring-framework-bom` |
 | Sidecar naming | `{artifactId}-{version}.*` per [artifact-layout.md](release-pilot/artifact-layout.md); deployed via `publish-to-nexus.sh` with Maven classifiers |
-
-**Why implemented:** tag → manifest → GAV → staged filenames → Nexus path is fully scripted and verified with `mvn dependency:get` in `verify-publish.sh`.
 
 ---
 
@@ -67,11 +67,11 @@ End-to-end orchestrator: `release-pilot/scripts/publish/publish-staging.sh` (aft
 
 | Requirement | Pilot behavior |
 | ----------- | -------------- |
-| CycloneDX SBOM | `generate-sbom.sh --mode maven` runs CycloneDX Maven plugin on the built module; output staged as `{artifactId}-{version}-cyclonedx.json` |
+| CycloneDX SBOM | `generate-sbom.sh --mode maven` (h2) or `--mode gradle` / `--mode coordinate` (Spring) |
 | OpenVEX | `generate-openvex.sh` builds `.openvex.json` from manifest `vulnerabilities[]` (CVE + `fixed` status + action statement) |
 | Post-publish checks | `verify-publish.sh` validates SBOM bom-ref vs expected PURL, prints OpenVEX statements, optionally runs `cyclonedx validate` |
 
-**Why implemented:** both sidecars are generated, staged, deployed, and checked in the default pipeline. SBOM bom-ref may still show the fork's internal Maven version (e.g. `1.4.201-SNAPSHOT`) while the published coordinate uses `+backpatch.NNN` — a known gap to align later.
+**Why implemented:** both sidecars are generated, staged, deployed, and checked in the default pipeline. SBOM bom-ref may still show the fork's internal version while the published coordinate uses `+backpatch.NNN` — a known gap to align later. Spring may fall back to a coordinate-only SBOM if the Gradle CycloneDX init script does not emit a report.
 
 ---
 
@@ -82,10 +82,8 @@ End-to-end orchestrator: `release-pilot/scripts/publish/publish-staging.sh` (aft
 | Requirement | Pilot behavior |
 | ----------- | -------------- |
 | `.baseline` tag marks fork point | Manifest generator derives `baselineTag` as `v{UPSTREAM}+backpatch.baseline` from the publish tag |
-| Only publish tags released | Build and deploy use `v1.4.200+backpatch.001`, not the baseline tag |
+| Only publish tags released | Build and deploy use `v…+backpatch.NNN`, not the baseline tag |
 | Patch scope from git | `git rev-list baselineTag..publishTag` — manifest CVE/provenance/recipient fields come from those commits |
-
-**Why implemented:** baseline tag is referenced in every generated manifest and scopes what changed; the baseline **binary** is not yet produced for REL-002 comparison.
 
 ---
 
@@ -96,10 +94,8 @@ End-to-end orchestrator: `release-pilot/scripts/publish/publish-staging.sh` (aft
 | Requirement | Pilot behavior |
 | ----------- | -------------- |
 | What changed | `recipientGuidance.whatChanged` from backpatch commit subject + summary line (`lib/generate_release_manifest.sh`) |
-| Suggested test surface | Heuristics on commit message: `*Test` class names, H2-specific strings (web console, JDBC/JNDI, embedded); fallback smoke-test line |
+| Suggested test surface | Heuristics on commit message: `*Test` class names, H2 strings, Spring path-traversal / web-module hints; fallback smoke-test line |
 | Published sidecar | `generate-openvex.sh` writes `{version}.recipient-guidance.yaml`; staged and deployed with classifier `recipient-guidance` |
-
-**Why partial:** fields are inferred from commit messages, not from a structured EVD block in the repo. Manual manifest edit is possible but discouraged — regenerate from git when commits are well-formed.
 
 ---
 
@@ -124,8 +120,9 @@ End-to-end orchestrator: `release-pilot/scripts/publish/publish-staging.sh` (aft
 - [Playground publish test](release-pilot/nexus-playground.md)
 - [Signing setup](release-pilot/signing-setup.md)
 - [H2 walkthrough](release-pilot/h2-pilot.md)
+- [Spring walkthrough](release-pilot/spring-pilot.md)
 - [Artifact layout](release-pilot/artifact-layout.md)
 
 ---
 
-*2026-07-24 — standards mapped to release-pilot; signing under scripts/sign.*
+*2026-08-03 — Spring Gradle multi-module pilot mapped alongside h2.*

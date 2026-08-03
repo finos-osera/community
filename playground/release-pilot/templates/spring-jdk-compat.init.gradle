@@ -1,0 +1,22 @@
+// Spring 5.3.x CompilerConventionsPlugin sets -Werror on main JavaCompile.
+// Joint Groovy compilation (e.g. :spring-beans:compileGroovy) also compiles
+// .java sources and can retain -Werror. Strip it at task execution time so we
+// win over plugin configuration order, and silence JDK 11+ [removal] warnings.
+import org.gradle.api.tasks.compile.GroovyCompile
+import org.gradle.api.tasks.compile.JavaCompile
+
+def neutralizeWerror = { compileTask ->
+	compileTask.doFirst {
+		def args = new ArrayList<>(compileTask.options.compilerArgs ?: [])
+		args.removeAll { it == "-Werror" }
+		if (!args.contains("-Xlint:-removal")) {
+			args.add("-Xlint:-removal")
+		}
+		compileTask.options.compilerArgs = args
+	}
+}
+
+allprojects { project ->
+	project.tasks.withType(JavaCompile).configureEach(neutralizeWerror)
+	project.tasks.withType(GroovyCompile).configureEach(neutralizeWerror)
+}

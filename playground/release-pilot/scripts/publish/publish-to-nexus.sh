@@ -12,25 +12,32 @@ load_nexus_config
 MANIFEST=""
 STAGING=""
 DRY_RUN=false
+PACKAGING="jar"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --manifest) MANIFEST="$2"; shift 2 ;;
     --staging) STAGING="$2"; shift 2 ;;
+    --packaging) PACKAGING="$2"; shift 2 ;;
     --dry-run) DRY_RUN=true; shift ;;
     -h|--help)
-      echo "usage: $0 --manifest PATH --staging DIR [--dry-run]"
+      echo "usage: $0 --manifest PATH --staging DIR [--packaging jar|pom] [--dry-run]"
       echo "env: NEXUS_URL, REPOSITORY_ID (defaults from config/nexus-playground.env)"
       echo "     NEXUS_USERNAME, NEXUS_PASSWORD (optional; else ~/.m2/settings.xml)"
       echo "When OSERA_SKIP_SIGN=0, requires .asc + .asc.finos and uploads them as siblings."
       exit 0
       ;;
-    *) usage "$0 --manifest PATH --staging DIR [--dry-run]" ;;
+    *) usage "$0 --manifest PATH --staging DIR [--packaging jar|pom] [--dry-run]" ;;
   esac
 done
 
 [[ -n "$MANIFEST" && -n "$STAGING" ]] || usage "$0 --manifest PATH --staging DIR [--dry-run]"
 require_cmd mvn
+
+case "$PACKAGING" in
+  jar|pom) ;;
+  *) echo "error: unknown --packaging: $PACKAGING" >&2; exit 1 ;;
+esac
 
 groupId="$(manifest_field "$MANIFEST" '.coordinate.groupId')"
 artifactId="$(manifest_field "$MANIFEST" '.coordinate.artifactId')"
@@ -47,11 +54,8 @@ fi
 if $require_signatures; then
   while IFS= read -r file; do
     require_signature_sidecars "$file"
-  done < <(existing_sign_targets "$STAGING" "$artifactId" "$version")
+  done < <(existing_sign_targets "$STAGING" "$artifactId" "$version" "$PACKAGING")
 fi
-
-# Resolve deploy credentials for signature PUTs (Maven uses settings.xml itself).
-# load_nexus_credentials is provided by scripts/lib/common.sh.
 
 nexus_version_url() {
   nexus_gav_base_url "$groupId" "$artifactId" "$version"
@@ -124,7 +128,7 @@ deploy_attachment() {
 }
 
 # Primary JAR + POM in a single deploy (never deploy pom twice).
-deploy_primary() {
+deploy_primary_jar() {
   local -a extra=(-DpomFile="$pom_file" -DgeneratePom=false)
 
   if $DRY_RUN; then
@@ -143,15 +147,40 @@ deploy_primary() {
     "${extra[@]}"
 }
 
-[[ -f "$jar_file" ]] || { echo "error: missing $jar_file" >&2; exit 1; }
-[[ -f "$pom_file" ]] || { echo "error: missing $pom_file" >&2; exit 1; }
+# POM-only (e.g. spring-framework-bom).
+deploy_primary_pom() {
+  if $DRY_RUN; then
+    echo "dry-run: mvn deploy:deploy-file -Dfile=$pom_file -DpomFile=$pom_file -Dpackaging=pom -DgeneratePom=false"
+    return 0
+  fi
 
-if $require_signatures || [[ -f "${jar_file}.asc" ]]; then
+  mvn deploy:deploy-file \
+    -Durl="$NEXUS_URL" \
+    -DrepositoryId="$REPOSITORY_ID" \
+    -DgroupId="$groupId" \
+    -DartifactId="$artifactId" \
+    -Dversion="$version" \
+    -Dpackaging=pom \
+    -Dfile="$pom_file" \
+    -DpomFile="$pom_file" \
+    -DgeneratePom=false
+}
+
+[[ -f "$pom_file" ]] || { echo "error: missing $pom_file" >&2; exit 1; }
+if [[ "$PACKAGING" == "jar" ]]; then
+  [[ -f "$jar_file" ]] || { echo "error: missing $jar_file" >&2; exit 1; }
+fi
+
+if $require_signatures || [[ -f "${jar_file}.asc" ]] || [[ -f "${pom_file}.asc" ]]; then
   load_nexus_credentials
 fi
 
-deploy_primary
-put_signature_sidecars "$jar_file"
+if [[ "$PACKAGING" == "jar" ]]; then
+  deploy_primary_jar
+  put_signature_sidecars "$jar_file"
+else
+  deploy_primary_pom
+fi
 put_signature_sidecars "$pom_file"
 
 deploy_attachment "${prefix}-cyclonedx.json" json cyclonedx
@@ -165,5 +194,5 @@ if [[ -f "${prefix}-recipient-guidance.yaml" ]]; then
   put_signature_sidecars "${prefix}-recipient-guidance.yaml"
 fi
 
-echo "publish complete for ${groupId}:${artifactId}:${version}"
+echo "publish complete for ${groupId}:${artifactId}:${version} (packaging=${PACKAGING})"
 echo "nexus: ${NEXUS_URL}"

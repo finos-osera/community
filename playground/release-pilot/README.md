@@ -1,6 +1,6 @@
 # Release pilot
 
-Runnable operator toolkit for the `backpatch-h2` pilot and fleet rollout. Scripts live under `scripts/{release,publish,sign}/`; release manifests are generated from git tags (not checked in).
+Runnable operator toolkit for the `backpatch-h2` and `backpatch-spring-framework` pilots and fleet rollout. Scripts live under `scripts/{release,publish,sign}/`; release manifests are generated from git tags (not checked in).
 
 **Standards:** [REL-001](https://standards.osera.finos.org/standards/rel-001-build-process/) · [REL-002](https://standards.osera.finos.org/standards/rel-002-bytecode-compatibility/) · [REL-003](https://standards.osera.finos.org/standards/rel-003-version-metadata/) · [FEED-001](https://standards.osera.finos.org/standards/feed-001-openvex-cyclonedx/)
 
@@ -13,9 +13,9 @@ Runnable operator toolkit for the `backpatch-h2` pilot and fleet rollout. Script
 
 | Item               | Status                                                                                                                               |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Pilot scripts      | **Ready**                                                                                                                            |
+| Pilot scripts      | **Ready** (h2 Maven + Spring Gradle)                                                                                                 |
 | Nexus test target  | `playground` repo — [nexus-playground.md](nexus-playground.md)                                                                       |
-| Pilot manifest     | Generated from git by `publish/publish-staging.sh` (or [`release/generate-release-manifest.sh`](scripts/release/generate-release-manifest.sh)) |
+| Pilot manifest     | Generated from git by publish scripts (or [`release/generate-release-manifest.sh`](scripts/release/generate-release-manifest.sh)) |
 | Artifact signing   | **Skipped by default** — `OSERA_SKIP_SIGN=1`; enable via [signing-setup.md](signing-setup.md)                                        |
 | Production signing | Proposed — [../backpatch-signing.md](../backpatch-signing.md)                                                                        |
 
@@ -23,6 +23,8 @@ Runnable operator toolkit for the `backpatch-h2` pilot and fleet rollout. Script
 ---
 
 ## Quick start
+
+### H2 (Maven, single artifact)
 
 **Local only** (no Nexus upload):
 
@@ -37,15 +39,23 @@ $PILOT/scripts/publish/publish-staging.sh \
   --skip-deploy
 ```
 
+Walkthrough: [h2-pilot.md](h2-pilot.md).
+
+### Spring Framework (Gradle, all `spring-*` + BOM)
+
+```bash
+PILOT=playground/release-pilot
+eval "$($PILOT/scripts/release/build-spring.sh)"
+$PILOT/scripts/publish/publish-spring-staging.sh \
+  --repo-dir "$repo_dir" --tag "$tag" \
+  --modules-file "$modules_file" \
+  --staging /tmp/osera-staging-spring \
+  --skip-deploy
+```
+
+Walkthrough: [spring-pilot.md](spring-pilot.md).
+
 **Publish to playground Nexus**: see [nexus-playground.md](nexus-playground.md).
-
-End-to-end, `build-h2.sh` + `publish-staging.sh` do the following:
-
-1. **Build** — clone `backpatch-h2` at the publish tag and run `mvn package`.
-2. **Sidecars** — derive release manifest from git (`baseline..tag` commits), then generate OpenVEX, CycloneDX SBOM, and recipient guidance; copy JAR, POM, and sidecars into the staging dir.
-3. **Sign** (optional) — vendor `.asc` + FINOS `.asc.finos` when `OSERA_SKIP_SIGN=0` or `--sign`.
-4. **Deploy** — upload staged artifacts to the `playground` Nexus repo via `mvn deploy:deploy-file`.
-5. **Validate** — check SBOM/OpenVEX (and signatures when enabled), then confirm the coordinate resolves from Nexus.
 
 ---
 
@@ -54,11 +64,13 @@ End-to-end, `build-h2.sh` + `publish-staging.sh` do the following:
 
 | Script | Purpose |
 | ------ | ------- |
-| [`publish/publish-staging.sh`](scripts/publish/publish-staging.sh) | End-to-end orchestrator |
+| [`publish/publish-staging.sh`](scripts/publish/publish-staging.sh) | End-to-end orchestrator (single GAV; h2) |
+| [`publish/publish-spring-staging.sh`](scripts/publish/publish-spring-staging.sh) | Multi-module orchestrator (Spring) |
 | [`publish/publish-to-nexus.sh`](scripts/publish/publish-to-nexus.sh) | Upload to `…/repository/playground/` |
 | [`publish/verify-publish.sh`](scripts/publish/verify-publish.sh) | SBOM, VEX, signatures, Nexus resolve |
 | [`publish/stage-artifacts.sh`](scripts/publish/stage-artifacts.sh) | Copy JAR/POM/sidecars into staging |
-| [`release/build-h2.sh`](scripts/release/build-h2.sh) | Clone/build pilot tag |
+| [`release/build-h2.sh`](scripts/release/build-h2.sh) | Clone/build h2 pilot tag (Maven) |
+| [`release/build-spring.sh`](scripts/release/build-spring.sh) | Clone/build Spring pilot tag (Gradle) |
 | [`release/generate-release-manifest.sh`](scripts/release/generate-release-manifest.sh) | Publish tag + git → manifest YAML |
 | [`release/generate-openvex.sh`](scripts/release/generate-openvex.sh) · [`release/generate-sbom.sh`](scripts/release/generate-sbom.sh) | [FEED-001](https://standards.osera.finos.org/standards/feed-001-openvex-cyclonedx/) sidecars |
 | [`sign/vendor-sign.sh`](scripts/sign/vendor-sign.sh) · [`sign/finos-cosign.sh`](scripts/sign/finos-cosign.sh) | OpenPGP detached signatures |
@@ -72,7 +84,8 @@ Full index: run any script with `--help`. Ops for signing: [signing-setup.md](si
 ## Out of scope / known gaps
 
 - **Production FINOS keys** — playground keygen is self-signed local material only.
-- **[REL-002](https://standards.osera.finos.org/standards/rel-002-bytecode-compatibility/) bytecode checks** — `check-bytecode.sh` only records major class-file version today; full baseline comparison is not enforced. Build JDK selection is **h2-specific** (hardcoded JDK 17 in `ensure_h2_java_home`).
+- **[REL-002](https://standards.osera.finos.org/standards/rel-002-bytecode-compatibility/) bytecode checks** — `check-bytecode.sh` only records major class-file version today; full baseline comparison is not enforced. Build JDK selection is **per pilot** (`ensure_h2_java_home` / `ensure_spring_java_home`).
+- **Spring SBOM depth** — Gradle CycloneDX via init script; falls back to a coordinate-only SBOM if the plugin output is missing.
 
 ---
 
@@ -80,9 +93,10 @@ Full index: run any script with `--help`. Ops for signing: [signing-setup.md](si
 
 - [nexus-playground.md](nexus-playground.md) — credentials, deploy URL, resolve check
 - [signing-setup.md](signing-setup.md) — OpenPGP keygen, enable `--sign`
-- [h2-pilot.md](h2-pilot.md) — step-by-step walkthrough
+- [h2-pilot.md](h2-pilot.md) — h2 step-by-step
+- [spring-pilot.md](spring-pilot.md) — Spring Framework step-by-step
 - [artifact-layout.md](artifact-layout.md)
 
 ---
 
-*2026-07-24 — scripts under release/publish/sign; signing wired into deploy + verify.*
+*2026-08-03 — Spring Gradle multi-module pilot added alongside h2.*

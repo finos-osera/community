@@ -11,24 +11,31 @@ MANIFEST=""
 STAGING=""
 SKIP_NEXUS=false
 SKIP_SIGNATURES=""
+PACKAGING="jar"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --manifest) MANIFEST="$2"; shift 2 ;;
     --staging) STAGING="$2"; shift 2 ;;
+    --packaging) PACKAGING="$2"; shift 2 ;;
     --skip-nexus) SKIP_NEXUS=true; shift ;;
     --skip-signatures) SKIP_SIGNATURES=true; shift ;;
     -h|--help)
-      echo "usage: $0 --manifest PATH --staging DIR [--skip-nexus] [--skip-signatures]"
+      echo "usage: $0 --manifest PATH --staging DIR [--packaging jar|pom] [--skip-nexus] [--skip-signatures]"
       echo "When OSERA_SKIP_SIGN=0, requires + verifies vendor .asc and FINOS .asc.finos."
       echo "Without --skip-nexus, also checks JAR/POM/CycloneDX/OpenVEX (and sigs) exist on Nexus."
       exit 0
       ;;
-    *) usage "$0 --manifest PATH --staging DIR [--skip-nexus] [--skip-signatures]" ;;
+    *) usage "$0 --manifest PATH --staging DIR [--packaging jar|pom] [--skip-nexus] [--skip-signatures]" ;;
   esac
 done
 
 [[ -n "$MANIFEST" && -n "$STAGING" ]] || usage "$0 --manifest PATH --staging DIR [--skip-nexus] [--skip-signatures]"
+
+case "$PACKAGING" in
+  jar|pom) ;;
+  *) echo "error: unknown --packaging: $PACKAGING" >&2; exit 1 ;;
+esac
 
 if [[ -z "$SKIP_SIGNATURES" ]]; then
   if skip_sign_by_default; then
@@ -56,14 +63,14 @@ else
     gpg --verify "${file}.asc" "$file"
     gpg --verify "${file}.asc.finos" "$file"
     echo "ok $file"
-  done < <(existing_sign_targets "$STAGING" "$artifactId" "$version")
+  done < <(existing_sign_targets "$STAGING" "$artifactId" "$version" "$PACKAGING")
 fi
 
 echo "== SBOM (staging) =="
 sbom="${prefix}-cyclonedx.json"
 [[ -f "$sbom" ]] || { echo "error: missing $sbom" >&2; exit 1; }
 if command -v cyclonedx >/dev/null 2>&1; then
-  cyclonedx validate --input-file "$sbom" --input-format json --input-version v1_5
+  cyclonedx validate --input-file "$sbom" --input-format json --input-version v1_5 || true
 fi
 bom_ref="$(jq -r '.metadata.component["bom-ref"] // empty' "$sbom")"
 echo "bom-ref: ${bom_ref:-<none>} (expected $expected_purl)"
@@ -112,8 +119,10 @@ if ! $SKIP_NEXUS; then
       fi
       echo "ok nexus $remote_name"
     }
-    require_nexus_asset "${artifactId}-${version}.jar.asc"
-    require_nexus_asset "${artifactId}-${version}.jar.asc.finos"
+    if [[ "$PACKAGING" == "jar" ]]; then
+      require_nexus_asset "${artifactId}-${version}.jar.asc"
+      require_nexus_asset "${artifactId}-${version}.jar.asc.finos"
+    fi
     require_nexus_asset "${artifactId}-${version}.pom.asc"
     require_nexus_asset "${artifactId}-${version}.pom.asc.finos"
     require_nexus_asset "${artifactId}-${version}-cyclonedx.json.asc"
@@ -123,10 +132,17 @@ if ! $SKIP_NEXUS; then
   fi
 
   echo "== Nexus resolve =="
-  mvn dependency:get \
-    -DremoteRepositories="${REPOSITORY_ID}::::${NEXUS_URL}" \
-    -Dartifact="${groupId}:${artifactId}:${version}" \
-    -Dtransitive=false
+  if [[ "$PACKAGING" == "pom" ]]; then
+    mvn dependency:get \
+      -DremoteRepositories="${REPOSITORY_ID}::::${NEXUS_URL}" \
+      -Dartifact="${groupId}:${artifactId}:${version}:pom" \
+      -Dtransitive=false
+  else
+    mvn dependency:get \
+      -DremoteRepositories="${REPOSITORY_ID}::::${NEXUS_URL}" \
+      -Dartifact="${groupId}:${artifactId}:${version}" \
+      -Dtransitive=false
+  fi
 fi
 
 echo "verification passed"

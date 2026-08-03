@@ -36,6 +36,8 @@ Tooling: [release-pilot/](release-pilot/README.md) (outside `finos-osera/backpat
 
 Configure `~/.m2/settings.xml` from [release-pilot/templates/settings.xml.template](release-pilot/templates/settings.xml.template) (`osera-playground` server id), then:
 
+**H2:**
+
 ```bash
 PILOT=playground/release-pilot
 eval "$($PILOT/scripts/release/build-h2.sh)"
@@ -46,8 +48,19 @@ $PILOT/scripts/publish/publish-staging.sh \
   --module-dir "$module_dir" --jar "$jar" --pom "$pom"
 ```
 
-Full checklist: [release-pilot/nexus-playground.md](release-pilot/nexus-playground.md)
+**Spring Framework** (all `spring-*` + BOM):
+
+```bash
+PILOT=playground/release-pilot
+eval "$($PILOT/scripts/release/build-spring.sh)"
+$PILOT/scripts/publish/publish-spring-staging.sh \
+  --repo-dir "$repo_dir" --tag "$tag" \
+  --modules-file "$modules_file" \
+  --staging /tmp/osera-staging-spring
+```
+
+Full checklist: [release-pilot/nexus-playground.md](release-pilot/nexus-playground.md) · [release-pilot/spring-pilot.md](release-pilot/spring-pilot.md)
 
 ---
 
-*2026-07-24 — playground test target; signing optional via release-pilot.*
+*2026-08-03 — Spring Gradle multi-module pilot.*

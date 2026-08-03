@@ -101,6 +101,12 @@ generate_release_manifest() {
   if grep -qi 'embedded' <<< "$all_text"; then
     test_surface+=("Embedded mode startup")
   fi
+  if grep -qiE 'PathResourceLookup|RouterFunctions|path traversal' <<< "$all_text"; then
+    test_surface+=("WebMvc.fn / WebFlux.fn static resource path-traversal cases")
+  fi
+  if grep -qi 'spring-webmvc\|spring-webflux\|spring-web' <<< "$all_text"; then
+    test_surface+=("Spring Framework module smoke-test for patched web stack")
+  fi
   if [[ ${#test_surface[@]} -eq 0 ]]; then
     test_surface=("Smoke-test patched library startup and primary integration paths")
   fi
