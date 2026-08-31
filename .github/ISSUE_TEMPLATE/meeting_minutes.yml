@@ -12,7 +12,7 @@ body:
     attributes:
       label: Date
       description: Meeting date and time
-      placeholder: MMM DD YYYY - 12.30am ET / 5.30pm GMT
+      placeholder: MMM DD YYYY - 12.30pm ET / 5.30pm GMT
     validations:
       required: true
   - type: textarea
