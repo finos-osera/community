@@ -11,8 +11,6 @@ For information about maintainer responsibilities and resources, please see the 
 | @dovops | Dov Katz | Morgan Stanley | |
 | @mindthegab | Gabriele Columbro | FINOS | |
 
-For information about maintainer responsibilities and resources, see the [project governance](GOVERNANCE.md).
-
 ## Updating this file
 
 All changes to the maintainer list are managed openly:
