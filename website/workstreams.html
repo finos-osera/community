@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workstreams · OSERA | Open Source Enterprise Resiliency Alliance</title>
+<link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="/img/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#00253F;--cyan:#00B5E2;--blue:#0086BF;--teal:#3FB6A8;--teald:#487A7B;--green:#43B02A;--ink:#16222E;--grey:#5B6770;--line:#E7EDF2;--bg:#FFFFFF;--soft:#F4F8FB;--mist:#E9F6FB;--mist2:#EAF7F3;--gold:#B98314;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);line-height:1.7;background:#fff;-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}
+h1,h2,h3{font-family:'Montserrat',sans-serif;color:var(--navy);letter-spacing:-.01em}
+.wrap{max-width:1140px;margin:0 auto;padding:0 28px}
+header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:66px;max-width:1140px;margin:0 auto;padding:0 28px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo-link{display:flex;align-items:center;line-height:0}
+.brand-logo{height:36px;width:auto;display:block}
+.finos-logo{height:36px}
+.osera-logo{height:32px;width:auto;display:block}
+.brand-footer .finos-logo{height:40px}
+.brand-footer .osera-logo{height:34px}
+.brand-divider{width:1px;height:32px;background:var(--line);display:block}
+.site-brand{display:flex;flex-direction:column;justify-content:center;gap:1px;text-decoration:none;line-height:1.1}
+.site-brand .full-name{font-weight:600;color:var(--grey);font-size:11px;letter-spacing:0}
+footer .brand .full-name{color:#cfe0ec}
+footer .brand-divider{background:rgba(255,255,255,.28)}
+.navlinks{display:flex;gap:8px;align-items:center;white-space:nowrap}
+.navlinks a{color:var(--ink);font-weight:600;font-size:14px;text-decoration:none}
+.navlinks a:hover{color:var(--blue)}
+.navlinks a:not(.btn):not(.nav-github){padding:8px 12px;border-radius:999px}
+.btn{display:inline-block;font-family:'Inter';font-weight:600;font-size:14px;padding:11px 20px;border-radius:999px;border:1px solid transparent;cursor:pointer;transition:.15s;text-decoration:none}
+.btn.primary{background:var(--navy);color:#fff !important}
+.btn.primary:hover{background:#003a5e}
+.btn.ghost{background:#fff;color:var(--navy) !important;border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--blue);color:var(--blue) !important}
+.btn.cyan{background:var(--cyan);color:var(--navy) !important}
+.btn.cyan:hover{background:#00a3cb;color:#fff !important}
+.btn.involve{background:var(--gold);color:#fff !important;border-color:var(--gold)}
+.btn.involve:hover{background:#9a6d10;border-color:#9a6d10}
+.navlinks .page-link{background:var(--soft);color:var(--grey) !important;border-color:var(--line)}
+.navlinks .page-link:hover{background:#fff;border-color:var(--blue);color:var(--blue) !important}
+.btn.active{background:var(--navy);color:#fff !important;border-color:var(--navy)}
+.btn.active:hover{background:#003a5e;color:#fff !important}
+.nav-github{display:flex;align-items:center;color:var(--ink)}
+.nav-github:hover{color:var(--blue)}
+.nav-github svg{width:22px;height:22px;display:block}
+@media(max-width:1080px){.brand .full-name{display:none}}
+@media(max-width:940px){.navlinks a:not(.btn):not(.nav-github){display:none}}
+@media(max-width:760px){.navlinks .page-link:not(.active){display:none}}
+@media(max-width:560px){.navlinks .page-link{display:none}}
+@media(max-width:620px){.brand{gap:8px}.finos-logo{height:30px}.osera-logo{height:26px}.brand-divider{height:28px}}
+.hero{background:radial-gradient(900px 460px at 85% -10%, var(--mist2), transparent 60%),linear-gradient(180deg,#fff,var(--soft));border-bottom:1px solid var(--line);padding:78px 0 66px}
+.hero .eyebrow{color:var(--blue);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:12px;margin-bottom:16px}
+.hero h1{font-size:44px;font-weight:800;line-height:1.12}
+.hero p{color:var(--grey);font-size:19px;margin-top:20px}
+.hero .jump{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+@media(max-width:680px){.hero h1{font-size:34px}}
+section{padding:74px 0;border-bottom:1px solid var(--line)}
+.sec-soft{background:var(--soft)}
+.eyebrow{color:var(--blue);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:12px;margin-bottom:14px}
+h2{font-size:32px;font-weight:800;line-height:1.2}
+.lead{font-size:17px;color:var(--grey);margin-top:14px}
+/* generic cards */
+.grid{display:grid;gap:22px;margin-top:40px}
+.g3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){.g3{grid-template-columns:1fr 1fr}} @media(max-width:620px){.g3{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;transition:.18s;box-shadow:0 1px 2px rgba(16,34,46,.03)}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(16,34,46,.08);border-color:#dfe7ee}
+.card h3{font-size:18px;font-weight:700}
+.card p{font-size:14.5px;color:var(--grey);margin-top:8px}
+/* workstreams */
+.ws .card{border-top:5px solid var(--blue)} .ws .card.w2{border-top-color:var(--teal)} .ws .card.w3{border-top-color:var(--gold)}
+.ws .num{font-family:'Montserrat';font-weight:800;font-size:13px;color:#9aa7b1}
+.ws ul{list-style:none;margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+.ws li{font-size:13px;color:var(--ink);padding:5px 0 5px 18px;position:relative}
+.ws li::before{content:"›";position:absolute;left:0;color:var(--blue);font-weight:800}
+.standards-callout{margin-top:28px;background:#fff;border:1px solid var(--line);border-radius:18px;border-top:5px solid var(--cyan);padding:24px 28px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+.standards-callout p{font-size:15px;color:var(--ink);max-width:62ch;margin:0}
+.standards-callout a{font-weight:600}
+.standards-callout img{height:28px;width:auto;display:block}
+.flownote{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 20px;font-size:14px;color:var(--grey)}
+.sec-soft .flownote{background:#fff}
+/* participation strip */
+.joincard{margin-top:30px;background:var(--mist);border:1px solid #cfeaf6;border-radius:18px;padding:24px 28px}
+.joincard h3{font-size:17px}
+.joincard p{font-size:14px;color:var(--grey);margin-top:8px}
+.joincard ul{list-style:none;margin-top:12px}
+.joincard li{font-size:14px;color:var(--ink);padding:6px 0 6px 22px;position:relative}
+.joincard li::before{content:"";position:absolute;left:2px;top:14px;width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+/* risk navigator */
+.tool-showcase{display:grid;grid-template-columns:.85fr 1.15fr;gap:34px;align-items:center;margin-top:38px}
+@media(max-width:900px){.tool-showcase{grid-template-columns:1fr}}
+.tool-copy h3{font-size:22px}
+.tool-copy p{font-size:15.5px;color:var(--grey);margin-top:12px}
+.tool-copy ul{list-style:none;margin-top:18px}
+.tool-copy li{font-size:14px;color:var(--ink);padding:7px 0 7px 22px;position:relative}
+.tool-copy li::before{content:"";position:absolute;left:0;top:15px;width:8px;height:8px;border-radius:50%;background:var(--cyan)}
+.tool-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.tool-shot{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 18px 44px rgba(16,34,46,.12)}
+.tool-shot img{display:block;width:100%;height:auto}
+.cta{background:var(--soft);text-align:center;border:none;padding:74px 0}
+.cta h2{font-size:30px}
+.cta .lead{max-width:64ch;margin-left:auto;margin-right:auto}
+.cta .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+footer{background:var(--navy);color:#cfe0ec;padding:40px 0;font-size:13px}
+footer a{color:#9fd4ec}
+.footer-inner{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;max-width:1140px;margin:0 auto;padding:0 28px}
+.footer-note{max-width:78ch;color:#7fa6bd;font-size:13px}
+.footer-nav{color:#7fa6bd}
+</style>
+</head>
+<body id="top">
+
+<header>
+  <nav>
+    <div class="brand"><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-color.svg" alt="OSERA" class="osera-logo"></a></div>
+    <div class="navlinks">
+      <a href="how-it-works.html">The Solution</a>
+      <a href="alliance.html">The Alliance</a>
+      <a href="workstreams.html" class="btn active page-link" aria-current="page">Workstreams</a>
+      <a href="principles.html">Our Principles</a>
+      <a href="news.html">News &amp; Media</a>
+      <a href="index.html#involved" class="btn involve">Get involved</a>
+      <a href="https://github.com/finos-osera" class="nav-github" target="_blank" rel="noopener" aria-label="OSERA on GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.021C22 6.484 17.522 2 12 2z"/></svg></a>
+    </div>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Workstreams</div>
+    <h1>Where the work happens — in the open.</h1>
+    <p>Three workstreams carry the alliance's mission: an open <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">remediation standard</a> so fixes are portable and verifiable, shared <a href="#tooling">tooling</a> that prioritises the backlog on one neutral basis, and the road to regulated consumption at scale. All of it runs under the <a href="principles.html">OSERA Guiding Principles</a> — open, portable, and lock-in-free.</p>
+    <div class="jump">
+      <a href="#workstreams" class="btn ghost">The workstreams</a>
+      <a href="#tooling" class="btn ghost">Available tooling</a>
+      <a href="principles.html" class="btn ghost">Guiding principles</a>
+    </div>
+  </div>
+</div>
+
+<!-- WORKSTREAMS -->
+<section id="workstreams">
+  <div class="wrap">
+    <div class="eyebrow">The workstreams</div>
+    <h2>Three streams, one mission</h2>
+    <p class="lead">The alliance's workstreams are live and open. Any FINOS member can participate in the working groups — no OSERA membership required.</p>
+    <div class="grid g3 ws">
+      <div class="card w1">
+        <div class="num">WS1 · ACTIVE — WORKING GROUP</div>
+        <h3>Remediation Standards</h3>
+        <p>One open standard so a fix from any producer is portable, verifiable and lock-in-free: it defines when a patched release is accepted into the OSERA repository — evidencing, signing, attestations, testing and conformance automation — aligned with Akrites, OpenSSF and the SCA ecosystem. Chaired by Dov Katz (Morgan Stanley).</p>
+        <ul>
+          <li><a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Read the current standards draft</a></li>
+          <li><a href="https://github.com/finos-osera/remediation-standards" target="_blank" rel="noopener">Contribute on GitHub</a></li>
+          <li><a href="https://lists.finos.org/g/osera-remediations" target="_blank" rel="noopener">Join the working-group mailing list</a></li>
+        </ul>
+      </div>
+      <div class="card w2">
+        <div class="num">WS2 · ACTIVE — SHARED TOOLING</div>
+        <h3>Risk Navigator</h3>
+        <p>Where shared prioritisation happens. Cross-firm demand, severity and exposure are scored on one neutral basis to order the shared remediation backlog — so machine-speed CVE waves are triaged automatically, not in committee.</p>
+        <ul>
+          <li><a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Open Risk Navigator</a></li>
+          <li><a href="https://github.com/finos-osera/risk-navigator" target="_blank" rel="noopener">Explore the source on GitHub</a></li>
+          <li>Ranks by CVSS, KEV, EPSS, footprint &amp; overlap</li>
+          <li><a href="#tooling">See it in action below</a></li>
+        </ul>
+      </div>
+      <div class="card w3">
+        <div class="num">WS3 · FUTURE FOCUS</div>
+        <h3>Regulated Consumption at Scale</h3>
+        <p>The next frontier: consuming fixes in time across a regulated estate — and proving it. Regulatory compliance evidencing and shared consumption tools and recipes, alongside FINOS <a href="https://calm.finos.org/">CALM</a>.</p>
+        <ul>
+          <li>Consumption evidence, mapped to DORA, NIS2 &amp; CRA</li>
+          <li>Shared tools &amp; recipes for rollout at scale</li>
+          <li>Working group proposed for ratification next</li>
+          <li><a href="index.html#involved">Register your interest</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="joincard">
+      <h3>How to participate</h3>
+      <p>Working-group meetings and mailing lists are open to <strong>FINOS members only</strong> — but no OSERA membership is required. Not yet a member? <a href="https://www.finos.org/become-a-member" target="_blank" rel="noopener">Become a FINOS member</a>.</p>
+      <ul>
+        <li>Subscribe to the <a href="https://lists.finos.org/g/osera-general" target="_blank" rel="noopener">OSERA general mailing list</a> — the front door for all alliance announcements.</li>
+        <li>Join the OSERA general meetings — the schedule is on the <a href="https://lists.finos.org/g/osera-general/calendar" target="_blank" rel="noopener">general list calendar</a>.</li>
+        <li>Then pick your workstream: the <a href="https://lists.finos.org/g/osera-remediations" target="_blank" rel="noopener">Remediation Standards list</a> for WS1, GitHub for WS2, or <a href="index.html#involved">register interest</a> in WS3.</li>
+      </ul>
+    </div>
+    <div class="standards-callout">
+      <p>An initial draft of proposed patching standards is available at <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">standards.osera.finos.org</a></p>
+      <a href="https://standards.osera.finos.org" target="_blank" rel="noopener" aria-label="FINOS Labs — remediation standards">
+        <img src="https://raw.githubusercontent.com/finos/contrib-toolbox/master/images/badge-labs.png" alt="FINOS Labs">
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- AVAILABLE TOOLING -->
+<section id="tooling" class="sec-soft">
+  <div class="wrap">
+    <div class="eyebrow">Available tooling</div>
+    <h2>Prioritise open source remediation with Risk Navigator</h2>
+    <p class="lead">Risk Navigator is where the alliance's shared prioritisation happens: it turns dependency and vulnerability data into one neutral remediation view — what is exposed, which projects are affected, and where upgrades or backpatches should be prioritised across firms.</p>
+    <div class="tool-showcase">
+      <div class="tool-copy">
+        <h3>From vulnerable libraries to action</h3>
+        <p>Use the overview to inspect vulnerable packages, CVEs, affected projects, safe versions, and backpatch candidates before bringing work into the OSERA formation process.</p>
+        <ul>
+          <li>Rank libraries by CVSS, KEV, EPSS, project footprint, and upgrade path.</li>
+          <li>See which applications are directly or transitively exposed.</li>
+          <li>Identify candidates for upgrade guidance, OpenRewrite recipes, or backpatch work.</li>
+        </ul>
+        <div class="tool-actions">
+          <a class="btn primary" href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Open Risk Navigator</a>
+          <a class="btn ghost" href="index.html#available">See what's available now</a>
+        </div>
+      </div>
+      <a class="tool-shot" href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener" aria-label="Open Risk Navigator overview">
+        <img src="/img/risk-navigator-prioritization.png" alt="Risk Navigator prioritization interface showing vulnerable libraries, CVEs, affected projects, and remediation details">
+      </a>
+    </div>
+    <div class="flownote">The output feeds the alliance's shared backlog: the <a href="https://github.com/finos-osera" target="_blank" rel="noopener">60 backpatch lines already maintained on GitHub</a> started here. See <a href="how-it-works.html">how the whole loop works</a>.</div>
+  </div>
+</section>
+
+<section class="cta" style="background:#fff">
+  <div class="wrap">
+    <h2>Ready to roll up your sleeves?</h2>
+    <p class="lead">Tech vendors join the working groups and bid to maintain through FINOS membership. Financial institutions fund and govern through OSERA membership. And because every line is open source, anyone can build it themselves.</p>
+    <div class="btns">
+      <a href="https://www.finos.org/become-a-member" class="btn cyan" target="_blank" rel="noopener">Become a FINOS member</a>
+      <a href="alliance.html#membership" class="btn ghost">Become an OSERA member</a>
+      <a href="https://github.com/finos-osera" target="_blank" rel="noopener" class="btn ghost">Build it yourself</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-white.svg" alt="OSERA" class="osera-logo"><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
+    <div class="footer-note">OSERA is a FINOS initiative, part of the Linux Foundation, focused on open, portable remediation for regulated enterprises and complementary to <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a>.</div>
+    <div class="footer-nav"><a href="index.html">Home</a> · <a href="how-it-works.html">The Solution</a> · <a href="alliance.html">The Alliance</a> · <a href="workstreams.html">Workstreams</a> · <a href="principles.html">Our Principles</a> · <a href="news.html">News &amp; Media</a> · <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a> · <a href="mailto:membership@finos.org">membership@finos.org</a></div>
+  </div>
+</footer>
+<script>
+  // scroll-behavior:smooth can cancel the browser's own anchor scroll when arriving
+  // with a hash (e.g. workstreams.html#tooling) while images are still loading.
+  (function(){
+    var userScrolled = false;
+    ['wheel','touchstart','keydown'].forEach(function(ev){
+      window.addEventListener(ev, function(){ userScrolled = true; }, {passive:true, once:true});
+    });
+    function fixHash(){
+      if(userScrolled) return;
+      var id = location.hash.slice(1);
+      if(!id) return;
+      var el = document.getElementById(id);
+      if(el){ window.scrollTo({top: el.offsetTop, behavior:'instant'}); }
+    }
+    window.addEventListener('load', function(){ fixHash(); setTimeout(fixHash, 400); setTimeout(fixHash, 1000); });
+    fixHash();
+  })();
+</script>
+</body>
+</html>
