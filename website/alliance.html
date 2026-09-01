@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Alliance · OSERA | Open Source Enterprise Resiliency Alliance</title>
+<link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="/img/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#00253F;--cyan:#00B5E2;--blue:#0086BF;--teal:#3FB6A8;--teald:#487A7B;--green:#43B02A;--ink:#16222E;--grey:#5B6770;--line:#E7EDF2;--bg:#FFFFFF;--soft:#F4F8FB;--mist:#E9F6FB;--mist2:#EAF7F3;--gold:#B98314;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);line-height:1.7;background:#fff;-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}
+h1,h2,h3{font-family:'Montserrat',sans-serif;color:var(--navy);letter-spacing:-.01em}
+.wrap{max-width:1140px;margin:0 auto;padding:0 28px}
+header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:66px;max-width:1140px;margin:0 auto;padding:0 28px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo-link{display:flex;align-items:center;line-height:0}
+.brand-logo{height:36px;width:auto;display:block}
+.finos-logo{height:36px}
+.osera-logo{height:32px;width:auto;display:block}
+.brand-footer .finos-logo{height:40px}
+.brand-footer .osera-logo{height:34px}
+.brand-divider{width:1px;height:32px;background:var(--line);display:block}
+.site-brand{display:flex;flex-direction:column;justify-content:center;gap:1px;text-decoration:none;line-height:1.1}
+.site-brand .full-name{font-weight:600;color:var(--grey);font-size:11px;letter-spacing:0}
+footer .brand .full-name{color:#cfe0ec}
+footer .brand-divider{background:rgba(255,255,255,.28)}
+.navlinks{display:flex;gap:8px;align-items:center;white-space:nowrap}
+.navlinks a{color:var(--ink);font-weight:600;font-size:14px;text-decoration:none}
+.navlinks a:hover{color:var(--blue)}
+.navlinks a:not(.btn):not(.nav-github){padding:8px 12px;border-radius:999px}
+.btn{display:inline-block;font-family:'Inter';font-weight:600;font-size:14px;padding:11px 20px;border-radius:999px;border:1px solid transparent;cursor:pointer;transition:.15s;text-decoration:none}
+.btn.primary{background:var(--navy);color:#fff !important}
+.btn.primary:hover{background:#003a5e}
+.btn.ghost{background:#fff;color:var(--navy) !important;border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--blue);color:var(--blue) !important}
+.btn.cyan{background:var(--cyan);color:var(--navy) !important}
+.btn.cyan:hover{background:#00a3cb;color:#fff !important}
+.btn.involve{background:var(--gold);color:#fff !important;border-color:var(--gold)}
+.btn.involve:hover{background:#9a6d10;border-color:#9a6d10}
+.navlinks .page-link{background:var(--soft);color:var(--grey) !important;border-color:var(--line)}
+.navlinks .page-link:hover{background:#fff;border-color:var(--blue);color:var(--blue) !important}
+.btn.active{background:var(--navy);color:#fff !important;border-color:var(--navy)}
+.btn.active:hover{background:#003a5e;color:#fff !important}
+.nav-github{display:flex;align-items:center;color:var(--ink)}
+.nav-github:hover{color:var(--blue)}
+.nav-github svg{width:22px;height:22px;display:block}
+@media(max-width:1080px){.brand .full-name{display:none}}
+@media(max-width:940px){.navlinks a:not(.btn):not(.nav-github){display:none}}
+@media(max-width:760px){.navlinks .page-link:not(.active){display:none}}
+@media(max-width:560px){.navlinks .page-link{display:none}}
+@media(max-width:620px){.brand{gap:8px}.finos-logo{height:30px}.osera-logo{height:26px}.brand-divider{height:28px}}
+.hero{background:radial-gradient(900px 460px at 85% -10%, var(--mist), transparent 60%),linear-gradient(180deg,#fff,var(--soft));border-bottom:1px solid var(--line);padding:78px 0 66px}
+.hero .eyebrow{color:var(--blue);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:12px;margin-bottom:16px}
+.hero h1{font-size:44px;font-weight:800;line-height:1.12}
+.hero p{color:var(--grey);font-size:19px;margin-top:20px}
+.hero .jump{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+@media(max-width:680px){.hero h1{font-size:34px}}
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.kick{color:var(--blue);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:12px;margin-bottom:14px}
+h2{font-size:28px;font-weight:800;margin-bottom:8px}
+p.body{font-size:16px;margin-top:12px;color:var(--grey)}
+/* member tiles */
+.member-tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:36px}
+@media(max-width:900px){.member-tiles{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:620px){.member-tiles{grid-template-columns:1fr 1fr}}
+.mtile{border:1px solid var(--line);border-radius:16px;background:#fff;padding:24px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:112px;transition:.15s}
+.mtile:hover{border-color:var(--blue);transform:translateY(-2px)}
+.mtile img{max-height:44px;max-width:84%;width:auto;height:auto;object-fit:contain}
+.mtile .tier{margin-top:10px;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);background:#FBF6DC;border-radius:999px;padding:4px 10px}
+/* generic cards */
+.grid{display:grid;gap:22px;margin-top:36px}
+.g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:900px){.g3{grid-template-columns:1fr 1fr}} @media(max-width:620px){.g2,.g3{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;transition:.18s;box-shadow:0 1px 2px rgba(16,34,46,.03)}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(16,34,46,.08);border-color:#dfe7ee}
+.card h3{font-size:18px;font-weight:700}
+.card p{font-size:14.5px;color:var(--grey);margin-top:8px}
+.card .ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.ic.b{background:var(--mist);color:var(--blue)} .ic.t{background:var(--mist2);color:var(--teald)} .ic.g{background:#FBF6DC;color:var(--gold)} .ic.n{background:#E9EEF2;color:var(--navy)}
+.more{display:inline-block;margin-top:14px;font-weight:600;font-size:14px;color:var(--blue);text-decoration:none}
+/* contributing vendors */
+.vendor-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:36px}
+@media(max-width:900px){.vendor-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.vendor-grid{grid-template-columns:1fr}}
+.vcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px 26px;display:flex;flex-direction:column;align-items:center;text-align:center;transition:.18s;border-top:5px solid var(--teal)}
+.vcard:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(16,34,46,.08)}
+.vcard .vlogo{height:72px;display:flex;align-items:center;justify-content:center}
+.vcard .vlogo img{max-height:56px;max-width:180px;width:auto;height:auto;object-fit:contain}
+.vcard .vrole{display:inline-block;margin-top:16px;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--teald);background:var(--mist2);border-radius:999px;padding:5px 12px}
+/* board cards */
+.board-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:38px}
+@media(max-width:900px){.board-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.board-grid{grid-template-columns:1fr}}
+.bcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px 26px;text-align:center;transition:.18s;box-shadow:0 1px 2px rgba(16,34,46,.03);display:flex;flex-direction:column}
+.bcard:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(16,34,46,.08);border-color:#dfe7ee}
+.bcard img,.bcard .avatar{width:124px;height:124px;border-radius:50%;object-fit:cover;margin:0 auto 18px;display:block;border:4px solid var(--mist)}
+.bcard .avatar{display:flex;align-items:center;justify-content:center;background:linear-gradient(140deg,var(--navy),var(--blue));color:#fff;font-family:'Montserrat';font-weight:800;font-size:36px}
+.bcard h3{font-size:19px}
+.bcard .role{font-size:13.5px;color:var(--grey);margin-top:6px;line-height:1.5}
+.bcard .firm{display:inline-block;margin:12px auto 0;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);background:var(--mist);padding:5px 13px;border-radius:999px}
+.bcard .chairtag{display:inline-block;margin:8px auto 0;font-size:11px;font-weight:800;letter-spacing:.04em;color:var(--gold);background:#FBF6DC;padding:5px 13px;border-radius:999px}
+.bcard .bio{font-size:13.5px;color:var(--grey);margin-top:16px;text-align:left;border-top:1px dashed var(--line);padding-top:14px}
+.boardnote{margin-top:26px;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:16px 20px;font-size:14px;color:var(--grey)}
+/* how the board works */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:32px}
+@media(max-width:820px){.grid3{grid-template-columns:1fr}}
+.gcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px}
+.gcard h3{font-size:17px}
+.gcard p{font-size:14px;color:var(--grey);margin-top:8px}
+.gcard .ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+/* membership */
+.tier-table-wrap{margin-top:28px;overflow-x:auto;-webkit-overflow-scrolling:touch;background:#fff;border:1px solid var(--line);border-radius:18px;padding:10px}
+.tier-table{width:100%;min-width:560px;border-collapse:collapse;font-size:13.5px;line-height:1.4}
+.tier-table th,.tier-table td{border:1px solid var(--line);padding:11px 14px;text-align:center;vertical-align:middle}
+.tier-table thead th{background:var(--soft);font-weight:700;color:var(--navy);font-size:13.5px}
+.tier-table thead th:first-child{background:var(--mist);text-align:left}
+.tier-table tbody th{font-weight:500;color:var(--ink);text-align:left;background:#fff}
+.tier-table .yes{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--green);color:var(--green);font-size:11px;font-weight:800;line-height:1}
+.tier-table .fee{font-weight:700;color:var(--navy);white-space:nowrap}
+.tier-table .note{font-size:12px;color:var(--grey);line-height:1.3}
+.member-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.cta{background:var(--soft);text-align:center;border:none}
+.cta h2{font-size:30px}
+.cta .btn{margin-top:22px;font-size:15px;padding:14px 26px}
+.cta .small{margin-top:14px;font-size:13px;color:var(--grey)}
+footer{background:var(--navy);color:#cfe0ec;padding:40px 0;font-size:13px}
+footer a{color:#9fd4ec}
+.footer-inner{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;max-width:1140px;margin:0 auto;padding:0 28px}
+.footer-note{max-width:78ch;color:#7fa6bd;font-size:13px}
+.footer-nav{color:#7fa6bd}
+</style>
+</head>
+<body id="top">
+
+<header>
+  <nav>
+    <div class="brand"><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-color.svg" alt="OSERA" class="osera-logo"></a></div>
+    <div class="navlinks">
+      <a href="how-it-works.html">The Solution</a>
+      <a href="alliance.html" class="btn active page-link" aria-current="page">The Alliance</a>
+      <a href="workstreams.html">Workstreams</a>
+      <a href="principles.html">Our Principles</a>
+      <a href="news.html">News &amp; Media</a>
+      <a href="index.html#involved" class="btn involve">Get involved</a>
+      <a href="https://github.com/finos-osera" class="nav-github" target="_blank" rel="noopener" aria-label="OSERA on GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.021C22 6.484 17.522 2 12 2z"/></svg></a>
+    </div>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">The Alliance</div>
+    <h1>Funded by institutions. Built with expert vendors. Governed by both the sector and no one firm.</h1>
+    <p class="sub">OSERA is member-governed by design: the institutions that run the software fund it and set its direction, and the technology vendors who know open source best do the work alongside them — all under FINOS's neutral governance within the Linux Foundation.</p>
+    <div class="jump">
+      <a href="#members" class="btn ghost">Members</a>
+      <a href="#board" class="btn ghost">Governing Board</a>
+      <a href="#vendors" class="btn ghost">Contributing Vendors</a>
+      <a href="#membership" class="btn involve">Become a member</a>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBERS -->
+<section id="members">
+  <div class="wrap">
+    <div class="kick">Members</div>
+    <h2>Funded and governed by the institutions that run the software</h2>
+    <p class="body">Five global banks fund the alliance and govern it — one firm, one vote — as founding Premier members. And membership is global by design: the General tier is sized so banks of every size, in every jurisdiction, can consume the same protection.</p>
+    <div class="member-tiles">
+      <div class="mtile"><img src="/img/members/citi.png" alt="Citi" loading="lazy"><span class="tier">Premier member</span></div>
+      <div class="mtile"><img src="/img/members/deutsche-bank.png" alt="Deutsche Bank" loading="lazy"><span class="tier">Premier member</span></div>
+      <div class="mtile"><img src="/img/members/morgan-stanley.png" alt="Morgan Stanley" loading="lazy"><span class="tier">Premier member</span></div>
+      <div class="mtile"><img src="/img/members/natwest.png" alt="NatWest" loading="lazy"><span class="tier">Premier member</span></div>
+      <div class="mtile"><img src="/img/members/rbc.png" alt="RBC" loading="lazy"><span class="tier">Premier member</span></div>
+    </div>
+    <div class="grid g3" style="margin-top:34px">
+      <div class="card" style="border-top:5px solid var(--gold)">
+        <div class="ic g">🏛</div>
+        <h3>Premier — govern &amp; prioritise</h3>
+        <p>A Governing Board seat and control of the model: approve projects, maintenance scope, SLAs and vendor-maintainer bids — plus member access to patched releases.</p>
+        <a class="more" href="#board">Meet the Governing Board →</a>
+      </div>
+      <div class="card" style="border-top:5px solid var(--blue)">
+        <div class="ic b">🌍</div>
+        <h3>General — consume at your scale</h3>
+        <p>Size-based fees give institutions of all sizes member access to the same patched releases and the right to propose new projects. One pooled fix, priced for everyone — that's the point.</p>
+        <a class="more" href="#membership">See member benefits →</a>
+      </div>
+      <div class="card" style="border-top:5px solid var(--teal)">
+        <div class="ic t">🤝</div>
+        <h3>FINOS members — join the work</h3>
+        <p>Any FINOS member can participate in OSERA working groups and bid to become a vendor maintainer — <strong>no OSERA membership required</strong>.</p>
+        <a class="more" href="workstreams.html">Explore the workstreams →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GOVERNING BOARD -->
+<section id="board" style="background:var(--soft)">
+  <div class="wrap">
+    <div class="kick">Governing Board</div>
+    <h2>Governed by the institutions that run the software</h2>
+    <p class="body">Each founding Premier member holds a seat on the Governing Board, which sets the direction of the alliance: what gets patched, how the shared backlog is prioritised, who produces fixes and to what standard, and how pooled funds are deployed. The board first convened in August 2026 — and its members are the institutions standing behind the <a href="principles.html">OSERA Guiding Principles</a>. One seat per Premier member, one firm one vote — listed alphabetically by institution.</p>
+    <div class="board-grid">
+      <div class="bcard">
+        <img src="/img/board/denis-urusov.png" alt="Denis Urusov">
+        <h3>Denis Urusov</h3>
+        <div class="role">Managing Director · Head of Engineering &amp; Architecture, Data Solutions</div>
+        <span class="firm">Citi</span>
+        <div class="bio">Denis leads Engineering and Architecture for Data Solutions at Citi, with three decades of technology leadership spanning Citi, Bear Stearns and the Federal Reserve Bank of New York — from low-latency trading to enterprise data platforms.</div>
+      </div>
+      <div class="bcard">
+        <img src="/img/board/peter-thomas.png" alt="Peter Thomas">
+        <h3>Peter Thomas</h3>
+        <div class="role">Managing Director · Distinguished Engineer</div>
+        <span class="firm">Deutsche Bank</span>
+        <div class="bio">Peter is a Managing Director and Distinguished Engineer at Deutsche Bank, one of the institutions behind the end-to-end pilot that proved the OSERA model ahead of formation.</div>
+      </div>
+      <div class="bcard">
+        <img src="/img/board/dov-katz.png" alt="Dov Katz">
+        <h3>Dov Katz</h3>
+        <div class="role">Managing Director · Distinguished Engineer</div>
+        <span class="firm">Morgan Stanley</span>
+        <span class="chairtag">Chair · Remediation Standards WG</span>
+        <div class="bio">Dov leads Morgan Stanley's Developer Experience organisation, supporting more than 15,000 developers, and is a former Chair of FINOS. He chairs the OSERA Remediation Standards Working Group.</div>
+      </div>
+      <div class="bcard">
+        <div class="avatar" aria-hidden="true">PS</div>
+        <h3>Peter Suggitt</h3>
+        <div class="role">Governing Board Representative</div>
+        <span class="firm">NatWest</span>
+        <div class="bio">Peter represents NatWest Group, which joined OSERA as a founding Premier member in August 2026.</div>
+      </div>
+      <div class="bcard">
+        <div class="avatar" aria-hidden="true">TC</div>
+        <h3>Tobias Coetzee</h3>
+        <div class="role">Governing Board Representative</div>
+        <span class="firm">RBC</span>
+        <div class="bio">Tobias is a senior engineering leader at RBC and the firm's primary representative on the OSERA Governing Board. Bhupesh Vora, chair of the FINOS Governing Board, serves as RBC's alternate delegate.</div>
+      </div>
+    </div>
+    <div class="boardnote">Shown: primary representatives. Each Premier member may also name an alternate delegate, and the General member class elects one additional board representative once seated. FINOS provides staff support and neutral facilitation for the board and every working group.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kick">How the board works</div>
+    <h2>Lightweight governance, built to ship</h2>
+    <div class="grid3">
+      <div class="gcard"><div class="ic b">🗳</div><h3>One firm, one vote</h3><p>Each member firm names one delegate per body it joins. The board meets monthly; working groups and task forces run weekly.</p></div>
+      <div class="gcard"><div class="ic t">⚙️</div><h3>Out of the critical path</h3><p>Prioritisation of the remediation backlog is automated on shared, neutral scoring — the board sets policy and handles escalations, not per-CVE decisions.</p></div>
+      <div class="gcard"><div class="ic g">🌐</div><h3>Neutral by charter</h3><p>OSERA operates under the FINOS charter within the Linux Foundation — IP, antitrust and confidentiality frameworks the industry already trusts, in a venue no single vendor or country controls.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTRIBUTING VENDORS -->
+<section id="vendors" style="background:var(--soft)">
+  <div class="wrap">
+    <div class="kick">Contributing Vendors</div>
+    <h2>Built with the vendors who know open source best</h2>
+    <p class="body">OSERA was not designed in a conference room. From the first formation calls through the bank-validated pilot, these technology firms put senior, deeply open-source-savvy engineers on the problem — shaping the model, drafting the standards, and building the pipeline that banks validated end-to-end before launch. That calibre of talent is still doing the work today, and the door is open: any FINOS member can join the working groups and bid to become a vendor maintainer.</p>
+    <div class="vendor-grid">
+      <div class="vcard">
+        <div class="vlogo"><img src="/img/vendors/moderne.svg" alt="Moderne"></div>
+        <span class="vrole">Vendor maintainer</span>
+      </div>
+      <div class="vcard">
+        <div class="vlogo"><img src="/img/vendors/sonatype.webp" alt="Sonatype"></div>
+        <span class="vrole">Supply-chain infrastructure</span>
+      </div>
+      <div class="vcard">
+        <div class="vlogo"><img src="/img/vendors/controlplane.webp" alt="ControlPlane"></div>
+        <span class="vrole">Security engineering</span>
+      </div>
+      <div class="vcard">
+        <div class="vlogo"><img src="/img/vendors/scottlogic.png" alt="Scott Logic"></div>
+        <span class="vrole">Community support</span>
+      </div>
+    </div>
+    <p class="body" style="margin-top:26px">Want your firm on this list? Working-group participation and vendor-maintainer bids are open to every FINOS member. <a href="https://www.finos.org/become-a-member" target="_blank" rel="noopener">Become a FINOS member</a> or head to the <a href="workstreams.html">workstreams</a> to start contributing.</p>
+  </div>
+</section>
+
+<!-- MEMBERSHIP -->
+<section id="membership">
+  <div class="wrap">
+    <div class="kick">Membership</div>
+    <h2>Become an OSERA member</h2>
+    <p class="body">Two simple tiers for the institutions that run the software — Premier to govern and prioritise, General to consume at your scale — plus benefits every existing FINOS member already has. OSERA is a global initiative: a sovereign, community-governed option that lets FSIs anywhere in the world reduce operational risk without depending on any single commercial vendor. The General tier is designed for banks of all sizes, with accessible fees so smaller FSIs can drastically improve their resiliency too. See the full <a href="https://cdn.platform.linuxfoundation.org/agreements/osera.pdf" target="_blank" rel="noopener">charter and not-for-execution participation agreement</a>.</p>
+    <div class="tier-table-wrap">
+      <table class="tier-table">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Premier</th>
+            <th scope="col">General</th>
+            <th scope="col">FINOS Member</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Annual fee</th>
+            <td class="fee">$100k</td>
+            <td class="fee">$15k–$90k <span class="note" style="display:block">by firm size</span></td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">Approve / sunset projects for maintenance</th>
+            <td><span class="yes" aria-label="Included">✓</span></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">Approve maintenance scope, SLAs &amp; vendor maintainer bids</th>
+            <td><span class="yes" aria-label="Included">✓</span></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">Governing board seat</th>
+            <td><span class="yes" aria-label="Included">✓</span></td>
+            <td class="note">1 for the whole class</td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">Committees seat</th>
+            <td><span class="yes" aria-label="Included">✓</span></td>
+            <td class="note">1 for the whole class</td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">Member-only access to patched releases</th>
+            <td><span class="yes" aria-label="Included">✓</span></td>
+            <td><span class="yes" aria-label="Included">✓</span></td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">Propose new projects</th>
+            <td><span class="yes" aria-label="Included">✓</span></td>
+            <td><span class="yes" aria-label="Included">✓</span></td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">Working group participation</th>
+            <td><span class="yes" aria-label="Included">✓</span></td>
+            <td><span class="yes" aria-label="Included">✓</span></td>
+            <td><span class="yes" aria-label="Included">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="body" style="font-size:13.5px;margin-top:14px">Working-group participation — and bidding to become a vendor maintainer — is open to all FINOS members. No OSERA membership required.</p>
+    <div class="grid g3" style="margin-top:30px">
+      <div class="card" style="border-top:5px solid var(--navy)">
+        <div class="ic n">🏦</div>
+        <h3>Financial institutions</h3>
+        <p>Fund and govern the alliance — and consume member-ready patched releases at your scale.</p>
+        <a class="btn primary" style="margin-top:16px" href="https://enrollment.lfx.linuxfoundation.org/?project=osera" target="_blank" rel="noopener">Become an OSERA member</a>
+        <p style="font-size:12.5px;margin-top:10px">Not yet a FINOS member? Email <a href="mailto:membership@finos.org?subject=Joining%20OSERA">membership@finos.org</a>.</p>
+      </div>
+      <div class="card" style="border-top:5px solid var(--teal)">
+        <div class="ic t">🛠</div>
+        <h3>Technology vendors</h3>
+        <p>Join the working groups and bid to become a vendor maintainer — open to every FINOS member, no OSERA membership required.</p>
+        <a class="btn cyan" style="margin-top:16px" href="https://www.finos.org/become-a-member" target="_blank" rel="noopener">Become a FINOS member</a>
+      </div>
+      <div class="card" style="border-top:5px solid var(--gold)">
+        <div class="ic g">📦</div>
+        <h3>Everyone who runs open source</h3>
+        <p>All OSERA source is public — explore the backpatch lines and standards on GitHub and build it yourself.</p>
+        <a class="btn ghost" style="margin-top:16px" href="https://github.com/finos-osera" target="_blank" rel="noopener">Build it yourself</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <h2>Want a seat at the table?</h2>
+    <p class="body" style="max-width:58ch;margin:12px auto 0">Premier membership includes a Governing Board seat and full control over what gets patched, to what standard, and by whom. General members elect a class representative — and every FINOS member can join the working groups.</p>
+    <a href="#membership" class="btn primary">Become a member</a>
+    <p class="small">See the <a href="https://cdn.platform.linuxfoundation.org/agreements/osera.pdf" target="_blank" rel="noopener">charter and participation agreement</a> · questions? <a href="mailto:membership@finos.org">membership@finos.org</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-white.svg" alt="OSERA" class="osera-logo"><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
+    <div class="footer-note">OSERA is a FINOS initiative, part of the Linux Foundation, focused on open, portable remediation for regulated enterprises and complementary to <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a>.</div>
+    <div class="footer-nav"><a href="index.html">Home</a> · <a href="how-it-works.html">The Solution</a> · <a href="alliance.html">The Alliance</a> · <a href="workstreams.html">Workstreams</a> · <a href="principles.html">Our Principles</a> · <a href="news.html">News &amp; Media</a> · <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a> · <a href="mailto:membership@finos.org">membership@finos.org</a></div>
+  </div>
+</footer>
+<script>
+  // scroll-behavior:smooth can cancel the browser's own anchor scroll when arriving
+  // with a hash (e.g. alliance.html#board) while images are still loading. Re-apply
+  // the hash target until layout settles; stop as soon as the user scrolls themselves.
+  (function(){
+    var userScrolled = false;
+    ['wheel','touchstart','keydown'].forEach(function(ev){
+      window.addEventListener(ev, function(){ userScrolled = true; }, {passive:true, once:true});
+    });
+    function fixHash(){
+      if(userScrolled) return;
+      var id = location.hash.slice(1);
+      if(!id) return;
+      var el = document.getElementById(id);
+      if(el){ window.scrollTo({top: el.offsetTop, behavior:'instant'}); }
+    }
+    window.addEventListener('load', function(){ fixHash(); setTimeout(fixHash, 400); setTimeout(fixHash, 1000); });
+    fixHash();
+  })();
+</script>
+</body>
+</html>
