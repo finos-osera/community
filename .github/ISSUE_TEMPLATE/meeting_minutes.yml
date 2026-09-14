@@ -6,15 +6,11 @@ body:
   - type: markdown
     attributes:
       value: |
-        Please fill out the meeting details below.
-  - type: input
-    id: date
+        Time: 12.30pm ET / 5.30pm GMT
+  - type: markdown
     attributes:
-      label: Date
-      description: Meeting date and time
-      placeholder: MMM DD YYYY - 12.30pm ET / 5.30pm GMT
-    validations:
-      required: true
+      value: |
+        Please fill out the meeting details below.
   - type: textarea
     id: meeting_details
     attributes:
