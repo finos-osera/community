@@ -28,9 +28,9 @@ OSERA (FINOS)
 ├── Software projects
 │   └── risk-navigator                  remediation prioritization tool
 ├── Standards
-│   └── remediation-standards           open patching / consumption draft
+│   └── remediation-standards           open patching / attestation standards
 ├── Backpatch library
-│   └── backpatch-*                     public source for maintained lines
+│   └── github.com/finos-osera-forks    public source for maintained lines
 └── Task forces
     └── operations-taskforce            operational coordination
 ```
@@ -55,11 +55,9 @@ OSERA (FINOS)
 | **Remediation / patching standards** | Provisional evaluation draft for producing, publishing, and consuming open backpatches (fork management, provenance, release evidence, VEX/SBOM feeds, recipient test guidance). Not a ratified FINOS standard. | [repo](https://github.com/finos-osera/remediation-standards) · **[standards.osera.finos.org](https://standards.osera.finos.org)** |
 
 
-[standards.osera.finos.org](https://standards.osera.finos.org) is an asset of the remediation-standards project.
+### Hardened Open Source Projects library
 
-### Backpatch library
-
-Public `backpatch-*` repositories in `[finos-osera](https://github.com/orgs/finos-osera/repositories?q=backpatch-&type=all)` hold the maintained source for lines the sector still runs — often past upstream end of life. Naming, branches, and release metadata follow the draft standards (`backpatch-<project>`, `backpatch/<version>` branches, `+backpatch.NNN` versions).
+Public repositories in `[finos-osera-forks](https://github.com/orgs/finos-osera-forks)` hold the maintained source for lines the sector still runs, often past upstream end of life. Naming, branches, release metadata and attestations follow standards defined by our Members at [standards.osera.finos.org](standards.osera.finos.org).
 
 Source is public by default. Built, participant-ready artifacts are delivered through formation participation. Browse the org, or start from the lines already piloted on [osera.finos.org](https://osera.finos.org).
 
@@ -73,12 +71,25 @@ Source is public by default. Built, participant-ready artifacts are delivered th
 
 ## Get involved
 
-- Public site and enrollment: [osera.finos.org/#involved](https://osera.finos.org/#involved)
+- Join OSERA: [osera.finos.org/#involved](https://osera.finos.org/#involved)
 - Guiding principles: [osera.finos.org/guiding-principles](https://osera.finos.org/guiding-principles)
 - Contribute via GitHub issues and pull requests in the relevant project (see [CONTRIBUTING.md](CONTRIBUTING.md))
 - Membership: [membership@finos.org](mailto:membership@finos.org)
 
+## How to update this website: AI-based driven developer workflow
 
+1. Download Cursor
+2. `git clone git@github.com:finos-osera/community.git`
+3. Import it in Cursor
+4. Switch to a feature branch: `git checkout -b mybranch`
+5. Tell the agent what you want, e.g: "add this video https://www.youtube.com/watch?v=M4G2oipL4lE&list=PLXnqWU1wRiXY&index=45 to the news and media page video block"
+6. `cd website; npm run start`
+7. test on localhost:3000
+8. if happy: `git add .; git commit -m "<your message">, git push --set-upstream mybranch` 
+9. go in github and raise a PR
+10. see the preview
+11. Assign someone to review
+12. merge :slightly_smiling_face:
 
 ## Governance
 
