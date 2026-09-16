@@ -78,17 +78,17 @@ Source is public by default. Built, participant-ready artifacts are delivered th
 
 ## How to update this website: AI-based driven developer workflow
 
-1. Download Cursor
+1. Download Cursor / Claude Code / Antigravity
 2. `git clone git@github.com:finos-osera/community.git`
-3. Import it in Cursor
+3. Import it in Cursor / Claude Code / Antigravity
 4. Switch to a feature branch: `git checkout -b mybranch`
 5. Tell the agent what you want, e.g: "add this video https://www.youtube.com/watch?v=M4G2oipL4lE&list=PLXnqWU1wRiXY&index=45 to the news and media page video block"
 6. `cd website; npm run start`
 7. test on localhost:3000
-8. if happy: `git add .; git commit -m "<your message">, git push --set-upstream mybranch` 
+8. if happy: `git add .; git commit -m "<describe your changes>"; git push --set-upstream origin mybranch` 
 9. go in github and raise a PR
 10. see the preview
-11. Assign someone to review
+11. Assign someone to review (or YOLO it if you are 100% sure)
 12. merge :slightly_smiling_face:
 
 ## Governance
