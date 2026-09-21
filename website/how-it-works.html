@@ -142,6 +142,10 @@ footer a{color:#9fd4ec}
 .faq-table.pairs td{width:50%}
 .diagram{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 16px 10px;overflow-x:auto}
 .diagram .mermaid{display:flex;justify-content:center}
+@media(max-width:900px){
+  .diagram .mermaid{display:block;width:1100px;max-width:none}
+  .diagram .mermaid svg{width:1100px !important;min-width:1100px !important;max-width:none !important;height:auto !important}
+}
 .summary{margin-top:36px;background:var(--navy);border-radius:18px;padding:28px 32px}
 .summary .eyebrow{color:#7fd8f5}
 .summary p{color:#fff;font-size:18px;font-weight:600;line-height:1.55;margin-top:8px}
@@ -475,10 +479,18 @@ flowchart LR
 <script src="https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js"></script>
 <script>
   mermaid.initialize({
-    startOnLoad: true,
+    startOnLoad: false,
     theme: 'base',
     securityLevel: 'strict',
-    flowchart: { htmlLabels: true, useMaxWidth: true, curve: 'basis', padding: 16 },
+    flowchart: {
+      htmlLabels: true,
+      useMaxWidth: true,
+      curve: 'basis',
+      padding: 18,
+      wrappingWidth: 460,
+      nodeSpacing: 50,
+      rankSpacing: 70
+    },
     themeVariables: {
       fontFamily: "Inter, system-ui, sans-serif",
       fontSize: '14px',
@@ -494,6 +506,7 @@ flowchart LR
       edgeLabelBackground: '#ffffff'
     }
   });
+  document.fonts.ready.then(function(){ mermaid.run({ querySelector: '.mermaid' }); });
 </script>
 </body>
 </html>
