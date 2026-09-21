@@ -126,6 +126,25 @@ footer a{color:#9fd4ec}
 .footer-inner{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;max-width:1140px;margin:0 auto;padding:0 28px}
 .footer-note{max-width:78ch;color:#7fa6bd;font-size:13px}
 .footer-nav{color:#7fa6bd}
+/* FAQ */
+.faq h3{font-size:22px;font-weight:800;margin-top:40px}
+.faq-table-wrap{margin-top:16px;overflow-x:auto;-webkit-overflow-scrolling:touch;background:#fff;border:1px solid var(--line);border-radius:18px}
+.faq-table{width:100%;min-width:720px;border-collapse:collapse;font-size:14.5px;line-height:1.55}
+.faq-table th,.faq-table td{padding:14px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.faq-table thead th{font-family:'Montserrat',sans-serif;font-weight:700;font-size:13.5px;color:var(--navy);background:var(--soft)}
+.faq-table thead th.q{background:var(--mist)}
+.faq-table thead th.osera,.faq-table td.osera{background:#f3fbf8}
+.faq-table thead th.akrites,.faq-table td.akrites{background:#f4fbfe}
+.faq-table thead th.osera{color:var(--teald)}
+.faq-table thead th.akrites{color:var(--blue)}
+.faq-table tbody tr:last-child th,.faq-table tbody tr:last-child td{border-bottom:none}
+.faq-table tbody th{width:20%;font-weight:700;color:var(--navy);background:var(--soft)}
+.faq-table.pairs td{width:50%}
+.diagram{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 16px 10px;overflow-x:auto}
+.diagram .mermaid{display:flex;justify-content:center}
+.summary{margin-top:36px;background:var(--navy);border-radius:18px;padding:28px 32px}
+.summary .eyebrow{color:#7fd8f5}
+.summary p{color:#fff;font-size:18px;font-weight:600;line-height:1.55;margin-top:8px}
 </style>
 </head>
 <body id="top">
@@ -156,6 +175,7 @@ footer a{color:#9fd4ec}
       <a href="#value" class="btn ghost">The value</a>
       <a href="#why" class="btn ghost">Why now</a>
       <a href="#fit" class="btn ghost">OSERA &amp; Akrites</a>
+      <a href="#faq" class="btn ghost">FAQ</a>
     </div>
   </div>
 </div>
@@ -278,6 +298,141 @@ footer a{color:#9fd4ec}
   </div>
 </section>
 
+<!-- OSERA VS AKRITES FAQ -->
+<section id="faq" class="sec-soft faq">
+  <div class="wrap">
+    <div class="eyebrow">FAQ</div>
+    <h2>OSERA vs. Akrites</h2>
+    <p class="lead">A side-by-side look at what OSERA and <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a> each do, how they work together, and why both are needed.</p>
+
+    <h3 id="faq-overview">Overview</h3>
+    <div class="faq-table-wrap">
+      <table class="faq-table overview" aria-labelledby="faq-overview">
+        <thead>
+          <tr>
+            <th class="q" scope="col">Question</th>
+            <th class="osera" scope="col">OSERA</th>
+            <th class="akrites" scope="col">Akrites</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Primary aim</th>
+            <td class="osera">Enable secure enterprise consumption of open source, with a particular focus on the priorities of financial services and other regulated industries.</td>
+            <td class="akrites">Improve the security and resilience of the broader open source ecosystem through coordinated vulnerability response, upstream collaboration, and cross-industry security initiatives.</td>
+          </tr>
+          <tr>
+            <th scope="row">Primary audience</th>
+            <td class="osera">Financial services organizations, regulated enterprises, open source consumers, and FINOS members.</td>
+            <td class="akrites">Open source maintainers, Linux Foundation communities, critical infrastructure organizations, technology providers, AI companies, security firms, cloud and platform providers.</td>
+          </tr>
+          <tr>
+            <th scope="row">Primary focus</th>
+            <td class="osera">Enterprise consumption, maintained packages, standards, operational guidance, and trusted software supply chains.</td>
+            <td class="akrites">Ecosystem-wide security coordination, responsible disclosure, vulnerability remediation, and strengthening upstream open source projects.</td>
+          </tr>
+          <tr>
+            <th scope="row">Software maintenance</th>
+            <td class="osera">Ongoing maintenance of supported enterprise package versions, including backported security fixes.</td>
+            <td class="akrites">Works with upstream maintainers to deliver security fixes. May act as a <strong>maintainer of last resort</strong> when a critical project has no active maintainer, but this is an exception rather than an ongoing maintenance service.</td>
+          </tr>
+          <tr>
+            <th scope="row">SLAs</th>
+            <td class="osera">Yes. Designed to support enterprise adoption through predictable maintenance and service commitments.</td>
+            <td class="akrites">No. Focuses on coordinated security response rather than contractual enterprise support.</td>
+          </tr>
+          <tr>
+            <th scope="row">Relationship</th>
+            <td class="osera">Represents financial services priorities, develops standards and operational practices, and contributes them to the wider ecosystem through Akrites.</td>
+            <td class="akrites">Provides the broader Linux Foundation forum where cross-industry security practices, standards, and coordinated vulnerability response are developed and adopted.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="faq-together">How do OSERA and Akrites work together?</h3>
+    <div class="faq-table-wrap">
+      <table class="faq-table pairs" aria-labelledby="faq-together">
+        <thead>
+          <tr>
+            <th class="osera" scope="col">OSERA Contribution</th>
+            <th class="akrites" scope="col">Benefit Through Akrites</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="osera">Represents the financial services sector.</td>
+            <td class="akrites">Ensures financial services requirements are considered alongside other industries.</td>
+          </tr>
+          <tr>
+            <td class="osera">Develops standards and best practices within FINOS.</td>
+            <td class="akrites">Mature standards can be proposed for wider adoption across the Linux Foundation ecosystem.</td>
+          </tr>
+          <tr>
+            <td class="osera">Shares operational experience from regulated enterprises.</td>
+            <td class="akrites">Helps improve security processes that benefit the wider open source community.</td>
+          </tr>
+          <tr>
+            <td class="osera">Enables collaboration between FINOS members.</td>
+            <td class="akrites">Creates implementation-level collaboration with maintainers, platform providers, security firms, AI companies, and other Linux Foundation communities.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="faq-why">Why are both initiatives valuable?</h3>
+    <div class="faq-table-wrap">
+      <table class="faq-table pairs" aria-labelledby="faq-why">
+        <thead>
+          <tr>
+            <th class="akrites" scope="col">Akrites</th>
+            <th class="osera" scope="col">OSERA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="akrites">Strengthens the upstream open source ecosystem through coordinated security response and vulnerability remediation.</td>
+            <td class="osera">Helps financial institutions and regulated organizations safely consume open source through maintained packages, enterprise guidance, operational support, and shared standards.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="faq-diagram">Relationship diagram</h3>
+    <figure class="diagram" aria-labelledby="faq-diagram">
+      <pre class="mermaid">
+flowchart LR
+
+    FS["Financial Services&lt;br/&gt;Organizations"]
+    O["OSERA (FINOS)&lt;br/&gt;&lt;br/&gt;• Financial services priorities&lt;br/&gt;• Enterprise consumption&lt;br/&gt;• Maintained packages &amp; SLAs&lt;br/&gt;• Standards &amp; guidance"]
+
+    A["Akrites (Linux Foundation)&lt;br/&gt;&lt;br/&gt;• Cross-industry security response&lt;br/&gt;• Coordinated vulnerability disclosure&lt;br/&gt;• Upstream collaboration&lt;br/&gt;• Maintainer of last resort (where needed)"]
+
+    LFP["Other Linux Foundation&lt;br/&gt;Projects &amp; Communities"]
+    OSM["Open Source&lt;br/&gt;Maintainers &amp; Projects"]
+    CSP["Cloud &amp; Platform Providers"]
+    SEC["Security Firms"]
+    AI["AI Companies"]
+
+    FS --&gt; O
+    O --&gt;|"Financial services requirements&lt;br/&gt;Standards &amp; implementation experience"| A
+    A --&gt;|"Cross-industry practices&lt;br/&gt;Feedback &amp; collaboration"| O
+
+    A --&gt; LFP
+    A --&gt; OSM
+    A --&gt; CSP
+    A --&gt; SEC
+    A --&gt; AI
+      </pre>
+    </figure>
+
+    <div class="summary">
+      <div class="eyebrow">One sentence summary</div>
+      <p>Akrites strengthens the broader open source ecosystem through coordinated security collaboration, while OSERA helps financial services organizations securely consume open source and contributes financial services priorities, standards, and operational experience back into the wider Linux Foundation ecosystem through Akrites.</p>
+    </div>
+  </div>
+</section>
+
 <section class="cta">
   <div class="wrap">
     <h2>Pick your path in.</h2>
@@ -316,6 +471,29 @@ footer a{color:#9fd4ec}
     window.addEventListener('load', function(){ fixHash(); setTimeout(fixHash, 400); setTimeout(fixHash, 1000); });
     fixHash();
   })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    securityLevel: 'strict',
+    flowchart: { htmlLabels: true, useMaxWidth: true, curve: 'basis', padding: 16 },
+    themeVariables: {
+      fontFamily: "Inter, system-ui, sans-serif",
+      fontSize: '14px',
+      primaryColor: '#E9F6FB',
+      primaryTextColor: '#00253F',
+      primaryBorderColor: '#0086BF',
+      secondaryColor: '#EAF7F3',
+      lineColor: '#0086BF',
+      textColor: '#16222E',
+      mainBkg: '#E9F6FB',
+      nodeBorder: '#0086BF',
+      clusterBkg: '#F4F8FB',
+      edgeLabelBackground: '#ffffff'
+    }
+  });
 </script>
 </body>
 </html>
