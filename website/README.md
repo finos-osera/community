@@ -26,6 +26,16 @@ npm run build
 
 Output is written to `build/` (`index.html` plus `img/`).
 
+### Google Analytics configuration
+
+Set a Google Analytics Measurement ID at build time to enable tracking:
+
+```sh
+GA_MEASUREMENT_ID=G-XXXXXXXXXX npm run build
+```
+
+When `GA_MEASUREMENT_ID` is set, the build replaces analytics placeholders in all public HTML pages.
+
 ## Deployment
 
 Netlify is the default hosting platform for FINOS websites. Use:
