@@ -30,8 +30,23 @@ Output is written to `build/` (`index.html` plus `img/`).
 
 Set a Google Analytics Measurement ID at build time to enable tracking:
 
+macOS/Linux:
+
 ```sh
 GA_MEASUREMENT_ID=G-XXXXXXXXXX npm run build
+```
+
+PowerShell:
+
+```powershell
+$env:GA_MEASUREMENT_ID="G-XXXXXXXXXX"
+npm run build
+```
+
+Command Prompt:
+
+```bat
+set GA_MEASUREMENT_ID=G-XXXXXXXXXX && npm run build
 ```
 
 `GA_MEASUREMENT_ID` is required for `npm run build`; the build fails if it is not set so unreplaced analytics placeholders are never published.
