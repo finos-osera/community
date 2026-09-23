@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "npx --yes serve . -l 3000",
-    "build": "rm -rf build && mkdir -p build && cp index.html how-it-works.html alliance.html workstreams.html principles.html news.html guiding-principles.html board.html roi.html press-release.html build/ && cp -r img build/ && node -e \"const fs=require('fs');const dir='build';const id=process.env.GA_MEASUREMENT_ID;if(!id){console.log('GA_MEASUREMENT_ID is not set; analytics placeholders were not replaced.');process.exit(0);}for(const file of fs.readdirSync(dir)){if(!file.endsWith('.html')) continue;const path=dir+'/'+file;const content=fs.readFileSync(path,'utf8').split('__GA_MEASUREMENT_ID__').join(id);fs.writeFileSync(path,content);}\""
+    "build": "rm -rf build && mkdir -p build && cp index.html how-it-works.html alliance.html workstreams.html principles.html news.html guiding-principles.html board.html roi.html press-release.html build/ && cp -r img build/ && node -e \"const fs=require('fs');const dir='build';const id=process.env.GA_MEASUREMENT_ID;if(!id){console.error('GA_MEASUREMENT_ID is required for build to prevent publishing unreplaced analytics placeholders.');process.exit(1);}for(const file of fs.readdirSync(dir)){if(!file.endsWith('.html')) continue;const path=dir+'/'+file;const content=fs.readFileSync(path,'utf8').split('__GA_MEASUREMENT_ID__').join(id);fs.writeFileSync(path,content);}\""
   },
   "engines": {
     "node": ">=20.0"
