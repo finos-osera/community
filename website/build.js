@@ -5,7 +5,7 @@ const buildDir = path.join(__dirname, 'build');
 const gaMeasurementId = process.env.GA_MEASUREMENT_ID;
 const gaPlaceholder = '__GA_MEASUREMENT_ID__';
 const sourceHtmlFiles = fs.readdirSync(__dirname).filter((file) => file.endsWith('.html'));
-const gaBlockPattern = /<!-- Google tag \(gtag\.js\) -->\s*<script async src="https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=__GA_MEASUREMENT_ID__"><\/script>\s*<script>[\s\S]*?<\/script>\s*/;
+const gaBlockPattern = /<!-- GA_TRACKING_START -->[\s\S]*?<!-- GA_TRACKING_END -->\s*/;
 
 fs.rmSync(buildDir, {recursive: true, force: true});
 fs.mkdirSync(buildDir, {recursive: true});
