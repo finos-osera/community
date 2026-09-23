@@ -49,7 +49,7 @@ Command Prompt:
 set GA_MEASUREMENT_ID=G-XXXXXXXXXX && npm run build
 ```
 
-`GA_MEASUREMENT_ID` is required for `npm run build`; the build fails if it is not set so unreplaced analytics placeholders are never published.
+If `GA_MEASUREMENT_ID` is not set, the build still succeeds and analytics blocks are stripped from output HTML.
 
 ## Deployment
 
