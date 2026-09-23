@@ -4,8 +4,19 @@ const path = require('node:path');
 const buildDir = path.join(__dirname, 'build');
 const gaMeasurementId = process.env.GA_MEASUREMENT_ID;
 const gaPlaceholder = '__GA_MEASUREMENT_ID__';
-const sourceHtmlFiles = fs.readdirSync(__dirname).filter((file) => file.endsWith('.html'));
-const gaBlockPattern = /<!-- GA_TRACKING_START -->[\s\S]*?<!-- GA_TRACKING_END -->\s*/;
+const sourceHtmlFiles = [
+  'index.html',
+  'how-it-works.html',
+  'alliance.html',
+  'workstreams.html',
+  'principles.html',
+  'news.html',
+  'guiding-principles.html',
+  'board.html',
+  'roi.html',
+  'press-release.html',
+];
+const gaBlockPattern = /<!-- GA_TRACKING_START -->[\s\S]*?<!-- GA_TRACKING_END -->\s*/g;
 
 fs.rmSync(buildDir, {recursive: true, force: true});
 fs.mkdirSync(buildDir, {recursive: true});
