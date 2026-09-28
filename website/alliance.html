@@ -67,13 +67,15 @@ section{padding:64px 0;border-bottom:1px solid var(--line)}
 h2{font-size:28px;font-weight:800;margin-bottom:8px}
 p.body{font-size:16px;margin-top:12px;color:var(--grey)}
 /* member tiles */
-.member-tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:36px}
-@media(max-width:900px){.member-tiles{grid-template-columns:repeat(3,1fr)}}
+.member-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:36px}
 @media(max-width:620px){.member-tiles{grid-template-columns:1fr 1fr}}
+a.mtile{text-decoration:none;color:inherit}
 .mtile{border:1px solid var(--line);border-radius:16px;background:#fff;padding:24px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:112px;transition:.15s}
 .mtile:hover{border-color:var(--blue);transform:translateY(-2px)}
+.mtile .name{font-family:'Montserrat';font-weight:800;color:var(--navy);font-size:16px;line-height:1.25}
 .mtile img{max-height:44px;max-width:84%;width:auto;height:auto;object-fit:contain}
 .mtile .tier{margin-top:10px;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);background:#FBF6DC;border-radius:999px;padding:4px 10px}
+.mtile.general .tier{color:var(--blue);background:var(--mist)}
 /* generic cards */
 .grid{display:grid;gap:22px;margin-top:36px}
 .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
@@ -173,8 +175,8 @@ footer a{color:#9fd4ec}
   <div class="wrap">
     <div class="kick">Members</div>
     <h2>Funded and governed by the institutions that run the software</h2>
-    <p class="body">Five global banks fund the alliance and govern it — one firm, one vote — as founding Premier members. And membership is global by design: the General tier is sized so banks of every size, in every jurisdiction, can consume the same protection.</p>
-    <div class="member-tiles">
+    <p class="body">These institutions fund the alliance and govern it — one firm, one vote. Membership is global by design: the General tier is sized so banks of every size, in every jurisdiction, can consume the same protection.</p>
+    <div class="member-tiles" id="member-tiles" aria-live="polite">
       <div class="mtile"><img src="/img/members/citi.png" alt="Citi" loading="lazy"><span class="tier">Premier member</span></div>
       <div class="mtile"><img src="/img/members/deutsche-bank.png" alt="Deutsche Bank" loading="lazy"><span class="tier">Premier member</span></div>
       <div class="mtile"><img src="/img/members/morgan-stanley.png" alt="Morgan Stanley" loading="lazy"><span class="tier">Premier member</span></div>
@@ -419,6 +421,77 @@ footer a{color:#9fd4ec}
     }
     window.addEventListener('load', function(){ fixHash(); setTimeout(fixHash, 400); setTimeout(fixHash, 1000); });
     fixHash();
+  })();
+
+  (function(){
+    var MEMBERS_URL = 'https://api-gw.platform.linuxfoundation.org/project-service/v1/public/projects/lfcK5vEVcgon9SNzAg/members?status=Active&orderBy=name';
+    var root = document.getElementById('member-tiles');
+    if (!root) return;
+
+    function websiteUrl(site){
+      if (!site) return '';
+      var s = String(site).trim();
+      if (!s) return '';
+      if (/^https?:\/\//i.test(s)) return s;
+      return 'https://' + s.replace(/^\/+/, '');
+    }
+
+    function nameFallback(name){
+      var span = document.createElement('span');
+      span.className = 'name';
+      span.textContent = name;
+      return span;
+    }
+
+    function render(members){
+      if (!members || !members.length) return;
+      var frag = document.createDocumentFragment();
+      members.forEach(function(m){
+        if (!m || !m.Name) return;
+        var name = m.Name;
+        var href = websiteUrl(m.Website);
+        var membershipName = m.Membership && m.Membership.Name;
+        var tile = document.createElement(href ? 'a' : 'div');
+        tile.className = 'mtile';
+        if (href){
+          tile.href = href;
+          tile.target = '_blank';
+          tile.rel = 'noopener';
+          tile.setAttribute('aria-label', name);
+        }
+        if (membershipName && /general/i.test(membershipName)) tile.className += ' general';
+
+        if (m.Logo){
+          var img = document.createElement('img');
+          img.src = m.Logo;
+          img.alt = name;
+          img.loading = 'lazy';
+          img.addEventListener('error', function(){
+            if (img.parentNode) img.parentNode.replaceChild(nameFallback(name), img);
+          });
+          tile.appendChild(img);
+        } else {
+          tile.appendChild(nameFallback(name));
+        }
+
+        var tier = document.createElement('span');
+        tier.className = 'tier';
+        tier.textContent = membershipName || 'Member';
+        tile.appendChild(tier);
+        frag.appendChild(tile);
+      });
+      if (!frag.childNodes.length) return;
+      root.textContent = '';
+      root.appendChild(frag);
+    }
+
+    fetch(MEMBERS_URL)
+      .then(function(res){
+        if (!res.ok) throw new Error('members ' + res.status);
+        return res.json();
+      })
+      .then(render)
+      .catch(function(){ /* keep the static fallback tiles */ });
   })();
 </script>
 </body>
