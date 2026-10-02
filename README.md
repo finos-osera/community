@@ -23,6 +23,7 @@ Work lives in the `[finos-osera](https://github.com/finos-osera)` GitHub organiz
 OSERA (FINOS)
 ├── Public sites
 │   ├── osera.finos.org                 this repo (website/)
+│   │   └── /projects                   maintained lines and how to consume them
 │   ├── standards.osera.finos.org       remediation-standards
 │   └── risknav.osera.finos.org         risk-navigator
 ├── Software projects
@@ -59,7 +60,7 @@ OSERA (FINOS)
 
 Public repositories in `[finos-osera-forks](https://github.com/orgs/finos-osera-forks)` hold the maintained source for lines the sector still runs, often past upstream end of life. Naming, branches, release metadata and attestations follow standards defined by our Members at [standards.osera.finos.org](standards.osera.finos.org).
 
-Source is public by default. Built, participant-ready artifacts are delivered through formation participation. Browse the org, or start from the lines already piloted on [osera.finos.org](https://osera.finos.org).
+Source is public by default. Built, participant-ready artifacts are delivered through formation participation. Browse the org, start from the lines on [osera.finos.org/projects](https://osera.finos.org/projects), or the lines already piloted on [osera.finos.org](https://osera.finos.org).
 
 ### Task forces
 
