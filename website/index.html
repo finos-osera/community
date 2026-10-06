@@ -240,7 +240,7 @@ footer .footer-inner{flex-direction:column;align-items:center;text-align:center;
 footer a{color:#9fd4ec}
 .disc{font-size:13px;color:#7fa6bd;max-width:78ch}
 .footer-nav{color:#7fa6bd}
-.availgrid{grid-template-columns:repeat(5,1fr);gap:16px}
+.availgrid{grid-template-columns:repeat(4,1fr);gap:16px}
 .line{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 18px;border-top:5px solid var(--blue);display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(16,34,46,.03)}
 .line.l2{border-top-color:var(--teal)}
 .line.l3{border-top-color:var(--navy)}
@@ -256,11 +256,6 @@ footer a{color:#9fd4ec}
 .explore .ea{font-size:30px;font-weight:800;line-height:1;color:var(--cyan)}
 @media(max-width:900px){.availgrid{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.availgrid{grid-template-columns:1fr}}
-.addproj{display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed var(--line);border-radius:16px;background:var(--soft);cursor:pointer;color:var(--blue);text-decoration:none;text-align:center;padding:18px;transition:.15s}
-.addproj:hover{border-color:var(--blue);background:var(--mist);transform:translateY(-3px)}
-.addproj .plus{font-size:30px;font-weight:800;line-height:1;color:var(--blue)}
-.addproj .pl{font-size:12.5px;font-weight:700;color:var(--navy);margin-top:8px}
-.addproj .ps{font-size:11px;color:var(--grey);margin-top:3px}
 /* press */
 .presscard{display:flex;flex-direction:column;height:100%;text-decoration:none}
 .presscard .outlet{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
@@ -274,10 +269,10 @@ footer a{color:#9fd4ec}
   <div class="wrap"><nav>
     <div class="brand"><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-color.svg" alt="OSERA" class="osera-logo"></a></div>
     <div class="navlinks">
+      <a href="projects.html">Available Now</a>
       <a href="how-it-works.html">The Solution</a>
       <a href="alliance.html">The Alliance</a>
       <a href="workstreams.html">Workstreams</a>
-      <a href="projects.html">Projects</a>
       <a href="principles.html">Our Principles</a>
       <a href="news.html">News &amp; Media</a>
       <a href="#involved" class="btn involve">Get involved</a>
@@ -308,7 +303,7 @@ footer a{color:#9fd4ec}
         <div class="cta">
           <a href="#thesis" class="btn ghost">The problem</a>
           <a href="#how" class="btn ghost">The solution</a>
-          <a href="alliance.html" class="btn ghost">Who's behind it</a>
+          <a href="#available" class="btn primary">What's available now</a>
           <a href="#involved" class="btn involve">Get involved</a>
         </div>
       </div>
@@ -375,9 +370,9 @@ footer a{color:#9fd4ec}
 <!-- AVAILABLE NOW -->
 <section id="available">
   <div class="wrap">
-    <div class="eyebrow">The concept was proven: Wave 1 delivers</div>
-    <h2 style="font-size:34px">Hardened Open Source piloted in bank environments</h2>
-    <p class="lead">Premier members flagged the outdated open source libraries, with known CVEs, that they still use. From that list they prioritised <strong>58 libraries</strong> to patch — all of them in three heavily used Spring lines: <strong>Spring Boot 2.7</strong>, <strong>Spring Framework 5.3</strong>, and <strong>Spring Security 5.7</strong>.</p>
+    <div class="eyebrow">Available now and more coming every day</div>
+    <h2 style="font-size:34px">Over 50 open source project lines secured. With Financial Services grade attestation</h2>
+    <p class="lead">OSERA is now maintaining hardened versions of over 50 libraries in Spring and its transitive closure, with remediations against public CVEs applied to the specific versions prioritized by OSERA Premier Members.</p>
     <div class="grid availgrid">
       <article class="line">
         <div class="row"><h3>Spring Boot</h3><span class="v mono">2.7</span></div>
@@ -394,8 +389,7 @@ footer a{color:#9fd4ec}
         <p>The security line paired with Boot 2.7 and Framework 5.3, so authentication and access-control fixes land on the version still in production.</p>
         <a class="more" href="https://github.com/finos-osera-forks/patch-spring-security" target="_blank" rel="noopener">View the Spring Security fork →</a>
       </article>
-      <a class="explore" href="https://www.finos.org/OSERA_Prospectus" target="_blank" rel="noopener"><span class="et">Explore all supported projects</span><span class="ea">→</span></a>
-      <a class="addproj" href="https://github.com/finos-osera-forks" target="_blank" rel="noopener" title="Build it yourself from the open source"><span class="plus">+</span><span class="pl">Build it yourself</span><span class="ps">All source is open on GitHub</span></a>
+      <a class="explore" href="https://www.finos.org/OSERA_Prospectus" target="_blank" rel="noopener"><span class="et">Read the OSERA Prospectus for a full list of supported lines</span><span class="ea">→</span></a>
     </div>
     <div class="flownote">Members resolve artifacts through their existing corporate proxy with a one line change to coordinate they already use — no code or CI changes. A per-project sponsorship model is in the works, so firms can directly fund the maintenance of the projects they depend on most — <a href="#involved">register your interest</a> to put one forward. And because every line is open source, you can always <a href="https://github.com/finos-osera-forks" target="_blank" rel="noopener">build it yourself</a> from GitHub. Members also get built artifacts with signing, VEX and other attestations defined by the <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a>. Wave 1 — the Spring lines Premier members prioritised — is on the <a href="projects.html">projects page</a>.</div>
     <p class="center" style="margin-top:36px"><a class="btn primary" href="https://github.com/finos-osera-forks">Explore all hardened project on GitHub</a></p>
