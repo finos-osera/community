@@ -249,6 +249,13 @@ footer a{color:#9fd4ec}
 .line .v{display:inline-block;font-size:11.5px;font-weight:700;color:#fff;background:var(--teald);border-radius:999px;padding:5px 12px;white-space:nowrap}
 .line p{font-size:14px;color:var(--grey);margin-top:12px}
 .line .more{margin-top:auto;padding-top:16px}
+.explore{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;text-align:center;background:var(--navy);border-radius:18px;padding:24px;text-decoration:none;transition:.18s}
+.explore:hover{background:#003a5e;transform:translateY(-3px)}
+.explore .et{font-family:'Montserrat';font-weight:700;font-size:18px;line-height:1.3;color:#fff}
+.explore .ea{font-size:22px;font-weight:700;color:var(--cyan)}
+.addproj.wide{grid-column:1/-1;flex-direction:row;gap:12px;padding:16px}
+.addproj.wide .pl,.addproj.wide .ps{margin-top:0}
+@media(max-width:620px){.addproj.wide{flex-direction:column;gap:4px}}
 @media(max-width:900px){.availgrid{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.availgrid{grid-template-columns:1fr}}
 .addproj{display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed var(--line);border-radius:16px;background:var(--soft);cursor:pointer;color:var(--blue);text-decoration:none;text-align:center;padding:18px;transition:.15s}
@@ -389,7 +396,8 @@ footer a{color:#9fd4ec}
         <p>The security line paired with Boot 2.7 and Framework 5.3, so authentication and access-control fixes land on the version still in production.</p>
         <a class="more" href="https://github.com/finos-osera-forks/patch-spring-security" target="_blank" rel="noopener">View the Spring Security fork →</a>
       </article>
-      <a class="addproj" href="https://github.com/finos-osera-forks" target="_blank" rel="noopener" title="Build it yourself from the open source"><span class="plus">+</span><span class="pl">Build it yourself</span><span class="ps">All source is open on GitHub</span></a>
+      <a class="explore" href="https://www.finos.org/OSERA_Prospectus" target="_blank" rel="noopener"><span class="et">Explore all supported projects</span><span class="ea">→</span></a>
+      <a class="addproj wide" href="https://github.com/finos-osera-forks" target="_blank" rel="noopener" title="Build it yourself from the open source"><span class="plus">+</span><span class="pl">Build it yourself</span><span class="ps">All source is open on GitHub</span></a>
     </div>
     <div class="flownote">Members resolve artifacts through their existing corporate proxy with a one line change to coordinate they already use — no code or CI changes. A per-project sponsorship model is in the works, so firms can directly fund the maintenance of the projects they depend on most — <a href="#involved">register your interest</a> to put one forward. And because every line is open source, you can always <a href="https://github.com/finos-osera-forks" target="_blank" rel="noopener">build it yourself</a> from GitHub. Members also get built artifacts with signing, VEX and other attestations defined by the <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a>. Wave 1 — the Spring lines Premier members prioritised — is on the <a href="projects.html">projects page</a>.</div>
     <p class="center" style="margin-top:36px"><a class="btn primary" href="https://github.com/finos-osera-forks">Explore all hardened project on GitHub</a></p>
