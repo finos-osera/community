@@ -7,6 +7,7 @@ const gaPlaceholder = '__GA_MEASUREMENT_ID__';
 const sourceHtmlFiles = [
   'index.html',
   'how-it-works.html',
+  'projects.html',
   'alliance.html',
   'workstreams.html',
   'principles.html',

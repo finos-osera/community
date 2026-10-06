@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects · OSERA | Open Source Enterprise Resiliency Alliance</title>
+<!-- GA_TRACKING_START -->
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=__GA_MEASUREMENT_ID__"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '__GA_MEASUREMENT_ID__', { anonymize_ip: true });
+</script>
+<!-- GA_TRACKING_END -->
+<link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="/img/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#00253F;--cyan:#00B5E2;--blue:#0086BF;--teal:#3FB6A8;--teald:#487A7B;
+  --green:#43B02A;--ink:#16222E;--grey:#5B6770;--line:#E7EDF2;--bg:#FFFFFF;
+  --soft:#F4F8FB;--mist:#E9F6FB;--mist2:#EAF7F3;--gold:#B98314;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);line-height:1.7;background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}
+h1,h2,h3,h4{font-family:'Montserrat',sans-serif;color:var(--navy);letter-spacing:-.01em}
+.wrap{max-width:1140px;margin:0 auto;padding:0 28px}
+.hero{background:radial-gradient(900px 460px at 85% -10%, var(--mist), transparent 60%),linear-gradient(180deg,#fff,var(--soft));border-bottom:1px solid var(--line);padding:78px 0 66px}
+.hero .eyebrow{margin-bottom:16px}
+.hero h1{font-size:44px;font-weight:800;line-height:1.12}
+.hero p{color:var(--grey);font-size:19px;margin-top:20px;max-width:74ch}
+.hero .jump{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+@media(max-width:680px){.hero h1{font-size:34px}}
+.eyebrow{color:var(--blue);font-weight:700;letter-spacing:.12em;font-size:12px;text-transform:uppercase;margin-bottom:14px;font-family:'Inter'}
+section{padding:74px 0;border-bottom:1px solid var(--line)}
+h2{font-size:32px;font-weight:800;line-height:1.2}
+.lead{font-size:17px;color:var(--grey);margin-top:14px}
+.mono{font-family:'SFMono-Regular',ui-monospace,'Courier New',monospace}
+header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:66px;gap:18px}
+.brand{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.brand .logo-link{display:flex;align-items:center;line-height:0}
+.brand-logo{height:36px;width:auto;display:block}
+.finos-logo{height:36px}
+.osera-logo{height:32px;width:auto;display:block}
+.brand-footer .finos-logo{height:40px}
+.brand-footer .osera-logo{height:34px}
+.brand-divider{width:1px;height:32px;background:var(--line);display:block}
+.site-brand{display:flex;flex-direction:column;justify-content:center;gap:1px;text-decoration:none;line-height:1.1}
+.site-brand .full-name{font-weight:600;color:var(--grey);font-size:11px;letter-spacing:0}
+footer .brand .full-name{color:#cfe0ec}
+footer .brand-divider{background:rgba(255,255,255,.28)}
+.navlinks{display:flex;gap:8px;align-items:center;white-space:nowrap}
+.navlinks a{color:var(--ink);font-weight:600;font-size:14px;text-decoration:none}
+.navlinks a:hover{color:var(--blue)}
+.navlinks a:not(.btn):not(.nav-github){padding:8px 12px;border-radius:999px}
+.btn{display:inline-block;font-family:'Inter';font-weight:600;font-size:14px;padding:11px 20px;border-radius:999px;border:1px solid transparent;cursor:pointer;transition:.15s;text-decoration:none}
+.btn.primary{background:var(--navy);color:#fff !important}
+.btn.primary:hover{background:#003a5e}
+.btn.ghost{background:#fff;color:var(--navy) !important;border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--blue);color:var(--blue) !important}
+.btn.cyan{background:var(--cyan);color:var(--navy) !important}
+.btn.cyan:hover{background:#00a3cb;color:#fff !important}
+.btn.involve{background:var(--gold);color:#fff !important;border-color:var(--gold)}
+.btn.involve:hover{background:#9a6d10;border-color:#9a6d10}
+.navlinks .page-link{background:var(--soft);color:var(--grey) !important;border-color:var(--line)}
+.navlinks .page-link:hover{background:#fff;border-color:var(--blue);color:var(--blue) !important}
+.nav-github{display:flex;align-items:center;color:var(--ink)}
+.nav-github:hover{color:var(--blue)}
+.nav-github svg{width:22px;height:22px;display:block}
+.btn.active{background:var(--navy);color:#fff !important;border-color:var(--navy)}
+.btn.active:hover{background:#003a5e;color:#fff !important}
+@media(max-width:1080px){.brand .full-name{display:none}}
+@media(max-width:940px){.navlinks a:not(.btn):not(.nav-github){display:none}}
+@media(max-width:760px){.navlinks .page-link:not(.active){display:none}}
+@media(max-width:560px){.navlinks .page-link{display:none}}
+@media(max-width:620px){.brand{gap:8px}.finos-logo{height:30px}.osera-logo{height:26px}.brand-divider{height:28px}}
+.sec-soft{background:var(--soft)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:36px}
+@media(max-width:760px){.stats{grid-template-columns:1fr}}
+.stat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px}
+.stat .n{font-family:'Montserrat';font-weight:800;font-size:34px;color:var(--navy);line-height:1}
+.stat p{font-size:14px;color:var(--grey);margin-top:10px}
+.lines{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:36px}
+@media(max-width:900px){.lines{grid-template-columns:1fr}}
+.line{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;border-top:5px solid var(--blue);display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(16,34,46,.03)}
+.line.l2{border-top-color:var(--teal)}
+.line.l3{border-top-color:var(--navy)}
+.line .row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.line h3{font-size:18px;font-weight:700}
+.line .v{display:inline-block;font-size:11.5px;font-weight:700;color:#fff;background:var(--teald);border-radius:999px;padding:5px 12px;white-space:nowrap}
+.line p{font-size:14.5px;color:var(--grey);margin-top:12px}
+.line .more{margin-top:auto;padding-top:16px;font-weight:600;font-size:14px}
+.center-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+.flownote{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 20px;font-size:14px;color:var(--grey)}
+.sec-soft .flownote{background:#fff}
+.flowtop{display:flex;align-items:stretch;gap:14px;margin-top:36px;flex-wrap:wrap}
+.flowbox{flex:1;min-width:230px;border-radius:16px;padding:20px 22px;color:var(--ink)}
+.flowbox.a{background:var(--mist);border:1px solid #cfeaf6}
+.flowbox.b{background:var(--mist2);border:1px solid #cfe9e2}
+.flowbox .t{font-family:'Montserrat';font-weight:700;font-size:15px;color:var(--navy)}
+.flowbox .d{font-size:13px;color:var(--grey);margin-top:4px}
+.flowbox .d a{font-weight:600}
+.flowarrow{display:flex;align-items:center;color:#c2ccd4;font-size:24px;font-weight:700}
+@media(max-width:760px){.flowarrow{flex-basis:100%;justify-content:center}}
+.dests{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:22px}
+@media(max-width:760px){.dests{grid-template-columns:1fr}}
+.dest{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;border-top:5px solid var(--blue)}
+.dest.d2{border-top-color:var(--green)}
+.dest.d3{border-top-color:var(--navy)}
+.dest .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dest h3{font-size:17px}
+.tag{font-size:11px;font-weight:800;letter-spacing:.04em;padding:4px 11px;border-radius:999px;color:#fff;white-space:nowrap}
+.tag.pub{background:var(--green)}
+.tag.mem{background:var(--navy)}
+.dest p{font-size:14px;color:var(--grey);margin-top:12px}
+.aud{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:28px}
+@media(max-width:760px){.aud{grid-template-columns:1fr}}
+.aud .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;border-top:5px solid var(--green)}
+.aud .card.mem{border-top-color:var(--navy)}
+.aud h3{font-size:18px}
+.aud .who{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--teald);margin-bottom:8px}
+.aud .card.mem .who{color:var(--navy)}
+.aud p{font-size:14.5px;color:var(--grey);margin-top:8px}
+.aud ul{list-style:none;margin-top:14px}
+.aud li{font-size:14px;color:var(--ink);padding:6px 0 6px 22px;position:relative}
+.aud li::before{content:"";position:absolute;left:2px;top:13px;width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+.aud .card.mem li::before{background:var(--navy)}
+.cta{background:var(--soft);text-align:center;border:none;padding:74px 0}
+.cta h2{font-size:30px}
+.cta .lead{max-width:62ch;margin-left:auto;margin-right:auto}
+.cta .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+footer{background:var(--navy);color:#cfe0ec;padding:40px 0;font-size:13px}
+footer a{color:#9fd4ec}
+.footer-inner{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;max-width:1140px;margin:0 auto;padding:0 28px}
+.footer-note{max-width:78ch;color:#7fa6bd;font-size:13px}
+.footer-nav{color:#7fa6bd}
+</style>
+</head>
+<body id="top">
+
+<header>
+  <div class="wrap"><nav>
+    <div class="brand"><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-color.svg" alt="OSERA" class="osera-logo"></a></div>
+    <div class="navlinks">
+      <a href="how-it-works.html">The Solution</a>
+      <a href="alliance.html">The Alliance</a>
+      <a href="workstreams.html">Workstreams</a>
+      <a href="projects.html" class="btn active page-link" aria-current="page">Projects</a>
+      <a href="principles.html">Our Principles</a>
+      <a href="news.html">News &amp; Media</a>
+      <a href="index.html#involved" class="btn involve">Get involved</a>
+      <a href="https://github.com/finos-osera" class="nav-github" target="_blank" rel="noopener" aria-label="OSERA on GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.021C22 6.484 17.522 2 12 2z"/></svg></a>
+    </div>
+  </nav></div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Projects</div>
+    <h1>The lines the sector still runs.</h1>
+    <p>Premier members flagged the outdated open source libraries, with known CVEs, that they still use. From that list they prioritised <strong>58 libraries</strong> to patch — all of them in three heavily used Spring lines: <strong>Spring Boot 2.7</strong>, <strong>Spring Framework 5.3</strong>, and <strong>Spring Security 5.7</strong>.</p>
+    <div class="jump">
+      <a href="#wave1" class="btn ghost">Wave 1 Delivers on the Concept</a>
+      <a href="#releases" class="btn ghost">Public source &amp; member releases</a>
+      <a href="#signup" class="btn involve">Not a member? Sign up.</a>
+    </div>
+  </div>
+</div>
+
+<section id="wave1">
+  <div class="wrap">
+    <div class="eyebrow">Wave 1 Delivers on the Concept</div>
+    <h2>One Spring stack, maintained together</h2>
+    <p class="lead">The first wave stays within the Spring lines institutions already have in production, including versions that are past upstream end of life. Fixes are applied directly to those lines — and to the libraries they manage — rather than requiring every firm to upgrade to a major new version before a known CVE is closed.</p>
+    <div class="stats">
+      <div class="stat"><div class="n">58</div><p>libraries prioritised by Premier members for the first wave of patches.</p></div>
+      <div class="stat"><div class="n">3</div><p>Spring lines carry that whole set: Boot, Framework, and Security.</p></div>
+      <div class="stat"><div class="n">Open</div><p>source in a public fork organisation. The inventory lives there, not on this page.</p></div>
+    </div>
+    <div class="lines">
+      <article class="line">
+        <div class="row"><h3>Spring Boot</h3><span class="v mono">2.7</span></div>
+        <p>The application line. Boot 2.7 manages the Framework and Security versions beside it, and the libraries a typical enterprise Boot application pulls in.</p>
+        <a class="more" href="https://github.com/finos-osera-forks/patch-spring-boot" target="_blank" rel="noopener">View the Spring Boot fork →</a>
+      </article>
+      <article class="line l2">
+        <div class="row"><h3>Spring Framework</h3><span class="v mono">5.3</span></div>
+        <p>The core framework line those applications run. Maintained as Spring Framework 5.3, on its own, alongside Boot.</p>
+        <a class="more" href="https://github.com/finos-osera-forks/patch-spring-framework" target="_blank" rel="noopener">View the Spring Framework fork →</a>
+      </article>
+      <article class="line l3">
+        <div class="row"><h3>Spring Security</h3><span class="v mono">5.7</span></div>
+        <p>The security line paired with Boot 2.7 and Framework 5.3, so authentication and access-control fixes land on the version still in production.</p>
+        <a class="more" href="https://github.com/finos-osera-forks/patch-spring-security" target="_blank" rel="noopener">View the Spring Security fork →</a>
+      </article>
+    </div>
+    <div class="flownote">The 58 libraries are not listed on this site. The set will keep growing, and the <a href="https://github.com/finos-osera-forks" target="_blank" rel="noopener">public fork organisation</a> is the list — every maintained repository, in the open. Prioritisation of what to fix next happens in <a href="workstreams.html#tooling">Risk Navigator</a>, and a fix is accepted only through the <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> gate.</div>
+    <div class="center-cta">
+      <a class="btn primary" href="https://github.com/finos-osera-forks" target="_blank" rel="noopener">Browse the public forks</a>
+      <a class="btn ghost" href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Open Risk Navigator</a>
+    </div>
+  </div>
+</section>
+
+<section id="releases" class="sec-soft">
+  <div class="wrap">
+    <div class="eyebrow">How you get the fix</div>
+    <h2>Public sources, FSI-grade member-only releases</h2>
+    <p class="lead">We apply fixes for <strong>known</strong> CVEs to the exact projects and versions the sector still runs — prioritised across firms in <a href="workstreams.html#tooling">Risk Navigator</a>, and accepted into the repository only through the <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> gate. The source stays open and is offered upstream. The member-ready release sits behind membership.</p>
+    <div class="flowtop">
+      <div class="flowbox a"><div class="t">Known CVE in a [package, version]</div><div class="d">in software the sector still runs — surfaced and prioritised across firms in <a href="workstreams.html#tooling">Risk Navigator</a></div></div>
+      <div class="flowarrow">→</div>
+      <div class="flowbox b"><div class="t">Fix produced &amp; tested</div><div class="d">under an alliance SLA · green CI on the upstream test suite · must clear the <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> acceptance gate</div></div>
+    </div>
+    <div class="dests">
+      <div class="dest d2">
+        <div class="row"><h3>Upstream first</h3><span class="tag pub">Public</span></div>
+        <p>Offered back to the original project wherever it is alive — free and public for the whole community.</p>
+      </div>
+      <div class="dest">
+        <div class="row"><h3>Public fork</h3><span class="tag pub">Public</span></div>
+        <p>The canonical, maintained, transparent source — fully auditable, for the cases upstream can't take the fix. Anyone can build from it.</p>
+      </div>
+      <div class="dest d3">
+        <div class="row"><h3>Member release</h3><span class="tag mem">Members</span></div>
+        <p>Fully packaged releases members consume through their existing proxy — the coordinates they already use, no CI change.</p>
+      </div>
+    </div>
+    <div class="aud">
+      <div class="card">
+        <div class="who">Non-members</div>
+        <h3>Build from the public fork</h3>
+        <p>The public fork is the canonical, maintained, transparent source code. If you are not a member, that source is yours to build from yourself.</p>
+        <ul>
+          <li>Every maintained line is public, under the upstream project licence.</li>
+          <li>The same source the alliance maintains — nothing hidden, nothing private.</li>
+          <li>Where upstream is receptive, patches are offered back to the original project.</li>
+        </ul>
+        <a class="btn ghost" style="margin-top:18px" href="https://github.com/finos-osera-forks" target="_blank" rel="noopener">Build it yourself</a>
+      </div>
+      <div class="card mem">
+        <div class="who">OSERA members</div>
+        <h3>Take the packaged release</h3>
+        <p>Premier members also get the fully packaged releases, with attestations, SBOMs and an audit trail. General members receive those same member releases.</p>
+        <ul>
+          <li>Built artifacts, ready to consume — not a source tree you have to assemble.</li>
+          <li>Attestations defined by the Remediation Standards: signing, SBOMs, VEX and test evidence.</li>
+          <li>An audit trail for the release, for the teams that have to show what they ran.</li>
+        </ul>
+        <a class="btn primary" style="margin-top:18px" href="#signup">Not a member? Sign up.</a>
+      </div>
+    </div>
+    <div class="flownote">No release enters the OSERA repository until it conforms to the <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a>. Source stays public by default; only the built, attested release artifacts sit behind membership. Releases are time-bound — a managed bridge to a current, supported version, not a licence to stay behind. See <a href="how-it-works.html">The Solution</a> for the wider model, and the <a href="alliance.html#membership">membership tiers</a> for who consumes the release.</div>
+  </div>
+</section>
+
+<section class="cta" id="signup">
+  <div class="wrap">
+    <h2>Not a member? Sign up.</h2>
+    <p class="lead">The public fork stays open, whether or not you join. Membership is how institutions take the fully packaged releases — with attestations, SBOMs and an audit trail.</p>
+    <div class="btns">
+      <a href="alliance.html#membership" class="btn involve">Not a member? Sign up.</a>
+      <a href="https://github.com/finos-osera-forks" class="btn ghost" target="_blank" rel="noopener">Browse the public forks</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-white.svg" alt="OSERA" class="osera-logo"><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
+    <div class="footer-note">OSERA is a FINOS initiative, part of the Linux Foundation, focused on open, portable remediation for regulated enterprises and complementary to <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a>.</div>
+    <div class="footer-nav"><a href="index.html">Home</a> · <a href="how-it-works.html">The Solution</a> · <a href="alliance.html">The Alliance</a> · <a href="workstreams.html">Workstreams</a> · <a href="projects.html">Projects</a> · <a href="principles.html">Our Principles</a> · <a href="news.html">News &amp; Media</a> · <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a> · <a href="mailto:membership@finos.org">membership@finos.org</a></div>
+  </div>
+</footer>
+<script>
+  (function(){
+    var userScrolled = false;
+    ['wheel','touchstart','keydown'].forEach(function(ev){
+      window.addEventListener(ev, function(){ userScrolled = true; }, {passive:true, once:true});
+    });
+    function fixHash(){
+      if(userScrolled) return;
+      var id = location.hash.slice(1);
+      if(!id) return;
+      var el = document.getElementById(id);
+      if(el){ window.scrollTo({top: el.offsetTop, behavior:'instant'}); }
+    }
+    window.addEventListener('load', function(){ fixHash(); setTimeout(fixHash, 400); setTimeout(fixHash, 1000); });
+    fixHash();
+  })();
+</script>
+</body>
+</html>
