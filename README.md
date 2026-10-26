@@ -1,4 +1,4 @@
-## OSERA
+ ## OSERA
 
 **Open Source Enterprise Resiliency Alliance** — a [FINOS](https://www.finos.org/) initiative that helps regulated institutions close open source patch-coverage gaps and operationalize remediation at scale.
 
