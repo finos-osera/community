@@ -60,3 +60,29 @@ Netlify is the default hosting platform for FINOS websites. Use:
 - Publish directory: `website/build`
 
 To request a `*.finos.org` domain, email [help@finos.org](mailto:help@finos.org).
+
+## Published feed and VEX navigator
+
+The homepage loads `https://feed.finos.org/stats/metrics.json`. `vex.html` loads
+`https://feed.finos.org/openvex.json` once per visit and searches in the browser.
+No backend, credentials, bundled feed snapshot or extra runtime dependencies are needed.
+The feed must permit cross-origin requests from the site. Both views show their own
+publication timestamp; totals are never combined across the two snapshots.
+
+The navigator supports library/CVE/alias/version/PURL search, status and supplier
+filters, library drill-down, 25 results per page and shareable query parameters.
+An ecosystem filter appears when the feed contains more than one ecosystem.
+Original statements are rendered as text, including additional evidence fields.
+A fixed entry is a unique vulnerability and product identifier pair with `fixed`
+status; different statements remain inspectable. Non-CVE identifiers do not inflate
+the distinct-CVE total. This is a VEX explorer, not the complete library catalog.
+
+A validated last successful feed is saved in browser local storage when available.
+Network failures (including a 15-second timeout) may fall back to that snapshot,
+clearly marked as unavailable for refresh with its source date and age. With no
+valid cache, the page shows an error and Retry, never fabricated zero counters.
+The feed's existing HTTP cache headers are respected. Clear site data to remove
+saved snapshots. Blocked/full local storage does not prevent a fresh load.
+
+Run `npm test` for parsing, counting, filtering, malformed data and fallback tests.
+Run `npm run build`; serve `build/` to preview both `/` and `/vex.html`.
