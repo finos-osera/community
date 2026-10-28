@@ -299,10 +299,11 @@ footer a{color:#9fd4ec}
       <label>Release scope<select name="releases" id="releases"><option value="latest">Latest OSERA tag per version line</option><option value="all">All releases in VEX</option></select></label>
       <label>Status<select name="status" id="status"><option value="">All statuses</option><option value="fixed">Fixed</option><option value="affected">Affected</option><option value="not_affected">Not affected</option><option value="under_investigation">Under investigation</option></select></label>
       <label>Supplier<select name="supplier" id="supplier"><option value="">All suppliers</option></select></label>
-      <label id="ecosystem-filter" hidden>Ecosystem<select name="ecosystem" id="ecosystem"><option value="">All ecosystems</option></select></label>
+      <label id="ecosystem-filter">Ecosystem<select name="ecosystem" id="ecosystem"><option value="">All ecosystems</option></select></label>
       <div class="vex-filter-actions"><button type="button" id="clear-filters" class="btn ghost">Clear filters</button><button type="button" id="share" class="btn ghost">Copy this view’s link</button></div>
     </form>
     <div id="active-filters" class="vex-active" aria-label="Active filters"></div>
+    <p class="feed-note">Hover, focus or tap a fix count to see CVEs and advisory links. Ecosystems appear as they are published in the feed.</p>
     <p id="release-scope-note" class="feed-note"></p>
     <p id="results-status" class="feed-note" role="status"></p>
     <div id="results"></div>

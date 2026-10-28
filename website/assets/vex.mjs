@@ -5,6 +5,9 @@ const labels = { fixed: 'Fixed', affected: 'Affected', not_affected: 'Not affect
 const defaults = { view: 'libraries', releases: 'latest' };
 const pageSize = 25;
 let entries = [], page = 0, library = '', debounce;
+let disclosureSequence = 0, disclosures = [];
+document.addEventListener('pointerdown', event => { for (const disclosure of disclosures) if (!disclosure.host.contains(event.target)) disclosure.close(); });
+document.addEventListener('keydown', event => { if (event.key === 'Escape') for (const disclosure of disclosures) disclosure.close(); });
 function element(parent, tag, text, className) {
   const node = document.createElement(tag);
   if (text !== undefined) node.textContent = text;
@@ -63,19 +66,43 @@ function identifiers(host, ids) {
 function advisories(host, records) {
   const fixed = records.filter(x => x.status === 'fixed');
   const ids = [...new Set(fixed.map(x => x.vulnerability))].sort();
-  const section = element(host, 'div', undefined, 'vex-advisories');
-  element(section, 'p', ids.length ? `${$('query').value || $('status').value ? 'Matching fixes included' : 'Fixes included'} · published evidence (${ids.length})` : 'No fixed statements in this selection', 'vex-evidence-label');
-  const links = element(section, 'div', undefined, 'vex-advisory-links'); identifiers(links, ids.slice(0, 6));
-  if (ids.length > 6) {
-    const more = element(section, 'details'); element(more, 'summary', `Show ${ids.length - 6} more advisory IDs`);
-    identifiers(element(more, 'div', undefined, 'vex-advisory-links'), ids.slice(6));
-  }
   const aliases = [...new Set(fixed.flatMap(x => x.aliases))].filter(id => !ids.includes(id));
+  const section = element(host, 'div', undefined, 'vex-advisories');
+  if (!ids.length) { element(section, 'p', 'No fixed statements in this selection', 'feed-note'); return; }
+  const cves = ids.filter(id => /^CVE-\d{4}-\d+$/i.test(id)).length;
+  const count = `${cves} CVE${cves === 1 ? '' : 's'}` + (ids.length > cves ? ` · ${ids.length - cves} other advisor${ids.length - cves === 1 ? 'y' : 'ies'}` : '');
+  let pinned = false;
+  const trigger = button(section, `${count} included ▾`, () => {
+    pinned = !pinned;
+    setOpen(pinned);
+  }, 'vex-fix-trigger');
+  const panel = element(section, 'div', undefined, 'vex-fix-panel');
+  panel.id = `fixes-${++disclosureSequence}`;
+  panel.hidden = true;
+  panel.setAttribute('role', 'region');
+  panel.setAttribute('aria-label', 'Included fixes and offsite advisory details');
+  trigger.setAttribute('aria-expanded', 'false');
+  trigger.setAttribute('aria-controls', panel.id);
+  element(panel, 'strong', $('query').value || $('status').value ? 'Matching fixes included' : 'Fixes included');
+  element(panel, 'p', 'Published evidence for this release. Detail links open in a new tab.', 'feed-note');
+  identifiers(element(panel, 'div', undefined, 'vex-advisory-links'), ids);
   if (aliases.length) {
-    const more = element(section, 'details'); element(more, 'summary', `Related advisory links (${aliases.length})`);
-    identifiers(element(more, 'div', undefined, 'vex-advisory-links'), aliases);
+    element(panel, 'p', 'Related advisory IDs', 'vex-evidence-label');
+    identifiers(element(panel, 'div', undefined, 'vex-advisory-links'), aliases);
   }
+  function setOpen(open) { panel.hidden = !open; trigger.setAttribute('aria-expanded', String(open)); }
+  function close() {
+    if (panel.contains(document.activeElement)) trigger.focus();
+    pinned = false; setOpen(false);
+  }
+  button(panel, 'Close', () => { trigger.focus(); close(); }, 'vex-panel-close');
+  section.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') setOpen(true); });
+  section.addEventListener('pointerleave', () => { if (!pinned && !section.contains(document.activeElement)) setOpen(false); });
+  section.addEventListener('focusin', () => setOpen(true));
+  section.addEventListener('focusout', event => { if (!section.contains(event.relatedTarget)) close(); });
+  disclosures.push({ host: section, close });
 }
+
 function evidence(row, records) {
   const details = element(row, 'details', undefined, 'vex-original');
   element(details, 'summary', records.length === 1 ? 'Inspect original statement' : `Inspect ${records.length} original statements`);
@@ -96,13 +123,14 @@ function evidence(row, records) {
 }
 function drill(item, view, all = false) {
   clearTimeout(debounce); library = item.library;
-  if ($('ecosystem').options.length > 2) $('ecosystem').value = item.ecosystem;
+  $('ecosystem').value = item.ecosystem;
   $('view').value = view;
   if (all) $('releases').value = 'all';
   page = 0; render(); $('clear-filters').focus();
   $('active-filters').scrollIntoView({ block: 'center' });
 }
 function render() {
+  disclosures = [];
   // Select latest versions before searching; an old matching CVE must never redefine "latest".
   const scoped = $('releases').value === 'all' ? entries : latestReleases(entries);
   const filtered = filterEntries(scoped, filters());
@@ -168,7 +196,7 @@ async function refresh() {
   try {
     const { data, cached } = await loadFeed(VEX_URL, normalizeVex); entries = data.entries;
     options('supplier', entries.map(x => x.supplier)); options('ecosystem', entries.map(x => x.ecosystem));
-    $('ecosystem-filter').hidden = new Set(entries.map(x => x.ecosystem)).size <= 1; readUrl();
+    readUrl();
     const totals = fixedTotals(entries); $('vex-summary').replaceChildren();
     for (const text of [`${totals.libraries} libraries with statements`, `${totals.cves} distinct fixed CVEs`, `${totals.fixed.toLocaleString()} fixed entries`]) element($('vex-summary'), 'span', text);
     $('feed-status').textContent = freshness(data.published, cached);

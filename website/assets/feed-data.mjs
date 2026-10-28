@@ -19,6 +19,10 @@ export function recentReleases(data) {
   const end = Date.parse(data.as_of.slice(0, 10) + 'T00:00:00Z');
   return data.releases_per_day.filter(x => { const day = Date.parse(x.date); return day <= end && day >= end - 6 * 86400000; }).reduce((sum, x) => sum + x.count, 0);
 }
+export function ecosystemLabel(type) {
+  const labels = { maven: 'Java', npm: 'JavaScript', pypi: 'Python', nuget: '.NET', cargo: 'Rust', golang: 'Go', gem: 'Ruby', composer: 'PHP', swift: 'Swift', cocoapods: 'CocoaPods', hex: 'Elixir', pub: 'Dart', cran: 'R', conan: 'C/C++', deb: 'Debian', rpm: 'RPM', apk: 'Alpine', docker: 'Docker', oci: 'OCI' };
+  return labels[type] || type;
+}
 export function parseProduct(id) {
   if (typeof id !== 'string' || !id) throw new Error('Missing product identifier');
   const match = /^pkg:([^/]+)\/(.+)$/.exec(id);
@@ -26,7 +30,7 @@ export function parseProduct(id) {
   const coordinate = match[2].split(/[?#]/)[0];
   const at = coordinate.lastIndexOf('@');
   const decode = value => { try { return decodeURIComponent(value); } catch { return value; } };
-  return { library: decode(at < 0 ? coordinate : coordinate.slice(0, at)).replaceAll('/', ':'), version: at < 0 ? 'Not specified' : decode(coordinate.slice(at + 1)), ecosystem: match[1] === 'maven' ? 'Java' : match[1] };
+  return { library: decode(at < 0 ? coordinate : coordinate.slice(0, at)).replaceAll('/', ':'), version: at < 0 ? 'Not specified' : decode(coordinate.slice(at + 1)), ecosystem: ecosystemLabel(match[1]) };
 }
 export function normalizeVex(data) {
   timestamp(data?.last_updated || data?.timestamp);

@@ -71,7 +71,7 @@ publication timestamp; totals are never combined across the two snapshots.
 
 The navigator supports library/CVE/alias/version/PURL search, status and supplier
 filters, library drill-down, 25 results per page and shareable query parameters.
-An ecosystem filter appears when the feed contains more than one ecosystem.
+The ecosystem filter is always visible; options come from the feed, with readable labels for common package types and a fallback for future types.
 Original statements are rendered as text, including additional evidence fields.
 A fixed entry is a unique vulnerability and product identifier pair with `fixed`
 status; different statements remain inspectable. Non-CVE identifiers do not inflate
@@ -102,3 +102,9 @@ carried-forward fixes when the publisher includes them. They are not incremental
 patch counts, and no union of earlier-version statements is inferred. “New in this
 release” needs producer evidence identifying that distinction and is not currently
 shown. CVE and GHSA links use allowlisted NVD/GitHub URL patterns and open a new tab.
+
+Fix counts open an advisory panel on mouse hover, keyboard focus or tap/click.
+Panels retain clickable CVE/GHSA detail links, can be pinned by click/tap, and close
+with Escape, the Close button, focus leaving, or an outside click. On small screens
+the panel expands in the row to avoid clipping. JavaScript (npm), Python, Go and
+other ecosystem labels are ready, but no unpublished ecosystem is offered as live data.

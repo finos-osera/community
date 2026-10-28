@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentReleases, latestReleases, groupReleases, advisoryUrl } from '../assets/feed-data.mjs';
+import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentReleases, latestReleases, groupReleases, advisoryUrl, ecosystemLabel } from '../assets/feed-data.mjs';
 const statement = (overrides = {}) => ({ vulnerability: { name: 'CVE-2026-1234', aliases: ['GHSA-example'] }, products: [{ '@id': 'pkg:maven/org.example/demo@1.0' }], status: 'fixed', supplier: 'Producer', ...overrides });
 const doc = statements => ({ timestamp: '2026-10-28T12:00:00Z', statements });
 test('expands products, preserves evidence and deduplicates fixed pairs across differing evidence', () => {
@@ -11,7 +11,7 @@ test('expands products, preserves evidence and deduplicates fixed pairs across d
   assert.equal(result.entries.at(-1).status, 'affected');
 });
 test('package identity preserves namespace, strips qualifiers, handles non-PURL products', () => {
-  assert.deepEqual(parseProduct('pkg:npm/%40scope/demo@1.2?arch=x#src'), { library: '@scope:demo', version: '1.2', ecosystem: 'npm' });
+  assert.deepEqual(parseProduct('pkg:npm/%40scope/demo@1.2?arch=x#src'), { library: '@scope:demo', version: '1.2', ecosystem: 'JavaScript' });
   assert.equal(parseProduct('https://example.org/product').version, 'Not specified');
   assert.equal(parseProduct('pkg:maven/org.other/demo@1.0').library, 'org.other:demo');
 });
@@ -76,4 +76,14 @@ test('advisory links allow only canonical CVE and GHSA identifiers', () => {
   assert.equal(advisoryUrl('GHSA-cmp6-m4wj-q63q'),'https://github.com/advisories/GHSA-cmp6-m4wj-q63q');
   assert.equal(advisoryUrl('javascript:alert(1)'),null);
   assert.equal(advisoryUrl('CVE-2025-66566/../../evil'),null);
+});
+
+test('ecosystems use readable names while preserving future package types', () => {
+  assert.equal(ecosystemLabel('maven'), 'Java');
+  assert.equal(ecosystemLabel('npm'), 'JavaScript');
+  assert.equal(ecosystemLabel('pypi'), 'Python');
+  assert.equal(ecosystemLabel('new-package-type'), 'new-package-type');
+  const entries = normalizeVex(doc([statement(), statement({products:[{'@id':'pkg:npm/%40scope/demo@1.0'}]})])).entries;
+  assert.equal(filterEntries(entries,{ecosystem:'JavaScript'}).length,1);
+  assert.equal(filterEntries(entries,{ecosystem:'Java'}).length,1);
 });
