@@ -106,7 +106,7 @@ async function refresh() {
 form.addEventListener('submit', event => event.preventDefault());
 form.addEventListener('input', event => { if (event.target.id !== 'query') return; clearTimeout(debounce); debounce = setTimeout(() => { page = 0; render(); }, 150); });
 form.addEventListener('change', event => { if (event.target.id === 'query') return; clearTimeout(debounce); page = 0; render(); });
-$('reset').addEventListener('click', () => { clearTimeout(debounce); form.reset(); library = ''; page = 0; render(); $('query').focus(); });
+$('clear-filters').addEventListener('click', () => { clearTimeout(debounce); form.reset(); library = ''; page = 0; render(); $('query').focus(); });
 $('share').addEventListener('click', async () => { clearTimeout(debounce); render(); try { await navigator.clipboard.writeText(location.href); $('results-status').textContent = 'Link copied. It preserves this search, filters and page.'; } catch { $('results-status').textContent = 'Copy the URL from your address bar to share this view.'; } });
 for (const [id, offset] of [['previous', -1], ['next', 1]]) $(id).addEventListener('click', () => { page += offset; render(); $('results-status').scrollIntoView({ block: 'center' }); });
 window.addEventListener('popstate', () => { readUrl(); render(); });
