@@ -86,3 +86,19 @@ saved snapshots. Blocked/full local storage does not prevent a fresh load.
 
 Run `npm test` for parsing, counting, filtering, malformed data and fallback tests.
 Run `npm run build`; serve `build/` to preview both `/` and `/vex.html`.
+
+The default release scope selects the highest numeric `-osera-N` tag separately
+for each version prefix, library, ecosystem and supplier in VEX. It does not
+collapse separate maintained version lines or infer a release date from a VEX
+statement timestamp. Version schemes without an OSERA sequence remain visible.
+Selection happens before search so a historical search hit cannot become “latest”.
+Users can switch to all releases or inspect other releases from a library row.
+Visible, individually removable chips expose every active query/filter, including
+the selected library. Clearing filters preserves the separately visible release
+scope and view controls. The scope is included in shared URLs when non-default.
+
+Library and release rows show fixes declared for that exact version, including
+carried-forward fixes when the publisher includes them. They are not incremental
+patch counts, and no union of earlier-version statements is inferred. “New in this
+release” needs producer evidence identifying that distinction and is not currently
+shown. CVE and GHSA links use allowlisted NVD/GitHub URL patterns and open a new tab.

@@ -1,82 +1,160 @@
-import { VEX_URL, CDX_URL, loadFeed, normalizeVex, fixedTotals, filterEntries, freshness, publicationLabel } from './feed-data.mjs';
+import { VEX_URL, CDX_URL, loadFeed, normalizeVex, fixedTotals, filterEntries, freshness, publicationLabel, advisoryUrl, latestReleases, groupReleases, releaseIdentity } from './feed-data.mjs';
 const $ = id => document.getElementById(id);
 const form = $('filters');
 const labels = { fixed: 'Fixed', affected: 'Affected', not_affected: 'Not affected', under_investigation: 'Under investigation' };
+const defaults = { view: 'libraries', releases: 'latest' };
 const pageSize = 25;
 let entries = [], page = 0, library = '', debounce;
 function element(parent, tag, text, className) {
   const node = document.createElement(tag);
   if (text !== undefined) node.textContent = text;
   if (className) node.className = className;
-  parent.appendChild(node);
-  return node;
+  parent.appendChild(node); return node;
 }
-function link(parent, text, href) { const a = element(parent, 'a', text); a.href = href; return a; }
+function link(parent, text, href, external = false) {
+  const a = element(parent, 'a', text); a.href = href;
+  if (external) { a.target = '_blank'; a.rel = 'noopener noreferrer'; a.setAttribute('aria-label', text + ' (opens in a new tab)'); }
+  return a;
+}
+function button(parent, text, action, className = 'btn ghost') {
+  const b = element(parent, 'button', text, className); b.type = 'button'; b.addEventListener('click', action); return b;
+}
 function readUrl() {
   const params = new URLSearchParams(location.search);
-  for (const control of form.querySelectorAll('[name]')) control.value = params.get(control.name) || (control.name === 'view' ? 'libraries' : '');
-  if (!$('view').value) $('view').value = 'libraries';
+  for (const control of form.querySelectorAll('[name]')) {
+    control.value = params.get(control.name) || defaults[control.name] || '';
+    if (!control.value && defaults[control.name]) control.value = defaults[control.name];
+  }
   page = Math.max(0, (Number.parseInt(params.get('page'), 10) || 1) - 1);
   library = params.get('library') || '';
 }
 function filters() { return { ...Object.fromEntries(new FormData(form)), library }; }
 function updateUrl() {
   const url = new URL(location.href); url.search = '';
-  for (const [key, value] of Object.entries(filters())) if (value && !(key === 'view' && value === 'libraries')) url.searchParams.set(key, value);
+  for (const [key, value] of Object.entries(filters())) if (value && value !== defaults[key]) url.searchParams.set(key, value);
   if (page) url.searchParams.set('page', page + 1);
   history.replaceState(null, '', url);
 }
+function activeFilters() {
+  const host = $('active-filters'); host.replaceChildren();
+  const values = filters();
+  const names = { library: 'Library', q: 'Search', status: 'Status', supplier: 'Supplier', ecosystem: 'Ecosystem' };
+  const active = Object.entries(names).filter(([key]) => values[key]);
+  host.hidden = !active.length;
+  $('clear-filters').className = active.length ? 'btn primary' : 'btn ghost';
+  $('clear-filters').textContent = active.length ? `Clear ${active.length} active filter${active.length === 1 ? '' : 's'}` : 'Clear filters';
+  if (active.length) element(host, 'strong', 'Filtered view');
+  for (const [key, name] of active) {
+    const value = key === 'status' ? labels[values[key]] : values[key];
+    const b = button(host, `${name}: ${value} ×`, () => {
+      clearTimeout(debounce);
+      if (key === 'library') library = ''; else form.elements.namedItem(key).value = '';
+      page = 0; render(); $('clear-filters').focus();
+    }, 'vex-filter-chip');
+    b.setAttribute('aria-label', `Remove ${name.toLowerCase()} filter: ${value}`);
+  }
+}
+function identifiers(host, ids) {
+  for (const id of [...new Set(ids)]) {
+    const url = advisoryUrl(id);
+    if (url) link(host, id + ' ↗', url, true); else element(host, 'span', id);
+  }
+}
+function advisories(host, records) {
+  const fixed = records.filter(x => x.status === 'fixed');
+  const ids = [...new Set(fixed.map(x => x.vulnerability))].sort();
+  const section = element(host, 'div', undefined, 'vex-advisories');
+  element(section, 'p', ids.length ? `${$('query').value || $('status').value ? 'Matching fixes included' : 'Fixes included'} · published evidence (${ids.length})` : 'No fixed statements in this selection', 'vex-evidence-label');
+  const links = element(section, 'div', undefined, 'vex-advisory-links'); identifiers(links, ids.slice(0, 6));
+  if (ids.length > 6) {
+    const more = element(section, 'details'); element(more, 'summary', `Show ${ids.length - 6} more advisory IDs`);
+    identifiers(element(more, 'div', undefined, 'vex-advisory-links'), ids.slice(6));
+  }
+  const aliases = [...new Set(fixed.flatMap(x => x.aliases))].filter(id => !ids.includes(id));
+  if (aliases.length) {
+    const more = element(section, 'details'); element(more, 'summary', `Related advisory links (${aliases.length})`);
+    identifiers(element(more, 'div', undefined, 'vex-advisory-links'), aliases);
+  }
+}
+function evidence(row, records) {
+  const details = element(row, 'details', undefined, 'vex-original');
+  element(details, 'summary', records.length === 1 ? 'Inspect original statement' : `Inspect ${records.length} original statements`);
+  details.addEventListener('toggle', () => {
+    if (!details.open || details.dataset.loaded) return;
+    details.dataset.loaded = 'true';
+    const actions = element(details, 'div', undefined, 'feed-actions');
+    link(actions, 'OpenVEX source', VEX_URL, true); link(actions, 'CycloneDX source', CDX_URL, true);
+    const copy = button(actions, 'Copy package URL', async () => { try { await navigator.clipboard.writeText(records[0].purl); copy.textContent = 'Copied'; } catch { copy.textContent = 'Select the package URL above to copy'; } }, 'feed-retry');
+    for (const item of records) {
+      const section = element(details, 'section', undefined, 'vex-statement');
+      identifiers(element(section, 'div', undefined, 'vex-advisory-links'), [item.vulnerability, ...item.aliases]);
+      element(section, 'p', 'Publisher-reported status: ' + labels[item.status]);
+      if (Number.isFinite(Date.parse(item.timestamp))) element(section, 'p', `Statement timestamp: ${publicationLabel(item.timestamp)}`, 'feed-note');
+      element(section, 'pre', JSON.stringify(item.statement, null, 2));
+    }
+  });
+}
+function drill(item, view, all = false) {
+  clearTimeout(debounce); library = item.library;
+  if ($('ecosystem').options.length > 2) $('ecosystem').value = item.ecosystem;
+  $('view').value = view;
+  if (all) $('releases').value = 'all';
+  page = 0; render(); $('clear-filters').focus();
+  $('active-filters').scrollIntoView({ block: 'center' });
+}
 function render() {
-  const filtered = filterEntries(entries, filters());
-  const grouped = $('view').value === 'libraries';
+  // Select latest versions before searching; an old matching CVE must never redefine "latest".
+  const scoped = $('releases').value === 'all' ? entries : latestReleases(entries);
+  const filtered = filterEntries(scoped, filters());
+  const view = $('view').value;
   let items = filtered;
-  if (grouped) {
+  if (view === 'libraries') {
     const groups = new Map();
     for (const entry of filtered) {
       const key = entry.ecosystem + ':' + entry.library;
-      if (!groups.has(key)) groups.set(key, { library: entry.library, ecosystem: entry.ecosystem, entries: [], versions: new Set() });
-      const group = groups.get(key); group.entries.push(entry); group.versions.add(entry.version);
+      if (!groups.has(key)) groups.set(key, { library: entry.library, ecosystem: entry.ecosystem, entries: [] });
+      groups.get(key).entries.push(entry);
     }
     items = [...groups.values()];
-  }
-  items.sort((a, b) => a.library.localeCompare(b.library) || (a.vulnerability || '').localeCompare(b.vulnerability || '') || (a.version || '').localeCompare(b.version || ''));
-  const pages = Math.max(1, Math.ceil(items.length / pageSize));
-  page = Math.min(page, pages - 1);
-  updateUrl();
-  $('results-status').textContent = `${items.length.toLocaleString()} ${grouped ? 'libraries' : 'statements'} match · ${filtered.length.toLocaleString()} product statements`;
+  } else if (view === 'releases') items = groupReleases(filtered);
+  if (view !== 'releases') items.sort((a, b) => a.library.localeCompare(b.library) || (a.vulnerability || '').localeCompare(b.vulnerability || '') || (b.version || '').localeCompare(a.version || '', undefined, { numeric: true }));
+  const pages = Math.max(1, Math.ceil(items.length / pageSize)); page = Math.min(page, pages - 1);
+  updateUrl(); activeFilters();
+  $('release-scope-note').textContent = $('releases').value === 'all' ? 'Showing all releases represented in VEX. Advisory lists apply to each exact release.' : 'Showing the highest OSERA tag per version line and supplier represented in VEX. Search older tags with “All releases in VEX”.';
+  $('results-status').textContent = `${items.length.toLocaleString()} ${view === 'libraries' ? 'libraries' : view === 'releases' ? 'releases' : 'statements'} match · ${filtered.length.toLocaleString()} product statements`;
   $('page-status').textContent = `Page ${page + 1} of ${pages}`;
   $('previous').disabled = page === 0; $('next').disabled = page === pages - 1;
-  $('selected-library').hidden = !library;
-  $('selected-library').textContent = library ? `Selected library: ${library}. Use Clear filters to return to all libraries.` : '';
   const host = $('results'); host.replaceChildren();
-  if (!items.length) element(host, 'p', 'No matching published statements. Try another search or clear the filters.', 'vex-empty');
+  if (!items.length) element(host, 'p', 'No matching statements in this release scope. Try All releases in VEX, another search, or clear the active filters.', 'vex-empty');
   for (const item of items.slice(page * pageSize, (page + 1) * pageSize)) {
-    const row = element(host, 'article', undefined, 'vex-record');
-    const summary = element(row, 'div');
+    const row = element(host, 'article', undefined, 'vex-record'); const summary = element(row, 'div');
     element(summary, 'h2', item.library);
-    if (grouped) {
-      const totals = fixedTotals(item.entries);
-      element(summary, 'p', `${item.ecosystem} · ${item.versions.size} artifact versions · ${totals.cves} distinct fixed CVEs · ${totals.fixed} fixed entries`);
-      element(summary, 'p', `${item.entries.length} published product statements`, 'feed-note');
-      const button = element(row, 'button', 'Inspect versions →', 'btn ghost'); button.type = 'button';
-      button.addEventListener('click', () => { library = item.library; $('ecosystem').value = item.ecosystem; $('view').value = 'entries'; page = 0; render(); $('view').focus(); });
+    if (view === 'libraries') {
+      const releases = groupReleases(item.entries);
+      element(summary, 'p', `${item.ecosystem} · ${releases.length} matching release${releases.length === 1 ? '' : 's'}`);
+      for (const release of releases.slice(0, 4)) {
+        const releaseRow = element(summary, 'div', undefined, 'vex-release');
+        element(releaseRow, 'h3', release.version);
+        element(releaseRow, 'p', 'Supplier: ' + release.supplier, 'feed-note');
+        advisories(releaseRow, release.entries);
+      }
+      if (releases.length > 4) element(summary, 'p', `Plus ${releases.length - 4} more matching releases. Inspect releases to see them all.`, 'feed-note');
+      const actions = element(row, 'div', undefined, 'vex-row-actions');
+      button(actions, 'Inspect releases →', () => drill(item, 'releases'));
+      const all = entries.filter(x => x.library === item.library && x.ecosystem === item.ecosystem && (!$('supplier').value || x.supplier === $('supplier').value));
+      const selected = new Set(scoped.map(releaseIdentity));
+      const older = new Set(all.filter(x => !selected.has(releaseIdentity(x))).map(releaseIdentity)).size;
+      if (older) button(actions, `See ${older} other release${older === 1 ? '' : 's'}`, () => drill(item, 'releases', true));
     } else {
-      element(summary, 'p', item.version + ' · ' + item.vulnerability);
+      element(summary, 'h3', item.version);
       element(summary, 'p', item.purl, 'vex-coordinate');
-      const status = element(summary, 'span', labels[item.status], 'vex-status'); status.dataset.status = item.status;
-      element(summary, 'p', `Supplier: ${item.supplier}`);
-      const details = element(row, 'details'); element(details, 'summary', 'Inspect original statement');
-      details.addEventListener('toggle', () => {
-        if (!details.open || details.dataset.loaded) return;
-        details.dataset.loaded = 'true';
-        if (Number.isFinite(Date.parse(item.timestamp))) element(details, 'p', `Statement timestamp: ${publicationLabel(item.timestamp)}`, 'feed-note');
-        if (item.aliases.length) element(details, 'p', 'Aliases: ' + item.aliases.join(', '), 'feed-note');
-        const actions = element(details, 'div', undefined, 'feed-actions');
-        link(actions, 'OpenVEX source', VEX_URL); link(actions, 'CycloneDX source', CDX_URL);
-        const copy = element(actions, 'button', 'Copy package URL', 'feed-retry'); copy.type = 'button';
-        copy.addEventListener('click', async () => { try { await navigator.clipboard.writeText(item.purl); copy.textContent = 'Copied'; } catch { copy.textContent = 'Select the package URL above to copy'; } });
-        element(details, 'pre', JSON.stringify(item.statement, null, 2));
-      });
+      element(summary, 'p', `Supplier: ${item.supplier}`, 'feed-note');
+      if (view === 'releases') advisories(summary, item.entries);
+      else {
+        identifiers(element(summary, 'div', undefined, 'vex-advisory-links'), [item.vulnerability, ...item.aliases]);
+        const status = element(summary, 'span', labels[item.status], 'vex-status'); status.dataset.status = item.status;
+      }
+      evidence(row, view === 'releases' ? item.entries : [item]);
     }
   }
 }
@@ -88,27 +166,26 @@ function options(id, values) {
 async function refresh() {
   $('retry').hidden = true; $('feed-status').textContent = 'Loading published OpenVEX statements…';
   try {
-    const { data, cached } = await loadFeed(VEX_URL, normalizeVex);
-    entries = data.entries;
+    const { data, cached } = await loadFeed(VEX_URL, normalizeVex); entries = data.entries;
     options('supplier', entries.map(x => x.supplier)); options('ecosystem', entries.map(x => x.ecosystem));
-    $('ecosystem-filter').hidden = new Set(entries.map(x => x.ecosystem)).size <= 1;
-    readUrl();
-    const totals = fixedTotals(entries);
-    $('vex-summary').replaceChildren();
+    $('ecosystem-filter').hidden = new Set(entries.map(x => x.ecosystem)).size <= 1; readUrl();
+    const totals = fixedTotals(entries); $('vex-summary').replaceChildren();
     for (const text of [`${totals.libraries} libraries with statements`, `${totals.cves} distinct fixed CVEs`, `${totals.fixed.toLocaleString()} fixed entries`]) element($('vex-summary'), 'span', text);
     $('feed-status').textContent = freshness(data.published, cached);
     $('retry').hidden = !cached; $('vex-content').hidden = false; render();
   } catch {
-    $('feed-status').textContent = 'The OpenVEX feed could not be loaded. Retry, or use the public feed links below.';
-    $('retry').hidden = false;
+    $('feed-status').textContent = 'The OpenVEX feed could not be loaded. Retry, or use the public feed links below.'; $('retry').hidden = false;
   }
 }
 form.addEventListener('submit', event => event.preventDefault());
 form.addEventListener('input', event => { if (event.target.id !== 'query') return; clearTimeout(debounce); debounce = setTimeout(() => { page = 0; render(); }, 150); });
 form.addEventListener('change', event => { if (event.target.id === 'query') return; clearTimeout(debounce); page = 0; render(); });
-$('clear-filters').addEventListener('click', () => { clearTimeout(debounce); form.reset(); library = ''; page = 0; render(); $('query').focus(); });
-$('share').addEventListener('click', async () => { clearTimeout(debounce); render(); try { await navigator.clipboard.writeText(location.href); $('results-status').textContent = 'Link copied. It preserves this search, filters and page.'; } catch { $('results-status').textContent = 'Copy the URL from your address bar to share this view.'; } });
+$('clear-filters').addEventListener('click', () => {
+  clearTimeout(debounce);
+  // Clearing filters preserves the explicit view and release-scope choices.
+  for (const name of ['q', 'status', 'supplier', 'ecosystem']) form.elements.namedItem(name).value = '';
+  library = ''; page = 0; render(); $('query').focus();
+});
+$('share').addEventListener('click', async () => { clearTimeout(debounce); render(); try { await navigator.clipboard.writeText(location.href); $('results-status').textContent = 'Link copied. It preserves this search, release scope, filters and page.'; } catch { $('results-status').textContent = 'Copy the URL from your address bar to share this view.'; } });
 for (const [id, offset] of [['previous', -1], ['next', 1]]) $(id).addEventListener('click', () => { page += offset; render(); $('results-status').scrollIntoView({ block: 'center' }); });
-window.addEventListener('popstate', () => { readUrl(); render(); });
-$('retry').addEventListener('click', refresh);
-refresh();
+window.addEventListener('popstate', () => { readUrl(); render(); }); $('retry').addEventListener('click', refresh); refresh();

@@ -83,3 +83,32 @@ export function freshness(value, cached) {
   const days = Math.max(0, Math.floor((Date.now() - Date.parse(value)) / 86400000));
   return (cached ? 'Update unavailable — showing the last saved snapshot. ' : '') + 'Published ' + publicationLabel(value) + (days >= 1 ? ` · ${days} day${days === 1 ? '' : 's'} old` : '');
 }
+
+export function advisoryUrl(id) {
+  if (/^CVE-\d{4}-\d+$/i.test(id)) return 'https://nvd.nist.gov/vuln/detail/' + id.toUpperCase();
+  if (/^GHSA-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}$/i.test(id)) return 'https://github.com/advisories/' + id.toLowerCase().replace('ghsa-', 'GHSA-');
+  return null;
+}
+export function releaseIdentity(entry) { return JSON.stringify([entry.purl, entry.supplier]); }
+export function versionLine(entry) {
+  const match = /^(.*)-osera-(\d+)$/.exec(entry.version);
+  return match ? { base: match[1], sequence: BigInt(match[2]), key: JSON.stringify([entry.ecosystem, entry.library, entry.supplier, match[1]]) } : null;
+}
+export function latestReleases(entries) {
+  const latest = new Map();
+  for (const entry of entries) {
+    const line = versionLine(entry);
+    if (line && (!latest.has(line.key) || line.sequence > latest.get(line.key))) latest.set(line.key, line.sequence);
+  }
+  // Unknown version schemes are retained; statement dates are not release dates.
+  return entries.filter(entry => { const line = versionLine(entry); return !line || line.sequence === latest.get(line.key); });
+}
+export function groupReleases(entries) {
+  const groups = new Map();
+  for (const entry of entries) {
+    const key = releaseIdentity(entry);
+    if (!groups.has(key)) groups.set(key, { ...entry, entries: [] });
+    groups.get(key).entries.push(entry);
+  }
+  return [...groups.values()].sort((a, b) => a.library.localeCompare(b.library) || a.supplier.localeCompare(b.supplier) || b.version.localeCompare(a.version, undefined, { numeric: true }));
+}

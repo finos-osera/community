@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentReleases } from '../assets/feed-data.mjs';
+import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentReleases, latestReleases, groupReleases, advisoryUrl } from '../assets/feed-data.mjs';
 const statement = (overrides = {}) => ({ vulnerability: { name: 'CVE-2026-1234', aliases: ['GHSA-example'] }, products: [{ '@id': 'pkg:maven/org.example/demo@1.0' }], status: 'fixed', supplier: 'Producer', ...overrides });
 const doc = statements => ({ timestamp: '2026-10-28T12:00:00Z', statements });
 test('expands products, preserves evidence and deduplicates fixed pairs across differing evidence', () => {
@@ -53,4 +53,27 @@ test('GHSA-only advisories remain navigable without inflating the CVE count', ()
   const entries = normalizeVex(doc([statement(), statement({ vulnerability: { name: 'GHSA-example-only' } })])).entries;
   assert.deepEqual(fixedTotals(entries), { libraries: 1, cves: 1, fixed: 2 });
   assert.equal(filterEntries(entries, { q: 'GHSA-example-only' }).length, 1);
+});
+
+test('latest tags are numeric, isolated by version line and supplier, never by statement date', () => {
+  const make = (version, supplier = 'A') => normalizeVex(doc([statement({ products: [{ '@id': 'pkg:maven/org.example/demo@' + version }], supplier })])).entries[0];
+  const entries = [make('2.13.5.1-osera-9'), make('2.13.5.1-osera-10'), make('2.15.4.1-osera-2'), make('2.13.5.1-osera-3','B'), make('3.0-RC1'), make('3.0-RC2')];
+  const latest = latestReleases(entries);
+  assert.deepEqual(latest.map(x => x.version), ['2.13.5.1-osera-10','2.15.4.1-osera-2','2.13.5.1-osera-3','3.0-RC1','3.0-RC2']);
+  assert.equal(filterEntries(latest, {q:'osera-9'}).length, 0);
+  assert.equal(filterEntries(entries, {q:'osera-9'}).length, 1);
+});
+test('latest evidence retains carried-forward statements but does not invent inheritance', () => {
+  const make = (version, cve) => statement({products:[{'@id':'pkg:maven/org.example/demo@1.0-osera-'+version}], vulnerability:{name:cve}});
+  const entries = normalizeVex(doc([make('1','CVE-2026-1111'),make('1','CVE-2026-2222'),make('5','CVE-2026-1111'),make('5','CVE-2026-3333')])).entries;
+  const releases = groupReleases(latestReleases(entries));
+  assert.equal(releases.length,1);
+  assert.deepEqual(releases[0].entries.map(x=>x.vulnerability),['CVE-2026-1111','CVE-2026-3333']);
+  assert.equal(groupReleases(entries).length,2);
+});
+test('advisory links allow only canonical CVE and GHSA identifiers', () => {
+  assert.equal(advisoryUrl('CVE-2025-66566'),'https://nvd.nist.gov/vuln/detail/CVE-2025-66566');
+  assert.equal(advisoryUrl('GHSA-cmp6-m4wj-q63q'),'https://github.com/advisories/GHSA-cmp6-m4wj-q63q');
+  assert.equal(advisoryUrl('javascript:alert(1)'),null);
+  assert.equal(advisoryUrl('CVE-2025-66566/../../evil'),null);
 });

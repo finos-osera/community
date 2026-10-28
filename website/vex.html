@@ -291,23 +291,27 @@ footer a{color:#9fd4ec}
   <p id="feed-status" class="feed-note" role="status">Loading published OpenVEX statements…</p>
   <button type="button" id="retry" class="feed-retry" hidden>Retry loading feed</button>
   <div id="vex-content" hidden>
+    <p class="feed-note">Whole-feed totals · all releases</p>
     <div id="vex-summary" class="vex-summary"></div>
     <form id="filters" class="vex-filters" role="search" aria-label="Filter VEX statements">
       <label class="vex-search">Search library, CVE, version or package URL<input type="search" name="q" id="query" placeholder="Try log4j or CVE-2025-66566" autocomplete="off"></label>
-      <label>View<select name="view" id="view"><option value="libraries">Libraries</option><option value="entries">Individual statements</option></select></label>
+      <label>View<select name="view" id="view"><option value="libraries">Libraries</option><option value="releases">Release versions</option><option value="entries">Individual statements</option></select></label>
+      <label>Release scope<select name="releases" id="releases"><option value="latest">Latest OSERA tag per version line</option><option value="all">All releases in VEX</option></select></label>
       <label>Status<select name="status" id="status"><option value="">All statuses</option><option value="fixed">Fixed</option><option value="affected">Affected</option><option value="not_affected">Not affected</option><option value="under_investigation">Under investigation</option></select></label>
       <label>Supplier<select name="supplier" id="supplier"><option value="">All suppliers</option></select></label>
       <label id="ecosystem-filter" hidden>Ecosystem<select name="ecosystem" id="ecosystem"><option value="">All ecosystems</option></select></label>
       <div class="vex-filter-actions"><button type="button" id="clear-filters" class="btn ghost">Clear filters</button><button type="button" id="share" class="btn ghost">Copy this view’s link</button></div>
     </form>
-    <p id="selected-library" class="feed-note" hidden></p>
+    <div id="active-filters" class="vex-active" aria-label="Active filters"></div>
+    <p id="release-scope-note" class="feed-note"></p>
     <p id="results-status" class="feed-note" role="status"></p>
     <div id="results"></div>
     <div class="vex-pagination"><button type="button" id="previous" class="btn ghost">← Previous</button><span id="page-status"></span><button type="button" id="next" class="btn ghost">Next →</button></div>
   </div>
   <aside class="vex-about">
     <h2>Read the evidence in context</h2>
-    <p>This navigator covers published VEX statements, not the complete library catalog. A “fixed” status applies to the named vulnerability on the exact product version. Missing statements do not mean a library is unaffected or vulnerability-free.</p>
+    <p>This navigator covers published VEX statements, not the complete library catalog. Latest means the highest OSERA tag number within each version prefix and supplier represented in this VEX feed, not the highest upstream version or necessarily the newest catalog release. Other version schemes remain visible. A “fixed” status applies to the named vulnerability on the exact product version. Missing statements do not mean a library is unaffected or vulnerability-free.</p>
+    <p>The fix list shows coverage reported for the selected release, including carried-forward fixes declared for that artifact. It is not just the changes introduced in that tag. We use the selected version’s VEX evidence rather than combining historical statements; “new since the previous release” requires release evidence that distinguishes new and carried-forward fixes.</p>
     <p>Library counts use package identities without versions. Fixed entries count distinct vulnerability × artifact pairs; distinct CVEs count CVE identifiers across fixed statements. Each view uses its source’s publication time, which may differ from the homepage metrics.</p>
     <div class="feed-actions"><a href="https://feed.finos.org/openvex.json">OpenVEX JSON</a><a href="https://feed.finos.org/cyclonedx.json">CycloneDX JSON</a><a href="https://feed.finos.org/stats/">All libraries &amp; metrics</a><a href="index.html#involved">Membership &amp; release access</a></div>
     <p class="feed-note">Public remediation metadata · Member access to built releases. The CycloneDX feed describes remediation evidence; it is not a complete dependency SBOM for every release.</p>
