@@ -111,7 +111,7 @@ function evidence(row, records) {
     details.dataset.loaded = 'true';
     const actions = element(details, 'div', undefined, 'feed-actions');
     link(actions, 'OpenVEX source', VEX_URL, true); link(actions, 'CycloneDX source', CDX_URL, true);
-    const copy = button(actions, 'Copy package URL', async () => { try { await navigator.clipboard.writeText(records[0].purl); copy.textContent = 'Copied'; } catch { copy.textContent = 'Select the package URL above to copy'; } }, 'feed-retry');
+    const copy = button(actions, 'Copy package URL (PURL)', async () => { try { await navigator.clipboard.writeText(records[0].purl); copy.textContent = 'Copied'; } catch { copy.textContent = 'Select the package URL above to copy'; } }, 'feed-retry');
     for (const item of records) {
       const section = element(details, 'section', undefined, 'vex-statement');
       identifiers(element(section, 'div', undefined, 'vex-advisory-links'), [item.vulnerability, ...item.aliases]);
