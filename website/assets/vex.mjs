@@ -80,10 +80,10 @@ function advisories(host, records) {
   panel.id = `fixes-${++disclosureSequence}`;
   panel.hidden = true;
   panel.setAttribute('role', 'region');
-  panel.setAttribute('aria-label', 'Included fixes and offsite advisory details');
+  panel.setAttribute('aria-label', 'CVEs addressed and offsite advisory details');
   trigger.setAttribute('aria-expanded', 'false');
   trigger.setAttribute('aria-controls', panel.id);
-  element(panel, 'strong', $('query').value || $('status').value ? 'Matching fixes included' : 'Fixes included');
+  element(panel, 'strong', 'CVEs addressed');
   element(panel, 'p', 'Published evidence for this release. Detail links open in a new tab.', 'feed-note');
   identifiers(element(panel, 'div', undefined, 'vex-advisory-links'), ids);
   if (aliases.length) {
@@ -198,7 +198,7 @@ async function refresh() {
     options('supplier', entries.map(x => x.supplier)); options('ecosystem', entries.map(x => x.ecosystem));
     readUrl();
     const totals = fixedTotals(entries); $('vex-summary').replaceChildren();
-    for (const text of [`${totals.libraries} libraries with statements`, `${totals.cves} distinct fixed CVEs`, `${totals.fixed.toLocaleString()} fixed entries`]) element($('vex-summary'), 'span', text);
+    for (const text of [`${totals.libraries} libraries with statements`, `${totals.cves} distinct CVEs addressed`, `${totals.fixed.toLocaleString()} patched entries`]) element($('vex-summary'), 'span', text);
     $('feed-status').textContent = freshness(data.published, cached);
     $('retry').hidden = !cached; $('vex-content').hidden = false; render();
   } catch {
