@@ -262,6 +262,8 @@ footer a{color:#9fd4ec}
 .presscard h3{font-size:16px;margin:9px 0 14px;color:var(--navy)}
 .presscard .more{margin-top:auto;margin-bottom:0}
 </style>
+<link rel="stylesheet" href="assets/published.css">
+<script type="module" src="assets/published.mjs"></script>
 </head>
 <body id="top">
 
@@ -303,7 +305,7 @@ footer a{color:#9fd4ec}
         <div class="cta">
           <a href="#thesis" class="btn ghost">The problem</a>
           <a href="#how" class="btn ghost">The solution</a>
-          <a href="#available" class="btn primary">What's available now</a>
+          <a href="#published" class="btn primary">What's available now</a>
           <a href="#involved" class="btn involve">Get involved</a>
         </div>
       </div>
@@ -318,6 +320,28 @@ footer a{color:#9fd4ec}
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="published" class="published-panel" aria-labelledby="published-title">
+  <div class="wrap">
+    <div class="eyebrow">Published remediation</div>
+    <h2 id="published-title">Operational. Published. Ready to explore.</h2>
+    <p class="lead">Discover the libraries and remediations published through the OSERA Exchange.</p>
+    <p class="feed-note" data-feed-status role="status">Loading published metrics…</p>
+    <button type="button" class="feed-retry" data-retry hidden>Retry loading metrics</button>
+    <div data-metrics hidden>
+      <div class="feed-metrics">
+        <div class="feed-metric"><strong data-metric="libraries">—</strong><span>Libraries in releases</span><small>Package coordinates, not projects</small></div>
+        <div class="feed-metric"><strong data-metric="releases">—</strong><span>Published release sets</span><small>Promoted as whole sets</small></div>
+        <div class="feed-metric"><strong data-metric="libraries_with_a_fixed_cve">—</strong><span>Libraries with fixes</span><small>At least one fixed CVE entry</small></div>
+        <div class="feed-metric"><strong data-metric="fixed_entries">—</strong><span>Fixed CVE entries</span><small>CVE × artifact version</small></div>
+      </div>
+      <div class="feed-activity"><strong data-ecosystems></strong><span data-activity></span></div>
+    </div>
+    <div class="feed-actions"><a class="btn primary" href="vex.html">Explore published fixes →</a><a href="https://feed.finos.org/stats/">All libraries &amp; metrics</a><a href="#involved">Membership &amp; access</a></div>
+    <p class="feed-note">Public remediation metadata · Member access to built releases. Metrics and VEX have their own publication timestamps.</p>
+    <noscript><p>JavaScript is needed to load the counters. <a href="https://feed.finos.org/stats/">View the published feed metrics</a>.</p></noscript>
   </div>
 </section>
 
@@ -348,7 +372,7 @@ footer a{color:#9fd4ec}
       <div class="flowarrow">→</div>
       <div class="flowbox b"><div class="t">Fix produced &amp; tested</div><div class="d">under an alliance SLA · green CI on the upstream test suite · must clear the <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> acceptance gate</div></div>
     </div>
-     <div class="flownote">The <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> are the acceptance gate: no release enters the OSERA repository until it conforms, and per the standard each release will carry attestations — cryptographic signing, full SBOMs, VEX and test evidence — that are member-only. Source stays public by default; only the built, attested release artifacts sit behind membership. Releases are time-bound — a managed bridge to a current, supported version, not a licence to stay behind. Dive deeper on <a href="how-it-works.html">The Solution</a> page, or see the <a href="workstreams.html">workstreams</a> where it all happens.</div>
+     <div class="flownote">The <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> are the acceptance gate: no release enters the OSERA repository until it conforms, and per the standard each release will carry attestations — cryptographic signing, full SBOMs, VEX and test evidence. Published remediation statements are publicly available through the <a href="vex.html">VEX navigator</a>. Source stays public by default; only the built, attested release artifacts sit behind membership. Releases are time-bound — a managed bridge to a current, supported version, not a licence to stay behind. Dive deeper on <a href="how-it-works.html">The Solution</a> page, or see the <a href="workstreams.html">workstreams</a> where it all happens.</div>
     <div class="dests">
       <div class="dest d2">
         <div class="row"><h3>Upstream first</h3><span class="tag pub">Public</span></div>
@@ -512,7 +536,7 @@ footer a{color:#9fd4ec}
     <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-white.svg" alt="OSERA" class="osera-logo"><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
     <div class="disc">OSERA is a FINOS initiative, part of the Linux Foundation, focused on open, portable remediation for regulated enterprises and complementary to <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a>.</div>
     <div class="footer-nav">
-      <a href="how-it-works.html">The Solution</a> · <a href="alliance.html">The Alliance</a> · <a href="workstreams.html">Workstreams</a> · <a href="projects.html">Projects</a> · <a href="principles.html">Our Principles</a> · <a href="news.html">News &amp; Media</a> · <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a><br>
+      <a href="how-it-works.html">The Solution</a> · <a href="alliance.html">The Alliance</a> · <a href="workstreams.html">Workstreams</a> · <a href="projects.html">Projects</a> · <a href="vex.html">VEX Navigator</a> · <a href="principles.html">Our Principles</a> · <a href="news.html">News &amp; Media</a> · <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a><br>
       <a href="mailto:membership@finos.org">membership@finos.org</a><br>
       <span style="color:#7fa6bd">Part of the Linux Foundation</span>
     </div>

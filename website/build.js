@@ -6,6 +6,7 @@ const gaMeasurementId = process.env.GA_MEASUREMENT_ID;
 const gaPlaceholder = '__GA_MEASUREMENT_ID__';
 const sourceHtmlFiles = [
   'index.html',
+  'vex.html',
   'how-it-works.html',
   'projects.html',
   'alliance.html',
@@ -42,3 +43,5 @@ for (const file of sourceHtmlFiles) {
 }
 
 fs.cpSync(path.join(__dirname, 'img'), path.join(buildDir, 'img'), {recursive: true});
+
+fs.cpSync(path.join(__dirname, 'assets'), path.join(buildDir, 'assets'), {recursive: true});
