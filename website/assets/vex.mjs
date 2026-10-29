@@ -72,7 +72,7 @@ function advisories(host, records) {
   const cves = ids.filter(id => /^CVE-\d{4}-\d+$/i.test(id)).length;
   const count = `${cves} CVE${cves === 1 ? '' : 's'}` + (ids.length > cves ? ` · ${ids.length - cves} other advisor${ids.length - cves === 1 ? 'y' : 'ies'}` : '');
   let pinned = false;
-  const trigger = button(section, `${count} included ▾`, () => {
+  const trigger = button(section, `${count} addressed ▾`, () => {
     pinned = !pinned;
     setOpen(pinned);
   }, 'vex-fix-trigger');
