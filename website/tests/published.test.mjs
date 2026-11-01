@@ -15,6 +15,6 @@ test('homepage submits exact queries without depending on a partial or unavailab
   for (const query of ['CVE-2025-66566', 'GHSA-cmp6-m4wj-q63q', 'at.yawk.lz4:lz4-java']) {
     input.value = query;
     handlers.submit({ preventDefault() {} });
-    assert.equal(location.href, navigatorHref({ q: query }));
+    assert.equal(location.href, navigatorHref({ q: query, releases: 'all' }));
   }
 });

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentReleases, latestReleases, groupReleases, advisoryUrl, ecosystemLabel, navigatorHref, searchSuggestions } from '../assets/feed-data.mjs';
+import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentReleases, latestReleases, groupReleases, advisoryUrl, ecosystemLabel, navigatorHref, searchSuggestions, vexSearchIndex } from '../assets/feed-data.mjs';
 const statement = (overrides = {}) => ({ vulnerability: { name: 'CVE-2026-1234', aliases: ['GHSA-example'] }, products: [{ '@id': 'pkg:maven/org.example/demo@1.0' }], status: 'fixed', supplier: 'Producer', ...overrides });
 const doc = statements => ({ timestamp: '2026-10-28T12:00:00Z', statements });
 test('expands products, preserves evidence and deduplicates fixed pairs across differing evidence', () => {
@@ -78,17 +78,17 @@ test('advisory links allow only canonical CVE and GHSA identifiers', () => {
   assert.equal(advisoryUrl('CVE-2025-66566/../../evil'),null);
 });
 
-test('search suggestions prefer CVE hits and stay empty for short queries', () => {
-  const data = { top_cves: [{ id: 'CVE-2025-66566' }, { id: 'CVE-2024-22257' }], libraries: [{ library: 'org.apache.logging.log4j:log4j-core', ecosystem: 'Java' }, { library: 'org.springframework:spring-web', ecosystem: 'Java' }] };
-  assert.equal(searchSuggestions(data, 'lo').length, 0);
-  assert.equal(searchSuggestions(data, 'l').length, 0);
-  const fuzzy = searchSuggestions({ libraries: [{ library: 'org.apache.logging.log4j:log4j-core', ecosystem: 'Java' }] }, 'lg4j');
-  assert.equal(fuzzy[0]?.q, 'org.apache.logging.log4j:log4j-core');
-  assert.deepEqual(searchSuggestions(data, 'cve-2025', 6).map(item => item.q), ['CVE-2025-66566']);
-  assert.equal(searchSuggestions(data, 'log4j')[0].detail, 'Java');
-  assert.equal(searchSuggestions({ libraries: [{ library: 'com.fasterxml.jackson.datatype:jackson-datatype-guava', ecosystem: 'Java', fixed_entries: 0 }] }, 'guava').length, 0);
-  assert.equal(navigatorHref({ q: 'log4j', ecosystem: 'Java' }), 'how-it-works.html?q=log4j&ecosystem=Java#search');
-  assert.equal(navigatorHref({}), 'how-it-works.html#search');
+test('VEX suggestions cover packages, every CVE and aliases across statuses and releases', () => {
+  const entries = Array.from({length: 30}, (_, i) => ({ library: 'org.example:package', ecosystem: 'Java', vulnerability: `CVE-2026-${1000+i}`, aliases: ['GHSA-abcd-efgh-ijkl'], status: i ? 'fixed' : 'affected', version: String(i), purl: `pkg:maven/org.example/package@${i}`, supplier: 'Example' }));
+  const index = vexSearchIndex(entries);
+  assert.equal(index.length, 32);
+  assert.equal(searchSuggestions(index, 'pa').length, 0);
+  assert.equal(searchSuggestions(index, 'CVE-2026-1029')[0].q, 'CVE-2026-1029');
+  assert.equal(searchSuggestions(index, 'GHSA-abcd')[0].q, 'GHSA-abcd-efgh-ijkl');
+  assert.equal(searchSuggestions(index, 'package')[0].detail, 'Java');
+  assert.equal(searchSuggestions(index, 'catalog-only').length, 0);
+  for (const suggestion of index) assert.ok(filterEntries(entries, { q: suggestion.q }).length > 0);
+  assert.equal(navigatorHref({ q: 'package', releases: 'all' }), 'how-it-works.html?q=package&releases=all#search');
 });
 
 test('ecosystems use readable names while preserving future package types', () => {

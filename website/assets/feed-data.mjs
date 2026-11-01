@@ -139,30 +139,24 @@ function fuzzyScore(query, text) {
   }
   return best;
 }
-export function searchSuggestions(data, query, limit = 10) {
+export function vexSearchIndex(entries) {
+  const index = new Map();
+  for (const entry of entries) {
+    index.set('library:' + entry.library, { kind: 'library', label: entry.library, q: entry.library, detail: entry.ecosystem });
+    for (const id of [entry.vulnerability, ...entry.aliases]) {
+      index.set('advisory:' + id, { kind: 'advisory', label: id, q: id, detail: '' });
+    }
+  }
+  return [...index.values()];
+}
+export function searchSuggestions(index, query, limit = 10) {
   const term = String(query || '').trim().toLowerCase();
   if (term.length < 3) return [];
-  const ranked = [];
-  for (const item of Array.isArray(data?.top_cves) ? data.top_cves : []) {
-    if (typeof item?.id !== 'string') continue;
-    const score = fuzzyScore(term, item.id);
-    if (score) ranked.push({ kind: 'cve', label: item.id, q: item.id, score: score + 25 });
-  }
-  for (const item of Array.isArray(data?.libraries) ? data.libraries : []) {
-    if (typeof item?.library !== 'string' || item.fixed_entries === 0) continue;
-    const score = Math.max(fuzzyScore(term, item.library), typeof item.latest === 'string' ? fuzzyScore(term, item.latest) : 0);
-    if (score) ranked.push({ kind: 'library', label: item.library, detail: typeof item.ecosystem === 'string' ? item.ecosystem : '', q: item.library, score });
-  }
-  ranked.sort((a, b) => b.score - a.score || a.label.localeCompare(b.label));
-  const seen = new Set();
-  const matches = [];
-  for (const item of ranked) {
-    if (seen.has(item.q)) continue;
-    seen.add(item.q);
-    matches.push({ kind: item.kind, label: item.label, detail: item.detail || '', q: item.q });
-    if (matches.length >= limit) break;
-  }
-  return matches;
+  return index.map(item => ({ ...item, score: fuzzyScore(term, item.label) }))
+    .filter(item => item.score > 0)
+    .sort((a, b) => b.score - a.score || a.label.localeCompare(b.label))
+    .slice(0, limit)
+    .map(({ score, ...item }) => item);
 }
 export function groupReleases(entries) {
   const groups = new Map();

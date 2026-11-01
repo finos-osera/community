@@ -1,6 +1,6 @@
-import { METRICS_URL, validateMetrics, loadFeed, freshness, searchSuggestions, navigatorHref } from './feed-data.mjs';
+import { METRICS_URL, VEX_URL, normalizeVex, vexSearchIndex, validateMetrics, loadFeed, freshness, searchSuggestions, navigatorHref } from './feed-data.mjs';
 
-let metrics = { libraries: [], top_cves: [], ecosystems: [] };
+let searchIndex = [];
 let searchBound = false;
 
 function setStatus(text) {
@@ -48,8 +48,8 @@ function bindSearch() {
   const input = form.querySelector('input[name="q"]');
   const list = document.getElementById('fix-suggestions');
   const empty = document.getElementById('fix-empty');
-  const go = query => { location.href = navigatorHref({ q: query }); };
-  const matchesFor = query => searchSuggestions(metrics, query, 10);
+  const go = query => { location.href = navigatorHref({ q: query, releases: 'all' }); };
+  const matchesFor = query => searchSuggestions(searchIndex, query, 10);
   form.addEventListener('submit', event => {
     event.preventDefault();
     const query = input.value.trim();
@@ -62,7 +62,6 @@ function bindSearch() {
     list.replaceChildren();
     list.hidden = items.length === 0;
     input.setAttribute('aria-expanded', items.length ? 'true' : 'false');
-    if (empty && items.length) empty.hidden = true;
     for (const item of items) {
       const li = document.createElement('li');
       const button = document.createElement('button');
@@ -73,7 +72,23 @@ function bindSearch() {
       list.appendChild(li);
     }
   };
-  input.addEventListener('input', () => show(matchesFor(input.value.trim())));
+  let loading = false, loaded = false;
+  const loadSuggestions = async () => {
+    if (loaded || loading) return;
+    loading = true;
+    if (empty) { empty.hidden = false; empty.textContent = 'Loading suggestions from published VEX statements…'; }
+    try {
+      const { data, cached } = await loadFeed(VEX_URL, normalizeVex);
+      searchIndex = vexSearchIndex(data.entries);
+      loaded = true;
+      if (empty) { empty.hidden = false; empty.textContent = 'Suggestions from OpenVEX · ' + freshness(data.published, cached); }
+      show(matchesFor(input.value.trim()));
+    } catch {
+      if (empty) { empty.hidden = false; empty.textContent = 'Suggestions are unavailable. You can still search the published VEX statements.'; }
+    } finally { loading = false; }
+  };
+  input.addEventListener('focus', loadSuggestions);
+  input.addEventListener('input', () => { loadSuggestions(); show(matchesFor(input.value.trim())); });
   input.addEventListener('keydown', event => { if (event.key === 'Escape') show([]); });
 }
 
@@ -83,7 +98,6 @@ async function refresh() {
   setStatus('Loading published metrics…');
   try {
     const { data, cached } = await loadFeed(METRICS_URL, validateMetrics);
-    metrics = data;
     fill(data, cached);
   } catch {
     setStatus('Published metrics are temporarily unavailable. Search still opens the navigator.');

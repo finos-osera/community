@@ -192,7 +192,7 @@ function render() {
   $('page-status').textContent = `Page ${page + 1} of ${pages}`;
   $('previous').disabled = page === 0; $('next').disabled = page === pages - 1;
   const host = $('results'); host.replaceChildren();
-  if (!items.length) element(host, 'p', 'No matching statements in this scope. Try all maintained versions, another search, or clear the active filters.', 'vex-empty');
+  if (!items.length) element(host, 'p', 'No published VEX statements match this search. Try all releases, another search, or clear the active filters.', 'vex-empty');
   for (const item of items.slice(page * size, (page + 1) * size)) {
     const row = element(host, 'article', undefined, 'vex-record'); const summary = element(row, 'div');
     element(summary, 'h2', item.library);
