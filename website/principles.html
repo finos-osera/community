@@ -101,13 +101,16 @@ footer a{color:#9fd4ec}
 .footer-note{max-width:78ch;color:#7fa6bd;font-size:13px}
 .footer-nav{color:#7fa6bd}
 </style>
+<link rel="stylesheet" href="assets/navigation.css">
+<script type="module" src="assets/navigation.mjs"></script>
 </head>
 <body id="top">
 
 <header>
   <div class="wrap"><nav>
     <div class="brand"><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-color.svg" alt="OSERA" class="osera-logo"></a></div>
-    <div class="navlinks">
+    <button class="nav-toggle" type="button" aria-label="Open navigation menu" aria-controls="site-navigation" aria-expanded="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span>Menu</span></button>
+    <div class="navlinks" id="site-navigation">
                   <a href="problem.html">The Problem</a>
       <a href="how-it-works.html">The Solution</a>
       <a href="alliance.html">The Alliance</a>

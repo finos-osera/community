@@ -1,0 +1,10 @@
+.nav-toggle{display:none;align-items:center;justify-content:center;gap:8px;min-width:44px;min-height:44px;padding:8px 12px;border:1px solid var(--line,#dce5eb);border-radius:8px;background:#fff;color:var(--navy,#00253f);font:inherit;font-weight:600;cursor:pointer}
+.nav-toggle svg{width:22px;height:22px}
+.nav-toggle:focus-visible{outline:3px solid #0086bf;outline-offset:3px}
+@media(max-width:1200px){
+  header nav{height:auto;min-height:66px;flex-wrap:wrap;gap:12px;padding:10px 0}
+  header .nav-toggle:not([hidden]){display:inline-flex;margin-left:auto}
+  header .navlinks{width:100%;flex-direction:column;align-items:stretch;gap:6px;white-space:normal;padding:8px 0;max-height:calc(100dvh - 100px);overflow-y:auto}
+  header .navlinks.nav-collapsible:not(.is-open){display:none}
+  header .navlinks a,header .navlinks a.nav-more:not(.active),header .navlinks a:not(.btn):not(.nav-github),header .navlinks .page-link:not(.active),header .navlinks .page-link{display:flex;align-items:center;min-height:44px;box-sizing:border-box}
+}
