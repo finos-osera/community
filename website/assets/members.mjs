@@ -1,3 +1,7 @@
+// Temporary official total confirmed by mindthegab on 2026-11-01.
+// The public API is consent-filtered; its length is not total membership.
+// Replace this override only when an authoritative total is available.
+export const MEMBER_COUNT = 7;
 export const MEMBERS_URL = 'https://api-gw.platform.linuxfoundation.org/project-service/v1/public/projects/lfcK5vEVcgon9SNzAg/members?status=Active&orderBy=name';
 
 export function memberView(members) {
@@ -8,7 +12,7 @@ export function memberView(members) {
     if (typeof member.Logo === 'string' && member.Logo.trim()) withLogo.push(member);
     else withoutLogo.push(member);
   }
-  return { count: list.length, withLogo, withoutLogo };
+  return { count: MEMBER_COUNT, withLogo, withoutLogo };
 }
 
 function websiteUrl(site) {
@@ -97,9 +101,9 @@ async function mount() {
     const view = memberView(members);
     renderLogos(tiles, view.withLogo);
     renderNames(document.querySelector('[data-member-names]'), view.withoutLogo);
-    document.querySelector('[data-member-status]').textContent = `${view.count} active members · Official Linux Foundation roster`;
+    document.querySelector('[data-member-status]').textContent = `${view.count} members · Members include:`;
   } catch {
-    document.querySelector('[data-member-status]').textContent = 'Live membership roster unavailable. Showing fallback logos; membership may have changed.';
+    document.querySelector('[data-member-status]').textContent = `${MEMBER_COUNT} members · Members include those shown below. Live logo list unavailable; showing fallback logos.`;
   }
 }
 
