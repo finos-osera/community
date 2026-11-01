@@ -1,4 +1,3 @@
-export const MEMBER_COUNT = 7;
 export const MEMBERS_URL = 'https://api-gw.platform.linuxfoundation.org/project-service/v1/public/projects/lfcK5vEVcgon9SNzAg/members?status=Active&orderBy=name';
 
 export function memberView(members) {
@@ -9,7 +8,7 @@ export function memberView(members) {
     if (typeof member.Logo === 'string' && member.Logo.trim()) withLogo.push(member);
     else withoutLogo.push(member);
   }
-  return { count: MEMBER_COUNT, withLogo, withoutLogo };
+  return { count: list.length, withLogo, withoutLogo };
 }
 
 function websiteUrl(site) {
@@ -28,7 +27,6 @@ function nameFallback(name) {
 }
 
 function renderLogos(root, members) {
-  if (!members.length) return;
   const fragment = document.createDocumentFragment();
   for (const member of members) {
     const name = member.Name.trim();
@@ -94,11 +92,14 @@ async function mount() {
   try {
     const response = await fetch(MEMBERS_URL);
     if (!response.ok) throw new Error('members ' + response.status);
-    const view = memberView(await response.json());
+    const members = await response.json();
+    if (!Array.isArray(members)) throw new Error('Invalid member roster');
+    const view = memberView(members);
     renderLogos(tiles, view.withLogo);
     renderNames(document.querySelector('[data-member-names]'), view.withoutLogo);
+    document.querySelector('[data-member-status]').textContent = `${view.count} active members · Official Linux Foundation roster`;
   } catch {
-    // Keep the static logo fallback. The member count stays 7 in the page.
+    document.querySelector('[data-member-status]').textContent = 'Live membership roster unavailable. Showing fallback logos; membership may have changed.';
   }
 }
 

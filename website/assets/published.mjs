@@ -53,15 +53,9 @@ function bindSearch() {
   form.addEventListener('submit', event => {
     event.preventDefault();
     const query = input.value.trim();
-    const matches = matchesFor(query);
-    const chosen = matches.find(item => item.q.toLowerCase() === query.toLowerCase() || item.label.toLowerCase() === query.toLowerCase()) || matches[0];
-    if (!chosen) {
-      if (empty) empty.hidden = false;
-      if (list) list.hidden = true;
-      return;
-    }
-    if (empty) empty.hidden = true;
-    go(chosen.q);
+    if (!query) { input.focus(); return; }
+    // Suggestions are a partial index, not proof that remediation is absent.
+    go(query);
   });
   if (!input || !list) return;
   const show = items => {
