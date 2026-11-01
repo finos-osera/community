@@ -107,6 +107,63 @@ export function latestReleases(entries) {
   // Unknown version schemes are retained; statement dates are not release dates.
   return entries.filter(entry => { const line = versionLine(entry); return !line || line.sequence === latest.get(line.key); });
 }
+export function navigatorHref(params = {}) {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (typeof value === 'string' && value) search.set(key, value);
+  }
+  const query = search.toString();
+  return 'how-it-works.html' + (query ? '?' + query : '') + '#search';
+}
+function fuzzyScore(query, text) {
+  const q = query.toLowerCase();
+  const value = String(text || '').toLowerCase();
+  if (!q || !value) return 0;
+  if (value === q) return 3000;
+  if (value.startsWith(q)) return 2000 - Math.min(value.length, 500);
+  const contains = value.indexOf(q);
+  if (contains >= 0) return 1000 - contains;
+  let best = 0;
+  for (let start = 0; start < value.length; start++) {
+    if (value[start] !== q[0]) continue;
+    let cursor = start + 1;
+    let gaps = 0;
+    let matched = true;
+    for (let index = 1; index < q.length; index++) {
+      const found = value.indexOf(q[index], cursor);
+      if (found < 0 || found - cursor > 2) { matched = false; break; }
+      gaps += found - cursor;
+      cursor = found + 1;
+    }
+    if (matched) best = Math.max(best, 500 - gaps);
+  }
+  return best;
+}
+export function searchSuggestions(data, query, limit = 10) {
+  const term = String(query || '').trim().toLowerCase();
+  if (term.length < 3) return [];
+  const ranked = [];
+  for (const item of Array.isArray(data?.top_cves) ? data.top_cves : []) {
+    if (typeof item?.id !== 'string') continue;
+    const score = fuzzyScore(term, item.id);
+    if (score) ranked.push({ kind: 'cve', label: item.id, q: item.id, score: score + 25 });
+  }
+  for (const item of Array.isArray(data?.libraries) ? data.libraries : []) {
+    if (typeof item?.library !== 'string' || item.fixed_entries === 0) continue;
+    const score = Math.max(fuzzyScore(term, item.library), typeof item.latest === 'string' ? fuzzyScore(term, item.latest) : 0);
+    if (score) ranked.push({ kind: 'library', label: item.library, detail: typeof item.ecosystem === 'string' ? item.ecosystem : '', q: item.library, score });
+  }
+  ranked.sort((a, b) => b.score - a.score || a.label.localeCompare(b.label));
+  const seen = new Set();
+  const matches = [];
+  for (const item of ranked) {
+    if (seen.has(item.q)) continue;
+    seen.add(item.q);
+    matches.push({ kind: item.kind, label: item.label, detail: item.detail || '', q: item.q });
+    if (matches.length >= limit) break;
+  }
+  return matches;
+}
 export function groupReleases(entries) {
   const groups = new Map();
   for (const entry of entries) {

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>News &amp; Media · OSERA | Open Source Enterprise Resiliency Alliance</title>
+<title>Resources · OSERA | Open Source Enterprise Resiliency Alliance</title>
 <!-- GA_TRACKING_START -->
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=__GA_MEASUREMENT_ID__"></script>
@@ -28,7 +28,7 @@ a{color:var(--blue)}
 h1,h2,h3{font-family:'Montserrat',sans-serif;color:var(--navy);letter-spacing:-.01em}
 .wrap{max-width:1140px;margin:0 auto;padding:0 28px}
 header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
-nav{display:flex;align-items:center;justify-content:space-between;height:66px;max-width:1140px;margin:0 auto;padding:0 28px}
+nav{display:flex;align-items:center;justify-content:space-between;height:66px;gap:18px}
 .brand{display:flex;align-items:center;gap:12px}
 .brand .logo-link{display:flex;align-items:center;line-height:0}
 .brand-logo{height:36px;width:auto;display:block}
@@ -62,6 +62,7 @@ footer .brand-divider{background:rgba(255,255,255,.28)}
 .nav-github:hover{color:var(--blue)}
 .nav-github svg{width:22px;height:22px;display:block}
 @media(max-width:1080px){.brand .full-name{display:none}}
+@media(max-width:1200px){.navlinks a.nav-more:not(.active){display:none}}
 @media(max-width:940px){.navlinks a:not(.btn):not(.nav-github){display:none}}
 @media(max-width:760px){.navlinks .page-link:not(.active){display:none}}
 @media(max-width:560px){.navlinks .page-link{display:none}}
@@ -72,6 +73,11 @@ footer .brand-divider{background:rgba(255,255,255,.28)}
 .hero p{color:var(--grey);font-size:19px;margin-top:20px}
 .hero .jump{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
 @media(max-width:680px){.hero h1{font-size:34px}}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr}}
+.hero-video{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#00253F;box-shadow:0 18px 44px rgba(16,34,46,.12)}
+.hero-video video{display:block;width:100%;height:auto}
+.hero-vidcap{margin-top:12px;font-size:12.5px;color:var(--grey);text-align:center}
 section{padding:74px 0;border-bottom:1px solid var(--line)}
 .sec-soft{background:var(--soft)}
 .eyebrow{color:var(--blue);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:12px;margin-bottom:14px}
@@ -123,30 +129,41 @@ footer a{color:#9fd4ec}
 <body id="top">
 
 <header>
-  <nav>
+  <div class="wrap"><nav>
     <div class="brand"><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-color.svg" alt="OSERA" class="osera-logo"></a></div>
     <div class="navlinks">
-      <a href="projects.html">Available Now</a>
+                  <a href="problem.html">The Problem</a>
       <a href="how-it-works.html">The Solution</a>
       <a href="alliance.html">The Alliance</a>
       <a href="workstreams.html">Workstreams</a>
-      <a href="principles.html">Our Principles</a>
-      <a href="news.html" class="btn active page-link" aria-current="page">News &amp; Media</a>
+      <a href="https://standards.osera.finos.org/" target="_blank" rel="noopener">Remediation Standards</a>
+      <a href="principles.html">Principles</a>
+      <a href="news.html" class="btn active page-link" aria-current="page">Resources</a>
       <a href="index.html#involved" class="btn involve">Get involved</a>
       <a href="https://github.com/finos-osera" class="nav-github" target="_blank" rel="noopener" aria-label="OSERA on GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.021C22 6.484 17.522 2 12 2z"/></svg></a>
     </div>
-  </nav>
+  </nav></div>
 </header>
 
 <div class="hero">
-  <div class="wrap">
-    <div class="eyebrow">News &amp; Media</div>
-    <h1>OSERA in the news.</h1>
-    <p>Coverage of the alliance — from the intent to form, through the bank-validated pilot, to the operational alliance — plus videos, shorts, and a short history of how we got here.</p>
-    <div class="jump">
-      <a href="#press" class="btn ghost">In the press</a>
-      <a href="#videos" class="btn ghost">Videos &amp; shorts</a>
-      <a href="#history" class="btn ghost">A short history</a>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Resources</div>
+      <h1>News, media, and the public record.</h1>
+      <p>Coverage of the alliance, plus the documents and tools that sit alongside it.</p>
+      <div class="jump">
+        <a href="#press" class="btn ghost">News &amp; media</a>
+        <a href="#videos" class="btn ghost">Videos</a>
+        <a href="https://www.finos.org/OSERA_Prospectus" class="btn ghost" target="_blank" rel="noopener">Prospectus</a>
+      </div>
+    </div>
+    <div>
+      <div class="hero-video">
+        <video controls preload="metadata" playsinline title="The Downstream Dilemma — Introducing OSERA">
+          <source src="https://2419532.fs1.hubspotusercontent-na1.net/hubfs/2419532/2026/Videos/OSERA%202026/The%20Downstream%20Dilemma_%20Introducing%20OSERA%20to%20Stop%20the%20Cost%20of%20Private%20Forks%20-%20B.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="hero-vidcap">The Downstream Dilemma — the launch video from OSFF London 2026<br><a href="https://www.finos.org/press/intent-to-form-osera-open-source-supply-chain-resiliency" target="_blank" rel="noopener">Read the FINOS launch announcement</a></div>
     </div>
   </div>
 </div>
@@ -272,22 +289,6 @@ footer a{color:#9fd4ec}
   </div>
 </section>
 
-<!-- HISTORY -->
-<section id="history">
-  <div class="wrap">
-    <div class="eyebrow">A short history</div>
-    <h2>How we got here</h2>
-    <div class="tl">
-      <div class="ev"><div class="when">Early 2026</div><p>FINOS institutions recognise they each pay, independently, to keep the same open source dependencies alive — forking, patching or buying support for identical CVEs.</p></div>
-      <div class="ev"><div class="when">Q2 2026</div><p>Spearheaded by <strong>Moderne</strong>, the effort is brought to the FINOS community — in the open, not as a product — and a formation group convenes to design a mutualised, openly-governed model.</p></div>
-      <div class="ev"><div class="when">May–June 2026</div><p>A working pipeline ships: critical Java lines maintained as backpatch releases and validated end-to-end by participating banks.</p></div>
-      <div class="ev"><div class="when">June 2026</div><p>The Linux Foundation launches <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a> - the upstream security response and maintenance layer for critical open source. <a href="https://www.linuxfoundation.org/press/linux-foundation-and-industry-leaders-launch-akrites-to-defend-critical-open-source-software-against-ai-enabled-cyber-threats" target="_blank" rel="noopener">Read the Linux Foundation announcement</a>.</p></div>
-      <div class="ev"><div class="when">26 June 2026</div><p>FINOS announces the intent to form OSERA with support from Deutsche Bank, Goldman Sachs, Moderne, Morgan Stanley, RBC, Sonatype, and TD Bank Group. <a href="https://www.finos.org/press/intent-to-form-osera-open-source-supply-chain-resiliency" target="_blank" rel="noopener">Read the OSERA announcement</a>.</p></div>
-      <div class="ev"><div class="when">August 2026</div><p>OSERA becomes operational: <strong>Citi, Deutsche Bank, Morgan Stanley, NatWest and RBC</strong> sign as founding Premier members, the first <a href="alliance.html#board">Governing Board</a> convenes, and the <a href="workstreams.html">Remediation Standards working group</a> is ratified.</p></div>
-    </div>
-  </div>
-</section>
-
 <section class="cta">
   <div class="wrap">
     <h2>Be part of the next chapter.</h2>
@@ -304,7 +305,7 @@ footer a{color:#9fd4ec}
   <div class="footer-inner">
     <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-white.svg" alt="OSERA" class="osera-logo"><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
     <div class="footer-note">OSERA is a FINOS initiative, part of the Linux Foundation, focused on open, portable remediation for regulated enterprises and complementary to <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a>.</div>
-    <div class="footer-nav"><a href="index.html">Home</a> · <a href="how-it-works.html">The Solution</a> · <a href="alliance.html">The Alliance</a> · <a href="workstreams.html">Workstreams</a> · <a href="projects.html">Projects</a> · <a href="principles.html">Our Principles</a> · <a href="news.html">News &amp; Media</a> · <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a> · <a href="mailto:membership@finos.org">membership@finos.org</a></div>
+    <div class="footer-nav"><a href="index.html">Home</a> · <a href="problem.html">The Problem</a> · <a href="how-it-works.html">The Solution</a> · <a href="alliance.html">The Alliance</a> · <a href="workstreams.html">Workstreams</a> · <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> · <a href="principles.html">Principles</a> · <a href="news.html">Resources</a> · <a href="how-it-works.html#search">Search fixes</a> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a> · <a href="mailto:membership@finos.org">membership@finos.org</a></div>
   </div>
 </footer>
 <script>

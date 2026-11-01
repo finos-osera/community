@@ -1,9 +1,16 @@
 import { VEX_URL, CDX_URL, loadFeed, normalizeVex, fixedTotals, filterEntries, freshness, publicationLabel, advisoryUrl, latestReleases, groupReleases, releaseIdentity } from './feed-data.mjs';
 const $ = id => document.getElementById(id);
+const releaseScope = () => form.elements.namedItem('releases');
 const form = $('filters');
 const labels = { fixed: 'Fixed', affected: 'Affected', not_affected: 'Not affected', under_investigation: 'Under investigation' };
-const defaults = { view: 'libraries', releases: 'latest' };
-const pageSize = 25;
+const defaults = { view: 'libraries', releases: 'latest', pageSize: '5' };
+function pageLength(count) {
+  const choice = document.getElementById('page-size');
+  const raw = choice ? choice.value : '5';
+  if (raw === 'all') return Math.max(count, 1);
+  const size = Number.parseInt(raw, 10);
+  return Number.isFinite(size) && size > 0 ? size : 5;
+}
 let entries = [], page = 0, library = '', debounce;
 let disclosureSequence = 0, disclosures = [];
 document.addEventListener('pointerdown', event => { for (const disclosure of disclosures) if (!disclosure.host.contains(event.target)) disclosure.close(); });
@@ -30,31 +37,63 @@ function readUrl() {
   }
   page = Math.max(0, (Number.parseInt(params.get('page'), 10) || 1) - 1);
   library = params.get('library') || '';
+  const size = document.getElementById('page-size');
+  if (size) size.value = params.get('pageSize') || defaults.pageSize;
 }
 function filters() { return { ...Object.fromEntries(new FormData(form)), library }; }
 function updateUrl() {
   const url = new URL(location.href); url.search = '';
   for (const [key, value] of Object.entries(filters())) if (value && value !== defaults[key]) url.searchParams.set(key, value);
   if (page) url.searchParams.set('page', page + 1);
+  const size = document.getElementById('page-size');
+  if (size && size.value && size.value !== defaults.pageSize) url.searchParams.set('pageSize', size.value);
   history.replaceState(null, '', url);
 }
+function clearRealFilters() {
+  for (const name of ['q', 'status', 'supplier', 'ecosystem']) form.elements.namedItem(name).value = '';
+  library = '';
+}
+function iconButton(parent, label, svg, action) {
+  const b = element(parent, 'button', undefined, 'icon-btn');
+  b.type = 'button'; b.title = label; b.setAttribute('aria-label', label);
+  b.innerHTML = svg; b.addEventListener('click', action); return b;
+}
 function activeFilters() {
-  const host = $('active-filters'); host.replaceChildren();
+  const host = $('active-filters'); host.replaceChildren(); host.hidden = false;
   const values = filters();
-  const names = { library: 'Library', q: 'Search', status: 'Status', supplier: 'Supplier', ecosystem: 'Ecosystem' };
+  const names = { library: 'Library', q: 'Search', status: 'Status', supplier: 'Producer', ecosystem: 'Ecosystem' };
   const active = Object.entries(names).filter(([key]) => values[key]);
-  host.hidden = !active.length;
-  $('clear-filters').className = active.length ? 'btn primary' : 'btn ghost';
-  $('clear-filters').textContent = active.length ? `Clear ${active.length} active filter${active.length === 1 ? '' : 's'}` : 'Clear filters';
-  if (active.length) element(host, 'strong', 'Filtered view');
+  const viewLabels = { libraries: 'Libraries', releases: 'Maintained versions', entries: 'Individual statements' };
+  const head = element(host, 'div', undefined, 'vex-active-head');
+  element(head, 'strong', 'Filtered view');
+  const tools = element(head, 'div', undefined, 'vex-active-tools');
+  if (active.length) {
+    iconButton(tools, 'remove all filters', '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 6l12 12M18 6L6 18"/></svg>', () => {
+      clearTimeout(debounce); clearRealFilters(); page = 0; render(); $('query').focus();
+    });
+    iconButton(tools, 'copy this view link', '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>', async () => {
+      clearTimeout(debounce); render();
+      try { await navigator.clipboard.writeText(location.href); $('results-status').textContent = 'Link copied. It preserves this search, release scope, filters and page.'; }
+      catch { $('results-status').textContent = 'Copy the URL from your address bar to share this view.'; }
+    }).id = 'share';
+  }
+  const chips = element(host, 'div', undefined, 'vex-chip-row');
+  const locked = [
+    ['View', viewLabels[values.view] || values.view],
+    ['Release scope', releaseScope().value === 'all' ? 'All maintained versions in VEX' : 'Latest OSERA tag per version line']
+  ];
+  for (const [name, value] of locked) {
+    const chip = element(chips, 'span', `${name}: ${value}`, 'vex-filter-chip is-locked');
+    chip.title = 'Change this with the options above';
+  }
   for (const [key, name] of active) {
     const value = key === 'status' ? labels[values[key]] : values[key];
-    const b = button(host, `${name}: ${value} ×`, () => {
+    const chip = button(chips, `${name}: ${value} ×`, () => {
       clearTimeout(debounce);
       if (key === 'library') library = ''; else form.elements.namedItem(key).value = '';
-      page = 0; render(); $('clear-filters').focus();
+      page = 0; render();
     }, 'vex-filter-chip');
-    b.setAttribute('aria-label', `Remove ${name.toLowerCase()} filter: ${value}`);
+    chip.setAttribute('aria-label', `Remove ${name.toLowerCase()} filter: ${value}`);
   }
 }
 function identifiers(host, ids) {
@@ -125,14 +164,14 @@ function drill(item, view, all = false) {
   clearTimeout(debounce); library = item.library;
   $('ecosystem').value = item.ecosystem;
   $('view').value = view;
-  if (all) $('releases').value = 'all';
-  page = 0; render(); $('clear-filters').focus();
+  if (all) releaseScope().value = 'all';
+  page = 0; render(); $('query').focus();
   $('active-filters').scrollIntoView({ block: 'center' });
 }
 function render() {
   disclosures = [];
   // Select latest versions before searching; an old matching CVE must never redefine "latest".
-  const scoped = $('releases').value === 'all' ? entries : latestReleases(entries);
+  const scoped = releaseScope().value === 'all' ? entries : latestReleases(entries);
   const filtered = filterEntries(scoped, filters());
   const view = $('view').value;
   let items = filtered;
@@ -146,37 +185,36 @@ function render() {
     items = [...groups.values()];
   } else if (view === 'releases') items = groupReleases(filtered);
   if (view !== 'releases') items.sort((a, b) => a.library.localeCompare(b.library) || (a.vulnerability || '').localeCompare(b.vulnerability || '') || (b.version || '').localeCompare(a.version || '', undefined, { numeric: true }));
-  const pages = Math.max(1, Math.ceil(items.length / pageSize)); page = Math.min(page, pages - 1);
+  const size = pageLength(items.length);
+  const pages = Math.max(1, Math.ceil(items.length / size)); page = Math.min(page, pages - 1);
   updateUrl(); activeFilters();
-  $('release-scope-note').textContent = $('releases').value === 'all' ? 'Showing all releases represented in VEX. Advisory lists apply to each exact release.' : 'Showing the highest OSERA tag per version line and supplier represented in VEX. Search older tags with “All releases in VEX”.';
-  $('results-status').textContent = `${items.length.toLocaleString()} ${view === 'libraries' ? 'libraries' : view === 'releases' ? 'releases' : 'statements'} match · ${filtered.length.toLocaleString()} product statements`;
+  $('results-status').textContent = `${items.length.toLocaleString()} ${view === 'libraries' ? 'libraries' : view === 'releases' ? 'maintained versions' : 'statements'} match · ${filtered.length.toLocaleString()} product statements`;
   $('page-status').textContent = `Page ${page + 1} of ${pages}`;
   $('previous').disabled = page === 0; $('next').disabled = page === pages - 1;
   const host = $('results'); host.replaceChildren();
-  if (!items.length) element(host, 'p', 'No matching statements in this release scope. Try All releases in VEX, another search, or clear the active filters.', 'vex-empty');
-  for (const item of items.slice(page * pageSize, (page + 1) * pageSize)) {
+  if (!items.length) element(host, 'p', 'No matching statements in this scope. Try all maintained versions, another search, or clear the active filters.', 'vex-empty');
+  for (const item of items.slice(page * size, (page + 1) * size)) {
     const row = element(host, 'article', undefined, 'vex-record'); const summary = element(row, 'div');
     element(summary, 'h2', item.library);
     if (view === 'libraries') {
       const releases = groupReleases(item.entries);
-      element(summary, 'p', `${item.ecosystem} · ${releases.length} matching release${releases.length === 1 ? '' : 's'}`);
+      element(summary, 'p', `${item.ecosystem} · ${releases.length} maintained version${releases.length === 1 ? '' : 's'}`, 'vex-meta');
+      const versionRow = element(summary, 'div', undefined, 'vex-version-row');
       for (const release of releases.slice(0, 4)) {
-        const releaseRow = element(summary, 'div', undefined, 'vex-release');
-        element(releaseRow, 'h3', release.version);
-        element(releaseRow, 'p', 'Supplier: ' + release.supplier, 'feed-note');
-        advisories(releaseRow, release.entries);
+        const chip = element(versionRow, 'div', undefined, 'vex-version-chip');
+        element(chip, 'strong', `${release.version} (producer: ${release.supplier})`);
+        advisories(chip, release.entries);
       }
-      if (releases.length > 4) element(summary, 'p', `Plus ${releases.length - 4} more matching releases. Inspect releases to see them all.`, 'feed-note');
+      if (releases.length > 4) element(summary, 'p', `Plus ${releases.length - 4} more maintained versions.`, 'feed-note');
       const actions = element(row, 'div', undefined, 'vex-row-actions');
-      button(actions, 'Inspect releases →', () => drill(item, 'releases'));
+      button(actions, 'Inspect versions →', () => drill(item, 'releases'));
       const all = entries.filter(x => x.library === item.library && x.ecosystem === item.ecosystem && (!$('supplier').value || x.supplier === $('supplier').value));
       const selected = new Set(scoped.map(releaseIdentity));
       const older = new Set(all.filter(x => !selected.has(releaseIdentity(x))).map(releaseIdentity)).size;
-      if (older) button(actions, `See ${older} other release${older === 1 ? '' : 's'}`, () => drill(item, 'releases', true));
+      if (older) button(actions, `See ${older} other maintained version${older === 1 ? '' : 's'}`, () => drill(item, 'releases', true));
     } else {
-      element(summary, 'h3', item.version);
+      element(summary, 'h3', `${item.version} (producer: ${item.supplier})`);
       element(summary, 'p', item.purl, 'vex-coordinate');
-      element(summary, 'p', `Supplier: ${item.supplier}`, 'feed-note');
       if (view === 'releases') advisories(summary, item.entries);
       else {
         identifiers(element(summary, 'div', undefined, 'vex-advisory-links'), [item.vulnerability, ...item.aliases]);
@@ -188,7 +226,7 @@ function render() {
 }
 function options(id, values) {
   const select = $(id); select.replaceChildren();
-  const all = element(select, 'option', id === 'supplier' ? 'All suppliers' : 'All ecosystems'); all.value = '';
+  const all = element(select, 'option', id === 'supplier' ? 'All producers' : 'All ecosystems'); all.value = '';
   for (const value of [...new Set(values)].sort()) { const option = element(select, 'option', value); option.value = value; }
 }
 async function refresh() {
@@ -208,12 +246,7 @@ async function refresh() {
 form.addEventListener('submit', event => event.preventDefault());
 form.addEventListener('input', event => { if (event.target.id !== 'query') return; clearTimeout(debounce); debounce = setTimeout(() => { page = 0; render(); }, 150); });
 form.addEventListener('change', event => { if (event.target.id === 'query') return; clearTimeout(debounce); page = 0; render(); });
-$('clear-filters').addEventListener('click', () => {
-  clearTimeout(debounce);
-  // Clearing filters preserves the explicit view and release-scope choices.
-  for (const name of ['q', 'status', 'supplier', 'ecosystem']) form.elements.namedItem(name).value = '';
-  library = ''; page = 0; render(); $('query').focus();
-});
-$('share').addEventListener('click', async () => { clearTimeout(debounce); render(); try { await navigator.clipboard.writeText(location.href); $('results-status').textContent = 'Link copied. It preserves this search, release scope, filters and page.'; } catch { $('results-status').textContent = 'Copy the URL from your address bar to share this view.'; } });
+const pageSize = document.getElementById('page-size');
+if (pageSize) pageSize.addEventListener('change', () => { page = 0; render(); });
 for (const [id, offset] of [['previous', -1], ['next', 1]]) $(id).addEventListener('click', () => { page += offset; render(); $('results-status').scrollIntoView({ block: 'center' }); });
 window.addEventListener('popstate', () => { readUrl(); render(); }); $('retry').addEventListener('click', refresh); refresh();

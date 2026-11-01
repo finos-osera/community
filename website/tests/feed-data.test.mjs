@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentReleases, latestReleases, groupReleases, advisoryUrl, ecosystemLabel } from '../assets/feed-data.mjs';
+import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentReleases, latestReleases, groupReleases, advisoryUrl, ecosystemLabel, navigatorHref, searchSuggestions } from '../assets/feed-data.mjs';
 const statement = (overrides = {}) => ({ vulnerability: { name: 'CVE-2026-1234', aliases: ['GHSA-example'] }, products: [{ '@id': 'pkg:maven/org.example/demo@1.0' }], status: 'fixed', supplier: 'Producer', ...overrides });
 const doc = statements => ({ timestamp: '2026-10-28T12:00:00Z', statements });
 test('expands products, preserves evidence and deduplicates fixed pairs across differing evidence', () => {
@@ -76,6 +76,19 @@ test('advisory links allow only canonical CVE and GHSA identifiers', () => {
   assert.equal(advisoryUrl('GHSA-cmp6-m4wj-q63q'),'https://github.com/advisories/GHSA-cmp6-m4wj-q63q');
   assert.equal(advisoryUrl('javascript:alert(1)'),null);
   assert.equal(advisoryUrl('CVE-2025-66566/../../evil'),null);
+});
+
+test('search suggestions prefer CVE hits and stay empty for short queries', () => {
+  const data = { top_cves: [{ id: 'CVE-2025-66566' }, { id: 'CVE-2024-22257' }], libraries: [{ library: 'org.apache.logging.log4j:log4j-core', ecosystem: 'Java' }, { library: 'org.springframework:spring-web', ecosystem: 'Java' }] };
+  assert.equal(searchSuggestions(data, 'lo').length, 0);
+  assert.equal(searchSuggestions(data, 'l').length, 0);
+  const fuzzy = searchSuggestions({ libraries: [{ library: 'org.apache.logging.log4j:log4j-core', ecosystem: 'Java' }] }, 'lg4j');
+  assert.equal(fuzzy[0]?.q, 'org.apache.logging.log4j:log4j-core');
+  assert.deepEqual(searchSuggestions(data, 'cve-2025', 6).map(item => item.q), ['CVE-2025-66566']);
+  assert.equal(searchSuggestions(data, 'log4j')[0].detail, 'Java');
+  assert.equal(searchSuggestions({ libraries: [{ library: 'com.fasterxml.jackson.datatype:jackson-datatype-guava', ecosystem: 'Java', fixed_entries: 0 }] }, 'guava').length, 0);
+  assert.equal(navigatorHref({ q: 'log4j', ecosystem: 'Java' }), 'how-it-works.html?q=log4j&ecosystem=Java#search');
+  assert.equal(navigatorHref({}), 'how-it-works.html#search');
 });
 
 test('ecosystems use readable names while preserving future package types', () => {

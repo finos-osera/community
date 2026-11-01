@@ -63,8 +63,7 @@ To request a `*.finos.org` domain, email [help@finos.org](mailto:help@finos.org)
 
 ## Published feed and VEX navigator
 
-The homepage loads `https://feed.finos.org/stats/metrics.json`. `vex.html` loads
-`https://feed.finos.org/openvex.json` once per visit and searches in the browser.
+The homepage loads `https://feed.finos.org/stats/metrics.json` for the live counters, ecosystem chips, and search suggestions. The full navigator lives on `projects.html#navigator` and loads `https://feed.finos.org/openvex.json` once per visit, searching in the browser. `vex.html` redirects there and keeps the query string.
 No backend, credentials, bundled feed snapshot or extra runtime dependencies are needed.
 The feed must permit cross-origin requests from the site. Both views show their own
 publication timestamp; totals are never combined across the two snapshots.
@@ -85,7 +84,8 @@ The feed's existing HTTP cache headers are respected. Clear site data to remove
 saved snapshots. Blocked/full local storage does not prevent a fresh load.
 
 Run `npm test` for parsing, counting, filtering, malformed data and fallback tests.
-Run `npm run build`; serve `build/` to preview both `/` and `/vex.html`.
+Run `npm run build`; serve `build/` to preview `/`, `/projects.html#navigator`, and the `/vex.html` redirect.
+The Alliance page and the homepage member strip show a fixed count of 7. Logos come from the Linux Foundation members API when a logo URL is present.
 
 The default release scope selects the highest numeric `-osera-N` tag separately
 for each version prefix, library, ecosystem and supplier in VEX. It does not

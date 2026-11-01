@@ -6,6 +6,7 @@ const gaMeasurementId = process.env.GA_MEASUREMENT_ID;
 const gaPlaceholder = '__GA_MEASUREMENT_ID__';
 const sourceHtmlFiles = [
   'index.html',
+  'problem.html',
   'vex.html',
   'how-it-works.html',
   'projects.html',

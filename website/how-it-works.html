@@ -82,6 +82,7 @@ footer .brand-divider{background:rgba(255,255,255,.28)}
 .btn.active{background:var(--navy);color:#fff !important;border-color:var(--navy)}
 .btn.active:hover{background:#003a5e;color:#fff !important}
 @media(max-width:1080px){.brand .full-name{display:none}}
+@media(max-width:1200px){.navlinks a.nav-more:not(.active){display:none}}
 @media(max-width:940px){.navlinks a:not(.btn):not(.nav-github){display:none}}
 @media(max-width:760px){.navlinks .page-link:not(.active){display:none}}
 @media(max-width:560px){.navlinks .page-link{display:none}}
@@ -137,6 +138,8 @@ footer a{color:#9fd4ec}
 .footer-note{max-width:78ch;color:#7fa6bd;font-size:13px}
 .footer-nav{color:#7fa6bd}
 </style>
+<link rel="stylesheet" href="assets/published.css">
+<link rel="stylesheet" href="assets/vex.css">
 </head>
 <body id="top">
 
@@ -144,12 +147,13 @@ footer a{color:#9fd4ec}
   <div class="wrap"><nav>
     <div class="brand"><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-color.svg" alt="OSERA" class="osera-logo"></a></div>
     <div class="navlinks">
-      <a href="projects.html">Available Now</a>
+                  <a href="problem.html">The Problem</a>
       <a href="how-it-works.html" class="btn active page-link" aria-current="page">The Solution</a>
       <a href="alliance.html">The Alliance</a>
       <a href="workstreams.html">Workstreams</a>
-      <a href="principles.html">Our Principles</a>
-      <a href="news.html">News &amp; Media</a>
+      <a href="https://standards.osera.finos.org/" target="_blank" rel="noopener">Remediation Standards</a>
+      <a href="principles.html">Principles</a>
+      <a href="news.html">Resources</a>
       <a href="index.html#involved" class="btn involve">Get involved</a>
       <a href="https://github.com/finos-osera" class="nav-github" target="_blank" rel="noopener" aria-label="OSERA on GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.021C22 6.484 17.522 2 12 2z"/></svg></a>
     </div>
@@ -161,138 +165,144 @@ footer a{color:#9fd4ec}
   <div class="wrap">
     <div class="eyebrow">The Solution</div>
     <h1>One pooled fix instead of many private ones.</h1>
-    <p>Every firm that runs the same open source pays, separately, to keep it safe — forking, patching or buying support for identical CVEs. OSERA replaces that recurring single-firm "fork tax" with one openly governed programme. The numbers behind the thesis are on the <a href="index.html#thesis">home page</a>.</p>
+    <p>Patching is the easy half. Getting a known fix into production — with evidence, across the estate — is the half the sector had not mutualized. OSERA replaces that recurring single-firm fork tax with one openly governed programme. No single vendor, and no single country, controls the fix.</p>
     <div class="jump">
-      <a href="#platform" class="btn ghost">The platform</a>
-      <a href="#value" class="btn ghost">The value</a>
-      <a href="#why" class="btn ghost">Why now</a>
-      <a href="#fit" class="btn ghost">OSERA &amp; Akrites</a>
+      <a href="#how" class="btn ghost">How it works</a>
+      <a href="#consume" class="btn ghost">How to consume</a>
+      <a href="#search" class="btn ghost">Search fixes</a>
     </div>
   </div>
 </div>
 
-<!-- PLATFORM -->
-<section id="platform" class="sec-soft">
+<section id="how">
   <div class="wrap">
-    <div class="eyebrow">An open, two-sided platform</div>
-    <h2>End users and tech producers, in one neutral venue</h2>
-    <p class="lead">Not a vendor and not a buyers' club — an open ecosystem. Institutions that <strong>run</strong> open source meet the technology firms with deep upstream expertise that <strong>maintain</strong> it. No single firm sits in the middle.</p>
-    <div class="plat">
-      <div class="pcol eu">
-        <div class="k">End users · demand</div>
-        <h3>Everyone who runs the software</h3>
+    <div class="eyebrow">How it works</div>
+    <h2>From a member's line to a release anyone can verify</h2>
+    <p class="lead">Four steps. Demand stays anonymous. The source stays public. The packaged release is what members consume.</p>
+    <div class="flow">
+      <article class="step" style="border-top:4px solid var(--navy)">
+        <h3>Members submit [package, version]</h3>
         <ul>
-          <li>Banks, insurers &amp; market infrastructure</li>
-          <li>Fintechs</li>
-          <li>Regulated enterprises beyond finance</li>
-          <li>Technology providers to the sector</li>
+          <li>Premier members send lines through <strong>oseractl</strong>.</li>
+          <li>The intake is secure, and the published backlog has no firm attribution.</li>
+          <li>A submission is a project and a version, not a CVE and not a full SBOM.</li>
+          <li>Firms can prepare those lines in <a href="workstreams.html#tooling">Risk Navigator</a>.</li>
         </ul>
-        <div class="roi">Resilient, compliant OSS at a fraction of single-firm cost — with a General tier sized for banks of all sizes.</div>
-        <a class="plink" href="alliance.html#members">Meet the Members →</a>
-      </div>
-      <div class="hub">
-        <h3>The open, governed platform</h3>
-        <p>FINOS neutral governance · open standards · per-project funding pools</p>
-        <div class="chips"><span>IP &amp; antitrust</span><span>Confidentiality</span><span>Open standards</span><span>Upstream-first</span></div>
-        <a class="plink" href="workstreams.html">Explore the workstreams →</a>
-      </div>
-      <div class="pcol tp">
-        <div class="k">Tech producers · supply</div>
-        <h3>Firms with upstream expertise</h3>
+      </article>
+      <div class="flow-arrow" aria-hidden="true">→</div>
+      <article class="step" style="border-top:4px solid var(--blue)">
+        <h3>Automated line and CVE prioritization</h3>
         <ul>
-          <li>Upstream specialists</li>
-          <li>OSS maintainers</li>
-          <li>Security &amp; remediation firms</li>
-          <li>SIs &amp; consultancies</li>
+          <li>A shared dependency is patched once, so the cost is mutualized.</li>
+          <li>Ordering uses public signals: severity, known exploitation, and exploit likelihood.</li>
+          <li>Anonymized member priority is part of the same score.</li>
+          <li>Per-project sponsorship is on the <a href="workstreams.html#roadmap">roadmap</a>.</li>
         </ul>
-        <div class="roi">Reach the whole sector through one neutral channel — no lock-in.</div>
-        <a class="plink" href="alliance.html#vendors">Meet the Contributing Vendors →</a>
-      </div>
-    </div>
-    <p class="lead center" style="margin:36px auto 0;font-weight:600;color:var(--navy)">Incubated in financial services — open to any regulated enterprise, anywhere in the world. Sovereign by design: no single vendor, and no single country, controls the fix.</p>
-  </div>
-</section>
-
-<!-- VALUE FOR EACH ACTOR -->
-<section id="value">
-  <div class="wrap">
-    <div class="eyebrow">The value</div>
-    <h2>What each actor gets</h2>
-    <p class="lead">One effort, three constituencies — each with a clear reason to take part.</p>
-    <div class="grid g3">
-      <div class="card" style="border-top:5px solid var(--cyan)">
-        <div style="display:inline-block;background:var(--mist);color:var(--blue);font-weight:700;font-size:12px;padding:6px 13px;border-radius:999px;margin-bottom:12px">FSIs · end users</div>
-        <ul class="ws" style="border:none;padding-top:0;margin-top:4px">
-          <li>Pay a fraction of single-firm cost</li>
-          <li>A <strong>flexible funding model</strong> — pooled &amp; per-project; pay for what you depend on</li>
-          <li>A venue you already trust: IP, antitrust, confidentiality</li>
-          <li>DORA / NIS2 / CRA readiness, with evidence built in</li>
-          <li>Remediation stays open &amp; portable — no lock-in</li>
+      </article>
+      <div class="flow-arrow" aria-hidden="true">→</div>
+      <article class="step" style="border-top:4px solid var(--teal)">
+        <h3>Public fork</h3>
+        <ul>
+          <li>Approved vendor maintainers build and release the fixed open source project.</li>
+          <li>The maintained source is public in <a href="https://github.com/finos-osera-forks" target="_blank" rel="noopener">finos-osera-forks</a>.</li>
+          <li>Where the original project is alive, the fix is offered back upstream, free for the whole community.</li>
         </ul>
-        <a class="more" href="alliance.html#membership">Become an OSERA member →</a>
-      </div>
-      <div class="card" style="border-top:5px solid var(--teal)">
-        <div style="display:inline-block;background:var(--mist2);color:var(--teald);font-weight:700;font-size:12px;padding:6px 13px;border-radius:999px;margin-bottom:12px">OSS &amp; tech vendors · producers</div>
-        <ul class="ws" style="border:none;padding-top:0;margin-top:4px">
-          <li>One neutral channel to the whole sector — no per-firm BD</li>
-          <li>Demand aggregated and funded through directed pools</li>
-          <li>Win on upstream expertise, not on lock-in</li>
-          <li>Reputation and contribution across the commons</li>
-          <li>Upstream-first — work that benefits everyone</li>
+      </article>
+      <div class="flow-arrow" aria-hidden="true">→</div>
+      <article class="step" style="border-top:4px solid var(--gold)">
+        <h3>Member release</h3>
+        <ul>
+          <li>Only packages complying with the <a href="https://standards.osera.finos.org/" target="_blank" rel="noopener">Remediation Standards</a> are promoted.</li>
+          <li>Members consume the release through their existing proxy, with the coordinates they already use.</li>
+          <li>No CI change. Each release is under an alliance SLA, with green CI on the upstream test suite.</li>
         </ul>
-        <a class="more" href="https://www.finos.org/become-a-member" target="_blank" rel="noopener">Become a FINOS member →</a>
-      </div>
-      <div class="card" style="border-top:5px solid var(--gold)">
-        <div style="display:inline-block;background:#FBF6DC;color:var(--gold);font-weight:700;font-size:12px;padding:6px 13px;border-radius:999px;margin-bottom:12px">Regulators</div>
-        <ul class="ws" style="border:none;padding-top:0;margin-top:4px">
-          <li>Shared, auditable remediation evidence</li>
-          <li>Reduces systemic third-party &amp; open source risk</li>
-          <li>One point of engagement for the sector's OSS posture</li>
-          <li>Transparency — public forks, open standards</li>
-          <li>Aligned to DORA, NIS2 and the CRA</li>
-        </ul>
-      </div>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- WHY NOW / REGULATORY -->
-<section id="why" class="sec-soft">
+<section id="consume" class="sec-soft">
   <div class="wrap">
-    <div class="eyebrow">Why now</div>
-    <h2>Patching is only half of the problem</h2>
-    <p class="lead">AI hasn't changed which vulnerabilities exist; it has changed how fast known ones are weaponised. And regulation now makes timely remediation a duty, not a choice.</p>
-    <div class="grid g3">
-      <div class="card"><div class="ic n">⏱</div><h3>Exploitation has accelerated</h3><p>Automation weaponises a published CVE in hours — but the same fix is still re-created, forked or bought firm by firm.</p></div>
-      <div class="card"><div class="ic b">§</div><h3>DORA &amp; NIS2 are in force</h3><p>Supervisors increasingly treat third-party and open source risk as systemic and auditable.</p></div>
-      <div class="card"><div class="ic g">★</div><h3>The EU CRA clock is running</h3><p>Vulnerability-reporting duties from <strong>Sep 2026</strong>; full vulnerability-handling obligations from <strong>Dec 2027</strong>.</p></div>
+    <div class="eyebrow">How to consume the fixes</div>
+    <h2>Build it yourself, or take the packaged release</h2>
+    <div class="consume">
+      <article class="card pub">
+        <div class="who">Non-members</div>
+        <h3>Build from the public fork</h3>
+        <p>The public fork is the canonical, maintained source. If you are not a member, that source is yours to build from.</p>
+        <ul>
+          <li>Every maintained line is public, under the upstream project licence.</li>
+          <li>The same source the alliance maintains.</li>
+          <li>Where upstream is receptive, patches are offered back to the original project.</li>
+        </ul>
+        <a class="btn ghost" style="margin-top:18px" href="https://github.com/finos-osera-forks" target="_blank" rel="noopener">Build it yourself</a>
+      </article>
+      <article class="card mem">
+        <div class="who">OSERA members</div>
+        <h3>Take the packaged release</h3>
+        <p>Premier and General members take the same fully packaged releases, with attestations, SBOMs, and an audit trail.</p>
+        <ul>
+          <li>Built artifacts, ready to consume, not a source tree to assemble.</li>
+          <li>Attestations defined by the Remediation Standards: signing, SBOMs, VEX, and test evidence.</li>
+          <li>An audit trail for the teams that have to show what they ran.</li>
+        </ul>
+        <a class="btn primary" style="margin-top:18px" href="alliance.html#membership">Not a member? Sign up.</a>
+      </article>
+    </div>
+    <div class="consume-note">
+      <h3>What changes in your build</h3>
+      <ul>
+        <li>Members change a version coordinate and keep the pipeline they already run.</li>
+        <li>For a large project such as Spring, the maintained bill of materials carries the patched versions, so one BOM update covers the line.</li>
+        <li>Scanners read the published VEX and can show the fixed CVE as resolved on that exact build.</li>
+        <li>Source stays public. Only the built, attested artifacts sit behind membership.</li>
+      </ul>
     </div>
   </div>
 </section>
 
-<!-- HOW IT FITS -->
-<section id="fit">
-  <div class="wrap">
-    <div class="eyebrow">Part of the collective Linux Foundation security response</div>
-    <h2>Complementary to Akrites, by design</h2>
-    <p class="lead"><a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a> coordinates upstream security response; OSERA helps regulated enterprises operationalize remediation downstream.</p>
-    <div class="fit">
-      <div class="card" style="border-top:5px solid var(--cyan)">
-        <h3>Akrites · Linux Foundation</h3>
-        <p style="margin-top:10px">The upstream security response layer: coordinated vulnerability disclosure, remediation and upstreaming so fixes can reach open source projects responsibly.</p>
-      </div>
-      <div class="card" style="border-top:5px solid var(--teal)">
-        <h3>OSERA · FINOS</h3>
-        <p style="margin-top:10px">The downstream operationalization layer: prioritization, standards, validation, back-patch sponsorship, vendor alignment, and rollout patterns for regulated enterprises.</p>
-      </div>
+<section id="search">
+  <span id="navigator"></span>
+  <div class="wrap vex-main">
+    <div class="eyebrow">Search maintained projects and fixes</div>
+    <h2>What's available today</h2>
+    <p class="lead">Search libraries, versions, or CVEs. Inspect the exact artifact covered by each published statement.</p>
+    <p class="feed-note"><span id="feed-status" role="status">Loading published OpenVEX statements…</span> · <a href="https://feed.finos.org/stats/" target="_blank" rel="noopener">Live stats</a></p>
+    <button type="button" id="retry" class="feed-retry" hidden>Retry loading feed</button>
+    <div id="vex-content" hidden>
+      <div id="vex-summary" class="vex-summary"></div>
+      <form id="filters" class="vex-filters" role="search" aria-label="Filter published statements">
+        <label class="vex-search">Search library, CVE, version or package URL<input type="search" name="q" id="query" placeholder="Try log4j or CVE-2025-66566" autocomplete="off"></label>
+        <label>View<select name="view" id="view"><option value="libraries">Libraries</option><option value="releases">Maintained versions</option><option value="entries">Individual statements</option></select></label>
+        <label>Release scope<select name="releases" id="releases-scope"><option value="latest">Latest OSERA tag per version line</option><option value="all">All maintained versions in VEX</option></select></label>
+        <label>Status<select name="status" id="status"><option value="">All statuses</option><option value="fixed">Fixed</option><option value="affected">Affected</option><option value="not_affected">Not affected</option><option value="under_investigation">Under investigation</option></select></label>
+        <label>Producer<select name="supplier" id="supplier"><option value="">All producers</option></select></label>
+        <label id="ecosystem-filter">Ecosystem<select name="ecosystem" id="ecosystem"><option value="">All ecosystems</option></select></label>
+      </form>
+      <div id="active-filters" class="vex-active" aria-label="Filtered view"></div>
+      <p class="feed-note">Hover, focus or tap a fix count to see CVEs and advisory links.</p>
+      <p id="results-status" class="feed-note" role="status"></p>
+      <div id="results"></div>
+      <div class="vex-pagination"><button type="button" id="previous" class="btn ghost">← Previous</button><span id="page-status"></span><label>Page size<select id="page-size"><option value="5">5</option><option value="10">10</option><option value="20">20</option><option value="all">All</option></select></label><button type="button" id="next" class="btn ghost">Next →</button></div>
     </div>
+    <aside class="vex-about">
+      <h2>Read the evidence in context</h2>
+      <p>This search covers published VEX statements, not the complete library catalog. Latest means the highest OSERA tag number within each version prefix and producer represented in this VEX feed, not the highest upstream version. A “fixed” status applies to the named vulnerability on the exact product version. Missing statements do not mean a library is unaffected.</p>
+      <div class="feed-actions">
+        <a class="btn ghost" href="https://feed.finos.org/openvex.json" target="_blank" rel="noopener">OpenVEX JSON</a>
+        <a class="btn ghost" href="https://feed.finos.org/cyclonedx.json" target="_blank" rel="noopener">CycloneDX JSON</a>
+        <a class="btn ghost" href="https://feed.finos.org/stats/" target="_blank" rel="noopener">Live Remediation Dashboard</a>
+        <a class="btn ghost" href="#consume">How to consume the fixes</a>
+      </div>
+    </aside>
+    <noscript><p>Enable JavaScript to search, or use the public JSON feeds linked above.</p></noscript>
   </div>
 </section>
 
 <section class="cta">
   <div class="wrap">
     <h2>Pick your path in.</h2>
-    <p class="lead">Financial institutions fund and govern the alliance. Tech vendors join the working groups and bid to maintain. And because the source is open, anyone can build it themselves.</p>
+    <p class="lead">Institutions fund and govern, or consume at their scale. Patch and infrastructure vendors conform, and maintainers bid, through FINOS. Anyone can build from source.</p>
     <div class="btns">
       <a href="alliance.html#membership" class="btn primary">Become an OSERA member</a>
       <a href="https://www.finos.org/become-a-member" class="btn ghost" target="_blank" rel="noopener">Become a FINOS member</a>
@@ -301,11 +311,12 @@ footer a{color:#9fd4ec}
   </div>
 </section>
 
+<script type="module" src="assets/vex.mjs"></script>
 <footer>
   <div class="footer-inner">
     <div class="brand brand-footer"><a class="logo-link" href="https://www.finos.org/"><img src="/img/finos-logo-white.png" alt="FINOS" class="brand-logo finos-logo"></a><span class="brand-divider" aria-hidden="true"></span><a class="site-brand" href="index.html#top" aria-label="OSERA home"><img src="/img/osera-horizontal-white.svg" alt="OSERA" class="osera-logo"><span class="full-name">Open Source Enterprise Resiliency Alliance</span></a></div>
     <div class="footer-note">OSERA is a FINOS initiative, part of the Linux Foundation, focused on open, portable remediation for regulated enterprises and complementary to <a href="https://akrites.org" target="_blank" rel="noopener">Akrites</a>.</div>
-    <div class="footer-nav"><a href="index.html">Home</a> · <a href="how-it-works.html">The Solution</a> · <a href="alliance.html">The Alliance</a> · <a href="workstreams.html">Workstreams</a> · <a href="projects.html">Projects</a> · <a href="principles.html">Our Principles</a> · <a href="news.html">News &amp; Media</a> · <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a> · <a href="mailto:membership@finos.org">membership@finos.org</a></div>
+    <div class="footer-nav"><a href="index.html">Home</a> · <a href="problem.html">The Problem</a> · <a href="how-it-works.html">The Solution</a> · <a href="alliance.html">The Alliance</a> · <a href="workstreams.html">Workstreams</a> · <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">Remediation Standards</a> · <a href="principles.html">Principles</a> · <a href="news.html">Resources</a> · <a href="how-it-works.html#search">Search fixes</a> · <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> · <a href="https://www.finos.org/">finos.org</a> · <a href="mailto:membership@finos.org">membership@finos.org</a></div>
   </div>
 </footer>
 <script>
