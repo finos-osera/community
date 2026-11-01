@@ -51,7 +51,7 @@
 .vphase h3{font-size:18px;margin:0 0 8px}
 .vitem{position:relative;padding:0 0 16px 0}
 .vitem::before{content:"";position:absolute;left:-36px;top:6px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid #0086bf}
-.vitem time{display:block;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#0086bf}
+.vitem time,.vitem .catalog-label{display:block;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#0086bf}
 @media(max-width:980px){.feed-metrics{grid-template-columns:1fr 1fr}.flow{flex-direction:column}.flow-arrow{transform:rotate(90deg)}.flow-gate{min-height:64px}}
 .alliance-strip .member-tiles{margin-top:12px}
 .alliance-strip .mtile{min-height:78px;padding:12px 8px;background:#fff}
