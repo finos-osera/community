@@ -1,4 +1,4 @@
-import { VEX_URL, CDX_URL, loadFeed, normalizeVex, fixedTotals, filterEntries, freshness, publicationLabel, advisoryUrl, latestReleases, groupReleases, releaseIdentity } from './feed-data.mjs';
+import { ARTIFACTS_URL, artifactSourceIndex, VEX_URL, CDX_URL, loadFeed, normalizeVex, fixedTotals, filterEntries, freshness, publicationLabel, advisoryUrl, latestReleases, groupReleases, releaseIdentity } from './feed-data.mjs';
 const $ = id => document.getElementById(id);
 const releaseScope = () => form.elements.namedItem('releases');
 const form = $('filters');
@@ -142,6 +142,33 @@ function advisories(host, records) {
   disclosures.push({ host: section, close });
 }
 
+// The public provenance manifest is large: fetch it only on explicit source-link requests.
+let sourceIndexRequest;
+function sourceLinks(host, record) {
+  const actions = element(host, 'div', undefined, 'feed-actions');
+  const trigger = button(actions, 'Repository & release tag ↗', async () => {
+    trigger.disabled = true;
+    trigger.textContent = 'Loading source links…';
+    try {
+      sourceIndexRequest ||= fetch(ARTIFACTS_URL, { cache: 'no-cache', signal: AbortSignal.timeout(30000) })
+        .then(response => { if (!response.ok) throw new Error('Source manifest unavailable'); return response.json(); })
+        .then(artifactSourceIndex)
+        .catch(error => { sourceIndexRequest = undefined; throw error; });
+      const source = (await sourceIndexRequest).get(JSON.stringify([record.purl, record.supplier]));
+      actions.replaceChildren();
+      if (source) {
+        link(actions, 'Patched repository ↗', source.repository, true);
+        link(actions, 'Source at this release tag ↗', source.tag, true);
+      } else {
+        element(actions, 'span', 'No verified source link published for this release.', 'feed-note');
+      }
+    } catch {
+      trigger.disabled = false;
+      trigger.textContent = 'Source links unavailable — retry';
+    }
+  }, 'feed-retry');
+}
+
 function evidence(row, records) {
   const details = element(row, 'details', undefined, 'vex-original');
   element(details, 'summary', records.length === 1 ? 'Inspect original statement' : `Inspect ${records.length} original statements`);
@@ -204,6 +231,7 @@ function render() {
         const chip = element(versionRow, 'div', undefined, 'vex-version-chip');
         element(chip, 'strong', `${release.version} (producer: ${release.supplier})`);
         advisories(chip, release.entries);
+        sourceLinks(chip, release);
       }
       if (releases.length > 4) element(summary, 'p', `Plus ${releases.length - 4} more maintained versions.`, 'feed-note');
       const actions = element(row, 'div', undefined, 'vex-row-actions');
@@ -215,6 +243,7 @@ function render() {
     } else {
       element(summary, 'h3', `${item.version} (producer: ${item.supplier})`);
       element(summary, 'p', item.purl, 'vex-coordinate');
+      sourceLinks(summary, item);
       if (view === 'releases') advisories(summary, item.entries);
       else {
         identifiers(element(summary, 'div', undefined, 'vex-advisory-links'), [item.vulnerability, ...item.aliases]);

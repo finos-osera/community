@@ -188,3 +188,17 @@ export function groupReleases(entries) {
   }
   return [...groups.values()].sort((a, b) => a.library.localeCompare(b.library) || a.supplier.localeCompare(b.supplier) || b.version.localeCompare(a.version, undefined, { numeric: true }));
 }
+
+export const ARTIFACTS_URL = 'https://raw.githubusercontent.com/finos-osera-forks/backlog/main/status/artifacts.json';
+export function artifactSourceIndex(data) {
+  if (!Array.isArray(data?.artifacts)) throw new Error('Invalid artifact manifest');
+  const index = new Map();
+  for (const item of data.artifacts) {
+    if (typeof item.purl !== 'string' || typeof item.producer !== 'string' ||
+        typeof item.fork !== 'string' || !/^patch-[A-Za-z0-9_.-]+$/.test(item.fork) ||
+        typeof item.tag !== 'string' || !item.tag || item.links?.fork?.state !== 'present' || item.links?.tag?.state !== 'present') continue;
+    const repository = 'https://github.com/finos-osera-forks/' + item.fork;
+    index.set(JSON.stringify([item.purl, item.producer]), { repository, tag: repository + '/tree/' + encodeURIComponent(item.tag) });
+  }
+  return index;
+}

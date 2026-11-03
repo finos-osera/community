@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentReleases, latestReleases, groupReleases, advisoryUrl, ecosystemLabel, navigatorHref, searchSuggestions, vexSearchIndex } from '../assets/feed-data.mjs';
+import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentReleases, latestReleases, groupReleases, advisoryUrl, ecosystemLabel, navigatorHref, searchSuggestions, vexSearchIndex, artifactSourceIndex } from '../assets/feed-data.mjs';
 const statement = (overrides = {}) => ({ vulnerability: { name: 'CVE-2026-1234', aliases: ['GHSA-example'] }, products: [{ '@id': 'pkg:maven/org.example/demo@1.0' }], status: 'fixed', supplier: 'Producer', ...overrides });
 const doc = statements => ({ timestamp: '2026-10-28T12:00:00Z', statements });
 test('expands products, preserves evidence and deduplicates fixed pairs across differing evidence', () => {
@@ -134,4 +134,15 @@ test('fallback expires after 120 minutes and never accepts untimed or future sna
   const storage = { getItem: () => JSON.stringify({ savedAt: now - 1000, raw: doc([statement()]) }) };
   const result = await loadFeed('test', normalizeVex, { fetcher, storage, now: () => now });
   assert.equal(result.cached, true);
+});
+
+test('source links use exact published PURL and producer mappings, never inferred repository names', () => {
+  const item = { purl: 'pkg:npm/crypto-js@4.1.2-osera-00001', producer: 'moderne', fork: 'patch-crypto-js', tag: 'v4.1.2-osera-00001', links: { fork: { state: 'present' }, tag: { state: 'present' } } };
+  const index = artifactSourceIndex({ artifacts: [item] });
+  const source = index.get(JSON.stringify([item.purl, item.producer]));
+  assert.equal(source.repository, 'https://github.com/finos-osera-forks/patch-crypto-js');
+  assert.equal(source.tag, source.repository + '/tree/v4.1.2-osera-00001');
+  assert.equal(index.has(JSON.stringify([item.purl, 'other'])), false);
+  assert.equal(artifactSourceIndex({ artifacts: [{ ...item, fork: '../evil' }, { ...item, links: {} }] }).size, 0);
+  assert.throws(() => artifactSourceIndex({}));
 });
