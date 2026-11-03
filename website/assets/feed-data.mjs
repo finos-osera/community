@@ -8,12 +8,24 @@ export function timestamp(value) {
 }
 export function validateMetrics(data) {
   timestamp(data?.as_of);
+  const totals = { ...data?.totals };
+  // New feeds distinguish release sets from individual package releases.
+  if (Object.hasOwn(totals, 'release_sets')) {
+    if (!Array.isArray(data.libraries) || !data.libraries.every(x =>
+      typeof x?.library === 'string' && typeof x.ecosystem === 'string' &&
+      Number.isSafeInteger(x.fixed_entries) && x.fixed_entries >= 0)) throw new Error('Invalid library metrics');
+    totals.releases = totals.release_sets;
+    totals.libraries_with_a_fixed_cve = new Set(data.libraries.filter(x => x.fixed_entries > 0).map(x => JSON.stringify([x.ecosystem, x.library]))).size;
+    // Sum explicitly fixed entries, not all vulnerability statuses.
+    totals.fixed_entries = data.libraries.reduce((sum, x) => sum + x.fixed_entries, 0);
+  }
   for (const field of ['libraries', 'releases', 'libraries_with_a_fixed_cve', 'fixed_entries']) {
-    if (!Number.isSafeInteger(data?.totals?.[field]) || data.totals[field] < 0) throw new Error('Invalid metrics');
+    if (!Number.isSafeInteger(totals[field]) || totals[field] < 0) throw new Error('Invalid metrics');
   }
   if (!Array.isArray(data.ecosystems) || !data.ecosystems.every(x => typeof x === 'string')) throw new Error('Invalid ecosystems');
-  if (!Array.isArray(data.releases_per_day) || !data.releases_per_day.every(x => /^\d{4}-\d{2}-\d{2}$/.test(x.date) && Number.isSafeInteger(x.count) && x.count >= 0)) throw new Error('Invalid activity');
-  return data;
+  // The homepage does not consume activity series. Do not confuse artifact counts with release sets.
+  if (data.releases_per_day !== undefined && (!Array.isArray(data.releases_per_day) || !data.releases_per_day.every(x => /^\d{4}-\d{2}-\d{2}$/.test(x.date) && Number.isSafeInteger(x.count) && x.count >= 0))) throw new Error('Invalid activity');
+  return { ...data, totals };
 }
 export function recentReleases(data) {
   const end = Date.parse(data.as_of.slice(0, 10) + 'T00:00:00Z');
@@ -62,20 +74,29 @@ export function filterEntries(entries, filters) {
   const term = (filters.q || '').trim().toLowerCase();
   return entries.filter(x => (!filters.status || x.status === filters.status) && (!filters.supplier || x.supplier === filters.supplier) && (!filters.ecosystem || x.ecosystem === filters.ecosystem) && (!filters.library || x.library === filters.library) && (!term || [x.library, x.version, x.purl, x.vulnerability, ...x.aliases, x.supplier].join(' ').toLowerCase().includes(term)));
 }
-export async function loadFeed(url, validate, { fetcher = globalThis.fetch, storage } = {}) {
-  const key = 'osera-feed-v1:' + url;
+export const SNAPSHOT_MAX_AGE_MS = 120 * 60 * 1000;
+export async function loadFeed(url, validate, { fetcher = globalThis.fetch, storage, now = Date.now } = {}) {
+  const key = 'osera-feed-v2:' + url;
   if (storage === undefined) { try { storage = globalThis.localStorage; } catch { storage = null; } }
   try {
-    const response = await fetcher(url, { signal: AbortSignal.timeout(15000) });
+    try { storage?.removeItem('osera-feed-v1:' + url); } catch { /* Old snapshots lack a saved-at time. */ }
+    const response = await fetcher(url, { cache: 'no-cache', signal: AbortSignal.timeout(15000) });
     if (!response.ok) throw new Error('Feed request failed');
     const raw = await response.json();
     const data = validate(raw);
-    try { storage?.setItem(key, JSON.stringify(raw)); } catch { /* Browsing without storage is supported. */ }
+    try { storage?.setItem(key, JSON.stringify({ savedAt: now(), raw })); } catch { /* Browsing without storage is supported. */ }
     return { data, cached: false };
   } catch (error) {
     try {
       const raw = storage?.getItem(key);
-      if (raw) return { data: validate(JSON.parse(raw)), cached: true };
+      if (raw) {
+        const snapshot = JSON.parse(raw);
+        const age = now() - snapshot.savedAt;
+        if (Number.isFinite(snapshot.savedAt) && age >= 0 && age < SNAPSHOT_MAX_AGE_MS) {
+          return { data: validate(snapshot.raw), cached: true };
+        }
+        storage?.removeItem(key);
+      }
     } catch { /* Invalid caches must not replace an unavailable feed with false data. */ }
     throw error;
   }
@@ -85,7 +106,7 @@ export function publicationLabel(value) {
 }
 export function freshness(value, cached) {
   const days = Math.max(0, Math.floor((Date.now() - Date.parse(value)) / 86400000));
-  return (cached ? 'Update unavailable — showing the last saved snapshot. ' : '') + 'Published ' + publicationLabel(value) + (days >= 1 ? ` · ${days} day${days === 1 ? '' : 's'} old` : '');
+  return (cached ? 'Live update unavailable — showing a snapshot retrieved within the last 120 minutes. ' : '') + 'Published ' + publicationLabel(value) + (days >= 1 ? ` · ${days} day${days === 1 ? '' : 's'} old` : '');
 }
 
 export function advisoryUrl(id) {
@@ -166,4 +187,18 @@ export function groupReleases(entries) {
     groups.get(key).entries.push(entry);
   }
   return [...groups.values()].sort((a, b) => a.library.localeCompare(b.library) || a.supplier.localeCompare(b.supplier) || b.version.localeCompare(a.version, undefined, { numeric: true }));
+}
+
+export const ARTIFACTS_URL = 'https://raw.githubusercontent.com/finos-osera-forks/backlog/main/status/artifacts.json';
+export function artifactSourceIndex(data) {
+  if (!Array.isArray(data?.artifacts)) throw new Error('Invalid artifact manifest');
+  const index = new Map();
+  for (const item of data.artifacts) {
+    if (typeof item.purl !== 'string' || typeof item.producer !== 'string' ||
+        typeof item.fork !== 'string' || !/^patch-[A-Za-z0-9_.-]+$/.test(item.fork) ||
+        typeof item.tag !== 'string' || !item.tag || item.links?.fork?.state !== 'present' || item.links?.tag?.state !== 'present') continue;
+    const repository = 'https://github.com/finos-osera-forks/' + item.fork;
+    index.set(JSON.stringify([item.purl, item.producer]), { repository, tag: repository + '/tree/' + encodeURIComponent(item.tag) });
+  }
+  return index;
 }
