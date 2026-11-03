@@ -124,10 +124,10 @@ test('page loads revalidate HTTP caches and replace saved snapshots', async () =
   assert.equal(calls, 2);
   assert.equal(JSON.parse(writes.get('osera-feed-v2:test')).savedAt, 200);
 });
-test('fallback expires after three hours and never accepts untimed or future snapshots', async () => {
+test('fallback expires after 120 minutes and never accepts untimed or future snapshots', async () => {
   const now = 20_000_000;
   const fetcher = async () => { throw new Error('offline'); };
-  for (const savedAt of [now - 3 * 60 * 60 * 1000, now + 1, undefined]) {
+  for (const savedAt of [now - 120 * 60 * 1000, now + 1, undefined]) {
     const storage = { getItem: () => JSON.stringify({ savedAt, raw: doc([statement()]) }) };
     await assert.rejects(loadFeed('test', normalizeVex, { fetcher, storage, now: () => now }));
   }

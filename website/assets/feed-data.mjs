@@ -74,7 +74,7 @@ export function filterEntries(entries, filters) {
   const term = (filters.q || '').trim().toLowerCase();
   return entries.filter(x => (!filters.status || x.status === filters.status) && (!filters.supplier || x.supplier === filters.supplier) && (!filters.ecosystem || x.ecosystem === filters.ecosystem) && (!filters.library || x.library === filters.library) && (!term || [x.library, x.version, x.purl, x.vulnerability, ...x.aliases, x.supplier].join(' ').toLowerCase().includes(term)));
 }
-export const SNAPSHOT_MAX_AGE_MS = 3 * 60 * 60 * 1000;
+export const SNAPSHOT_MAX_AGE_MS = 120 * 60 * 1000;
 export async function loadFeed(url, validate, { fetcher = globalThis.fetch, storage, now = Date.now } = {}) {
   const key = 'osera-feed-v2:' + url;
   if (storage === undefined) { try { storage = globalThis.localStorage; } catch { storage = null; } }
@@ -106,7 +106,7 @@ export function publicationLabel(value) {
 }
 export function freshness(value, cached) {
   const days = Math.max(0, Math.floor((Date.now() - Date.parse(value)) / 86400000));
-  return (cached ? 'Update unavailable — showing the last saved snapshot. ' : '') + 'Published ' + publicationLabel(value) + (days >= 1 ? ` · ${days} day${days === 1 ? '' : 's'} old` : '');
+  return (cached ? 'Live update unavailable — showing a snapshot retrieved within the last 120 minutes. ' : '') + 'Published ' + publicationLabel(value) + (days >= 1 ? ` · ${days} day${days === 1 ? '' : 's'} old` : '');
 }
 
 export function advisoryUrl(id) {
