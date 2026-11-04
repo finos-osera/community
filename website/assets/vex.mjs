@@ -1,4 +1,4 @@
-import { VEX_URL, CDX_URL, loadFeed, normalizeVex, fixedTotals, filterEntries, freshness, publicationLabel, advisoryUrl, latestReleases, groupReleases, releaseIdentity } from './feed-data.mjs';
+import { ARTIFACTS_URL, artifactSourceIndex, VEX_URL, CDX_URL, loadFeed, normalizeVex, fixedTotals, filterEntries, freshness, publicationLabel, advisoryUrl, latestReleases, groupReleases, releaseIdentity } from './feed-data.mjs';
 const $ = id => document.getElementById(id);
 const releaseScope = () => form.elements.namedItem('releases');
 const form = $('filters');
@@ -142,6 +142,45 @@ function advisories(host, records) {
   disclosures.push({ host: section, close });
 }
 
+// Resolve published mappings once per page, without delaying the VEX results.
+let sourceIndexRequest;
+const sourceIcons = {
+  repository: 'M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.48v-1.86c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.6 9.6 0 0 1 12 6.83c.85 0 1.71.11 2.51.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z',
+  tag: 'M20 13 13 20a2 2 0 0 1-2.83 0L2 11.83V2h9.83L20 10.17A2 2 0 0 1 20 13ZM7 7h.01'
+};
+function sourceIcon(host, kind, label, href) {
+  const node = href ? link(host, '', href, true) : element(host, 'span');
+  node.className = 'vex-source-icon';
+  node.title = label;
+  node.setAttribute('aria-label', label + (href ? ' (opens in a new tab)' : ''));
+  if (!href) { node.setAttribute('role', 'img'); node.setAttribute('aria-disabled', 'true'); }
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true');
+  const path = document.createElementNS(svg.namespaceURI, 'path');
+  path.setAttribute('d', sourceIcons[kind]);
+  if (kind === 'tag') { svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor'); svg.setAttribute('stroke-width', '1.8'); svg.setAttribute('stroke-linecap', 'round'); }
+  else svg.setAttribute('fill', 'currentColor');
+  svg.appendChild(path); node.appendChild(svg);
+}
+async function sourceLinks(host, record) {
+  const actions = element(host, 'span', undefined, 'vex-source-links');
+  const draw = (source, unavailable = false) => {
+    actions.replaceChildren();
+    for (const [kind, name] of [['repository', 'Patched GitHub repository'], ['tag', 'Source at release tag']]) {
+      const label = `${name} for ${record.library} ${record.version}`;
+      sourceIcon(actions, kind, source ? label : `${label} — ${unavailable ? 'unavailable' : 'loading'}`, source?.[kind]);
+    }
+  };
+  draw();
+  try {
+    sourceIndexRequest ||= fetch(ARTIFACTS_URL, { cache: 'no-cache', signal: AbortSignal.timeout(30000) })
+      .then(response => { if (!response.ok) throw new Error('Source manifest unavailable'); return response.json(); })
+      .then(artifactSourceIndex);
+    const source = (await sourceIndexRequest).get(JSON.stringify([record.purl, record.supplier]));
+    draw(source, !source);
+  } catch { draw(null, true); }
+}
+
 function evidence(row, records) {
   const details = element(row, 'details', undefined, 'vex-original');
   element(details, 'summary', records.length === 1 ? 'Inspect original statement' : `Inspect ${records.length} original statements`);
@@ -202,7 +241,9 @@ function render() {
       const versionRow = element(summary, 'div', undefined, 'vex-version-row');
       for (const release of releases.slice(0, 4)) {
         const chip = element(versionRow, 'div', undefined, 'vex-version-chip');
-        element(chip, 'strong', `${release.version} (producer: ${release.supplier})`);
+        const heading = element(chip, 'div', undefined, 'vex-release-heading');
+        element(heading, 'strong', `${release.version} (producer: ${release.supplier})`);
+        sourceLinks(heading, release);
         advisories(chip, release.entries);
       }
       if (releases.length > 4) element(summary, 'p', `Plus ${releases.length - 4} more maintained versions.`, 'feed-note');
@@ -213,7 +254,9 @@ function render() {
       const older = new Set(all.filter(x => !selected.has(releaseIdentity(x))).map(releaseIdentity)).size;
       if (older) button(actions, `See ${older} other maintained version${older === 1 ? '' : 's'}`, () => drill(item, 'releases', true));
     } else {
-      element(summary, 'h3', `${item.version} (producer: ${item.supplier})`);
+      const heading = element(summary, 'div', undefined, 'vex-release-heading');
+      element(heading, 'h3', `${item.version} (producer: ${item.supplier})`);
+      sourceLinks(heading, item);
       element(summary, 'p', item.purl, 'vex-coordinate');
       if (view === 'releases') advisories(summary, item.entries);
       else {

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentArtifacts, latestReleases, groupReleases, advisoryUrl, ecosystemLabel, navigatorHref, searchSuggestions, vexSearchIndex } from '../assets/feed-data.mjs';
+import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentReleases, latestReleases, groupReleases, advisoryUrl, ecosystemLabel, navigatorHref, searchSuggestions, vexSearchIndex, artifactSourceIndex } from '../assets/feed-data.mjs';
 const statement = (overrides = {}) => ({ vulnerability: { name: 'CVE-2026-1234', aliases: ['GHSA-example'] }, products: [{ '@id': 'pkg:maven/org.example/demo@1.0' }], status: 'fixed', supplier: 'Producer', ...overrides });
 const doc = statements => ({ timestamp: '2026-10-28T12:00:00Z', statements });
 test('expands products, preserves evidence and deduplicates fixed pairs across differing evidence', () => {
@@ -28,8 +28,8 @@ test('rejects malformed documents instead of silently dropping records', () => {
   assert.equal(normalizeVex(doc([])).entries.length, 0);
 });
 test('counts activity relative to snapshot UTC date, not browser clock', () => {
-  const m = { as_of: '2026-10-28T12:00:00Z', totals: { libraries: 0, release_sets: 0, cves: 0, cve_statements: 0 }, ecosystems: [], artifacts_per_day: [{ date: '2026-10-21', count: 100 }, { date: '2026-10-22', count: 3 }, { date: '2026-10-28', count: 2 }, { date: '2026-10-29', count: 100 }] };
-  assert.equal(recentArtifacts(validateMetrics(m)), 5);
+  const m = { as_of: '2026-10-28T12:00:00Z', totals: { libraries: 0, releases: 0, libraries_with_a_fixed_cve: 0, fixed_entries: 0 }, ecosystems: [], releases_per_day: [{ date: '2026-10-21', count: 100 }, { date: '2026-10-22', count: 3 }, { date: '2026-10-28', count: 2 }, { date: '2026-10-29', count: 100 }] };
+  assert.equal(recentReleases(validateMetrics(m)), 5);
   assert.throws(() => validateMetrics({ ...m, totals: {} }));
 });
 test('network success works with unavailable browser storage', async () => {
@@ -38,7 +38,7 @@ test('network success works with unavailable browser storage', async () => {
   assert.equal(result.data.entries.length, 1);
 });
 test('failed or invalid refresh uses only a validated cache and marks it cached', async () => {
-  const storage = { getItem: () => JSON.stringify(doc([statement()])) };
+  const storage = { getItem: () => JSON.stringify({ savedAt: Date.now(), raw: doc([statement()]) }) };
   const result = await loadFeed('test', normalizeVex, { fetcher: async () => ({ ok: true, json: async () => ({}) }), storage });
   assert.equal(result.cached, true);
   assert.equal(result.data.entries.length, 1);
@@ -99,4 +99,50 @@ test('ecosystems use readable names while preserving future package types', () =
   const entries = normalizeVex(doc([statement(), statement({products:[{'@id':'pkg:npm/%40scope/demo@1.0'}]})])).entries;
   assert.equal(filterEntries(entries,{ecosystem:'JavaScript'}).length,1);
   assert.equal(filterEntries(entries,{ecosystem:'Java'}).length,1);
+});
+
+test('new metrics preserve release-set and fixed-entry meanings without requiring old activity fields', () => {
+  const result = validateMetrics({ as_of: '2026-11-02T15:22:11Z', ecosystems: ['Java', 'JavaScript'], totals: { libraries: 3, releases: 99, release_sets: 8, cve_statements: 50 }, libraries: [
+    { library: 'one', ecosystem: 'Java', fixed_entries: 4 },
+    { library: 'crypto-js', ecosystem: 'JavaScript', fixed_entries: 1 },
+    { library: 'unpatched', ecosystem: 'Java', fixed_entries: 0 }
+  ] });
+  assert.equal(result.totals.releases, 8);
+  assert.equal(result.totals.fixed_entries, 5);
+  assert.equal(result.totals.libraries_with_a_fixed_cve, 2);
+  assert.deepEqual(result.ecosystems, ['Java', 'JavaScript']);
+  assert.throws(() => validateMetrics({ ...result, libraries: undefined }));
+  assert.throws(() => validateMetrics({ ...result, totals: { ...result.totals, release_sets: -1 } }));
+});
+test('page loads revalidate HTTP caches and replace saved snapshots', async () => {
+  const writes = new Map();
+  const storage = { setItem: (key, value) => writes.set(key, value), getItem: key => writes.get(key), removeItem: key => writes.delete(key) };
+  let calls = 0;
+  const fetcher = async (url, options) => { calls++; assert.equal(options.cache, 'no-cache'); return { ok: true, json: async () => doc([statement()]) }; };
+  await loadFeed('test', normalizeVex, { fetcher, storage, now: () => 100 });
+  await loadFeed('test', normalizeVex, { fetcher, storage, now: () => 200 });
+  assert.equal(calls, 2);
+  assert.equal(JSON.parse(writes.get('osera-feed-v2:test')).savedAt, 200);
+});
+test('fallback expires after 120 minutes and never accepts untimed or future snapshots', async () => {
+  const now = 20_000_000;
+  const fetcher = async () => { throw new Error('offline'); };
+  for (const savedAt of [now - 120 * 60 * 1000, now + 1, undefined]) {
+    const storage = { getItem: () => JSON.stringify({ savedAt, raw: doc([statement()]) }) };
+    await assert.rejects(loadFeed('test', normalizeVex, { fetcher, storage, now: () => now }));
+  }
+  const storage = { getItem: () => JSON.stringify({ savedAt: now - 1000, raw: doc([statement()]) }) };
+  const result = await loadFeed('test', normalizeVex, { fetcher, storage, now: () => now });
+  assert.equal(result.cached, true);
+});
+
+test('source links use exact published PURL and producer mappings, never inferred repository names', () => {
+  const item = { purl: 'pkg:npm/crypto-js@4.1.2-osera-00001', producer: 'moderne', fork: 'patch-crypto-js', tag: 'v4.1.2-osera-00001', links: { fork: { state: 'present' }, tag: { state: 'present' } } };
+  const index = artifactSourceIndex({ artifacts: [item] });
+  const source = index.get(JSON.stringify([item.purl, item.producer]));
+  assert.equal(source.repository, 'https://github.com/finos-osera-forks/patch-crypto-js');
+  assert.equal(source.tag, source.repository + '/tree/v4.1.2-osera-00001');
+  assert.equal(index.has(JSON.stringify([item.purl, 'other'])), false);
+  assert.equal(artifactSourceIndex({ artifacts: [{ ...item, fork: '../evil' }, { ...item, links: {} }] }).size, 0);
+  assert.throws(() => artifactSourceIndex({}));
 });

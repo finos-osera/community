@@ -10,6 +10,10 @@ For information about maintainer responsibilities and resources, please see the 
 |----------------|------|--------------|-------|
 | @dovops | Dov Katz | Morgan Stanley | |
 | @mindthegab | Gabriele Columbro | FINOS | |
+| @carmen-viloria | Carmen Viloria | FINOS | |
+| @wendallkaters | Kendall Perez | FINOS | |
+| @winmorgan | Win Morgan | FINOS | |
+
 
 ## Updating this file
 
