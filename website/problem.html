@@ -34,6 +34,7 @@ h1,h2,h3,h4{font-family:'Montserrat',sans-serif;color:var(--navy);letter-spacing
 .hero{background:radial-gradient(900px 460px at 85% -10%, var(--mist), transparent 60%),linear-gradient(180deg,#fff,var(--soft));border-bottom:1px solid var(--line);padding:78px 0 66px}
 .hero .eyebrow{margin-bottom:16px}
 .hero h1{font-size:44px;font-weight:800;line-height:1.12}
+.g{display:inline;background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p{color:var(--grey);font-size:19px;margin-top:20px}
 .hero .jump{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
 @media(max-width:680px){.hero h1{font-size:34px}}
@@ -166,7 +167,7 @@ footer a{color:#9fd4ec}
 <div class="hero">
   <div class="wrap">
     <div class="eyebrow">The Problem</div>
-    <h1>The fixes often exist. Getting them into production is the hard part.</h1>
+    <h1>The fixes often exist. <span class="g">Getting them into production is the hard part.</span></h1>
     <p>Regulated institutions share the same open source, often years behind, and each one pays alone to keep it safe. OSERA exists to mutualize that work without handing the fix to a single vendor or a single country.</p>
     <div class="jump">
       <a href="#thesis" class="btn ghost">The thesis</a>

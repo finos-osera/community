@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentReleases, latestReleases, groupReleases, advisoryUrl, ecosystemLabel, navigatorHref, searchSuggestions, vexSearchIndex } from '../assets/feed-data.mjs';
+import { normalizeVex, fixedTotals, parseProduct, filterEntries, loadFeed, validateMetrics, recentArtifacts, latestReleases, groupReleases, advisoryUrl, ecosystemLabel, navigatorHref, searchSuggestions, vexSearchIndex } from '../assets/feed-data.mjs';
 const statement = (overrides = {}) => ({ vulnerability: { name: 'CVE-2026-1234', aliases: ['GHSA-example'] }, products: [{ '@id': 'pkg:maven/org.example/demo@1.0' }], status: 'fixed', supplier: 'Producer', ...overrides });
 const doc = statements => ({ timestamp: '2026-10-28T12:00:00Z', statements });
 test('expands products, preserves evidence and deduplicates fixed pairs across differing evidence', () => {
@@ -28,8 +28,8 @@ test('rejects malformed documents instead of silently dropping records', () => {
   assert.equal(normalizeVex(doc([])).entries.length, 0);
 });
 test('counts activity relative to snapshot UTC date, not browser clock', () => {
-  const m = { as_of: '2026-10-28T12:00:00Z', totals: { libraries: 0, releases: 0, libraries_with_a_fixed_cve: 0, fixed_entries: 0 }, ecosystems: [], releases_per_day: [{ date: '2026-10-21', count: 100 }, { date: '2026-10-22', count: 3 }, { date: '2026-10-28', count: 2 }, { date: '2026-10-29', count: 100 }] };
-  assert.equal(recentReleases(validateMetrics(m)), 5);
+  const m = { as_of: '2026-10-28T12:00:00Z', totals: { libraries: 0, release_sets: 0, cves: 0, cve_statements: 0 }, ecosystems: [], artifacts_per_day: [{ date: '2026-10-21', count: 100 }, { date: '2026-10-22', count: 3 }, { date: '2026-10-28', count: 2 }, { date: '2026-10-29', count: 100 }] };
+  assert.equal(recentArtifacts(validateMetrics(m)), 5);
   assert.throws(() => validateMetrics({ ...m, totals: {} }));
 });
 test('network success works with unavailable browser storage', async () => {

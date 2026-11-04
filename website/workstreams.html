@@ -70,6 +70,7 @@ footer .brand-divider{background:rgba(255,255,255,.28)}
 .hero{background:radial-gradient(900px 460px at 85% -10%, var(--mist2), transparent 60%),linear-gradient(180deg,#fff,var(--soft));border-bottom:1px solid var(--line);padding:78px 0 66px}
 .hero .eyebrow{color:var(--blue);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:12px;margin-bottom:16px}
 .hero h1{font-size:44px;font-weight:800;line-height:1.12}
+.g{display:inline;background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p{color:var(--grey);font-size:19px;margin-top:20px}
 .hero .jump{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
 @media(max-width:680px){.hero h1{font-size:34px}}
@@ -156,9 +157,9 @@ footer a{color:#9fd4ec}
 
 <div class="hero">
   <div class="wrap">
-    <div class="eyebrow">Workstreams</div>
-    <h1>Where the work happens — in the open.</h1>
-    <p>Three workstreams carry the alliance's mission: an open <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">remediation standard</a> so fixes are portable and verifiable, shared <a href="#tooling">tooling</a> that prioritises the backlog on one neutral basis, and the road to regulated consumption at scale. All of it runs under the <a href="principles.html">OSERA Guiding Principles</a> — open, portable, and lock-in-free.</p>
+    <div class="eyebrow">Workstreams and available tooling</div>
+    <h1>Where the work happens — <span class="g">in the open.</span></h1>
+    <p>Three workstreams carry the alliance's mission: an open <a href="https://standards.osera.finos.org" target="_blank" rel="noopener">remediation standard</a> so fixes are portable and verifiable, an open source <a href="https://finos-osera.github.io/risk-navigator" target="_blank" rel="noopener">Risk Navigator</a> that allows firms to prioritize open source dependencies in their estates, and the road to regulated consumption at scale. All of it runs under the <a href="principles.html">OSERA Guiding Principles</a> — open, portable, and lock-in-free.</p>
     <div class="jump">
       <a href="#workstreams" class="btn ghost">The workstreams</a>
       <a href="#tooling" class="btn ghost">Risk Navigator</a>
@@ -304,7 +305,7 @@ footer a{color:#9fd4ec}
         <h3>Startup</h3>
         <div class="vitem"><time>10 Sep 2026</time><p>Remediation Standards pack 0.1.0 ratified. <a href="https://standards.osera.finos.org/standards/0.1.0/overview/" target="_blank" rel="noopener">Read the pack</a>.</p></div>
         <div class="vitem"><time>1 Oct 2026</time><p>First supported ecosystem, Java, and the first maintained lines. Spring Boot, Framework, and Security are the featured lines. The narrative list is in the <a href="https://www.finos.org/OSERA_Prospectus" target="_blank" rel="noopener">prospectus</a>.</p></div>
-        <div class="vitem"><span class="catalog-label">Current published catalog</span><p>Live catalog: <a href="https://feed.finos.org/stats" aria-label="Browse full library catalog statistics"><strong data-metric="libraries">—</strong></a> libraries, <a href="how-it-works.html?view=libraries&amp;status=fixed&amp;releases=all#search" aria-label="Browse libraries with fixes across all releases"><strong data-metric="libraries_with_a_fixed_cve">—</strong></a> with fixes, <a href="how-it-works.html?view=entries&amp;status=fixed&amp;releases=all#search" aria-label="Browse patched entries across all releases"><strong data-metric="fixed_entries">—</strong></a> patched entries. Ecosystems published now: <span data-ecosystem-chips>loading…</span>.</p></div>
+        <div class="vitem"><span class="catalog-label">Current published catalog</span><p>Live catalog: <a href="https://feed.finos.org/stats" aria-label="Browse full library catalog statistics"><strong data-metric="libraries">—</strong></a> libraries, <a href="how-it-works.html?view=entries&amp;status=fixed&amp;releases=all#search" aria-label="Browse addressed CVEs across all releases"><strong data-metric="cves">—</strong></a> distinct CVEs addressed, <a href="how-it-works.html?view=entries&amp;status=fixed&amp;releases=all#search" aria-label="Browse patched entries across all releases"><strong data-metric="cve_statements">—</strong></a> patched entries. Ecosystems published now: <span data-ecosystem-chips>loading…</span>.</p></div>
         <div class="vitem"><time>End of 2026</time><p>Per-project sponsorship, further ecosystem coverage, and version 0.2.0 of the Remediation Standards with the next attestations.</p></div>
       </div>
       <div class="vphase">

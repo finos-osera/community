@@ -8,16 +8,16 @@ export function timestamp(value) {
 }
 export function validateMetrics(data) {
   timestamp(data?.as_of);
-  for (const field of ['libraries', 'releases', 'libraries_with_a_fixed_cve', 'fixed_entries']) {
+  for (const field of ['libraries', 'release_sets', 'cves', 'cve_statements']) {
     if (!Number.isSafeInteger(data?.totals?.[field]) || data.totals[field] < 0) throw new Error('Invalid metrics');
   }
   if (!Array.isArray(data.ecosystems) || !data.ecosystems.every(x => typeof x === 'string')) throw new Error('Invalid ecosystems');
-  if (!Array.isArray(data.releases_per_day) || !data.releases_per_day.every(x => /^\d{4}-\d{2}-\d{2}$/.test(x.date) && Number.isSafeInteger(x.count) && x.count >= 0)) throw new Error('Invalid activity');
+  if (!Array.isArray(data.artifacts_per_day) || !data.artifacts_per_day.every(x => /^\d{4}-\d{2}-\d{2}$/.test(x.date) && Number.isSafeInteger(x.count) && x.count >= 0)) throw new Error('Invalid activity');
   return data;
 }
-export function recentReleases(data) {
+export function recentArtifacts(data) {
   const end = Date.parse(data.as_of.slice(0, 10) + 'T00:00:00Z');
-  return data.releases_per_day.filter(x => { const day = Date.parse(x.date); return day <= end && day >= end - 6 * 86400000; }).reduce((sum, x) => sum + x.count, 0);
+  return data.artifacts_per_day.filter(x => { const day = Date.parse(x.date); return day <= end && day >= end - 6 * 86400000; }).reduce((sum, x) => sum + x.count, 0);
 }
 export function ecosystemLabel(type) {
   const labels = { maven: 'Java', npm: 'JavaScript', pypi: 'Python', nuget: '.NET', cargo: 'Rust', golang: 'Go', gem: 'Ruby', composer: 'PHP', swift: 'Swift', cocoapods: 'CocoaPods', hex: 'Elixir', pub: 'Dart', cran: 'R', conan: 'C/C++', deb: 'Debian', rpm: 'RPM', apk: 'Alpine', docker: 'Docker', oci: 'OCI' };

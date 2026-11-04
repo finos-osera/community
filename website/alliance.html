@@ -70,6 +70,9 @@ footer .brand-divider{background:rgba(255,255,255,.28)}
 .hero{background:radial-gradient(900px 460px at 85% -10%, var(--mist), transparent 60%),linear-gradient(180deg,#fff,var(--soft));border-bottom:1px solid var(--line);padding:78px 0 66px}
 .hero .eyebrow{color:var(--blue);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:12px;margin-bottom:16px}
 .hero h1{font-size:44px;font-weight:800;line-height:1.12}
+.g{display:inline;background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn.gold-ghost{background:#fff;color:#8a6210 !important;border-color:var(--gold)}
+.btn.gold-ghost:hover{background:var(--gold);color:#fff !important}
 .hero p{color:var(--grey);font-size:19px;margin-top:20px}
 .hero .jump{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
 @media(max-width:680px){.hero h1{font-size:34px}}
@@ -175,12 +178,13 @@ footer a{color:#9fd4ec}
 <div class="hero">
   <div class="wrap">
     <div class="eyebrow">The Alliance</div>
-    <h1>Funded by institutions. Built with expert vendors. Governed by both the sector and no one firm.</h1>
+    <h1>Funded by institutions. Built with expert vendors. <span class="g">Governed collectively.</span></h1>
     <p class="sub">OSERA is member-governed by design: the institutions that run the software fund it and set its direction, and the technology vendors who know open source best do the work alongside them — all under FINOS's neutral governance within the Linux Foundation.</p>
     <div class="jump">
       <a href="#members" class="btn ghost">Members</a>
       <a href="#board" class="btn ghost">Governing Board</a>
       <a href="#vendors" class="btn ghost">Contributing Vendors</a>
+      <a href="https://www.finos.org/OSERA_Prospectus" target="_blank" rel="noopener" class="btn gold-ghost">Prospectus</a>
       <a href="#membership" class="btn involve">Become a member</a>
     </div>
   </div>
@@ -324,7 +328,7 @@ footer a{color:#9fd4ec}
   <div class="wrap">
     <div class="kick">Membership</div>
     <h2>Become an OSERA member</h2>
-    <p class="body">Two simple tiers for the institutions that run the software — Premier to govern and prioritise, General to consume at your scale — plus benefits every existing FINOS member already has. OSERA is a global initiative: a sovereign, community-governed option that lets FSIs anywhere in the world reduce operational risk without depending on any single commercial vendor. The General tier is designed for banks of all sizes, with accessible fees so smaller FSIs can drastically improve their resiliency too. See the full <a href="https://cdn.platform.linuxfoundation.org/agreements/osera.pdf" target="_blank" rel="noopener">charter and not-for-execution participation agreement</a>.</p>
+    <p class="body">Two simple tiers for the institutions that run the software — Premier to govern and prioritise, General to consume at your scale — plus benefits every existing FINOS member already has. OSERA is a global initiative: a sovereign, community-governed option that lets FSIs anywhere in the world reduce operational risk without depending on any single commercial vendor. The General tier is designed for banks of all sizes, with accessible fees so smaller FSIs can drastically improve their resiliency too. See the full <a href="https://cdn.platform.linuxfoundation.org/agreements/osera.pdf" target="_blank" rel="noopener">charter and not-for-execution participation agreement</a>, or start with the <a href="https://www.finos.org/OSERA_Prospectus" target="_blank" rel="noopener"><strong>OSERA prospectus</strong></a> for the full vision, operating model, and roadmap.</p>
     <div class="tier-table-wrap">
       <table class="tier-table">
         <thead>
@@ -417,6 +421,7 @@ footer a{color:#9fd4ec}
     <h2>Want a seat at the table?</h2>
     <p class="body" style="max-width:58ch;margin:12px auto 0">Premier membership includes a Governing Board seat and full control over what gets patched, to what standard, and by whom. General members elect a class representative — and every FINOS member can join the working groups.</p>
     <a href="#membership" class="btn primary">Become a member</a>
+    <a href="https://www.finos.org/OSERA_Prospectus" target="_blank" rel="noopener" class="btn gold-ghost" style="margin-left:10px">Read the prospectus</a>
     <p class="small">See the <a href="https://cdn.platform.linuxfoundation.org/agreements/osera.pdf" target="_blank" rel="noopener">charter and participation agreement</a> · questions? <a href="mailto:membership@finos.org">membership@finos.org</a></p>
   </div>
 </section>

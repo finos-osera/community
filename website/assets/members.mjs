@@ -101,9 +101,11 @@ async function mount() {
     const view = memberView(members);
     renderLogos(tiles, view.withLogo);
     renderNames(document.querySelector('[data-member-names]'), view.withoutLogo);
-    document.querySelector('[data-member-status]').textContent = `${view.count} members · Members include:`;
+    const status = document.querySelector('[data-member-status]');
+    if (status) status.textContent = `${view.count} members · Members include:`;
   } catch {
-    document.querySelector('[data-member-status]').textContent = `${MEMBER_COUNT} members · Members include those shown below. Live logo list unavailable; showing fallback logos.`;
+    const status = document.querySelector('[data-member-status]');
+    if (status) status.textContent = `${MEMBER_COUNT} members · Members include those shown below. Live logo list unavailable; showing fallback logos.`;
   }
 }
 

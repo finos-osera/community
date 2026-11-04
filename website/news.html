@@ -90,20 +90,36 @@ h2{font-size:32px;font-weight:800;line-height:1.2}
 .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;transition:.18s;box-shadow:0 1px 2px rgba(16,34,46,.03)}
 .card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(16,34,46,.08);border-color:#dfe7ee}
 .more{display:inline-block;margin-top:14px;font-weight:600;font-size:14px;color:var(--blue)}
-.presscard{display:flex;flex-direction:column;height:100%;text-decoration:none}
-.presscard .outlet{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
-.presscard h3{font-size:16px;margin:9px 0 14px;color:var(--navy)}
-.presscard .more{margin-top:auto;margin-bottom:0}
-/* video tiles */
-.vidgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px}
-@media(max-width:900px){.vidgrid{grid-template-columns:1fr 1fr}} @media(max-width:620px){.vidgrid{grid-template-columns:1fr}}
-.vidcard{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;text-decoration:none;transition:.18s;box-shadow:0 1px 2px rgba(16,34,46,.03)}
-.vidcard:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(16,34,46,.08);border-color:#dfe7ee}
+.btn.gold-ghost{background:#fff;color:#8a6210 !important;border-color:var(--gold)}
+.btn.gold-ghost:hover{background:var(--gold);color:#fff !important}
+/* press rows */
+.presslist{display:flex;flex-direction:column;gap:10px;margin-top:34px}
+.pressrow{display:flex;align-items:center;gap:18px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 20px;text-decoration:none;transition:.15s;box-shadow:0 1px 2px rgba(16,34,46,.03)}
+.pressrow:hover{border-color:var(--blue);box-shadow:0 8px 20px rgba(16,34,46,.07)}
+.pressrow .outlet{flex:0 0 225px;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+.pressrow h3{flex:1;font-size:15.5px;font-weight:700;color:var(--navy);line-height:1.4;margin:0}
+.pressrow .more{flex:none;margin:0}
+@media(max-width:680px){.pressrow{flex-wrap:wrap;gap:6px}.pressrow .outlet,.pressrow h3{flex:1 1 100%}}
+/* video rows */
+.vidlist{display:flex;flex-direction:column;gap:14px;margin-top:34px}
+.vidrow{display:flex;gap:20px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;text-decoration:none;transition:.18s;padding:12px;box-shadow:0 1px 2px rgba(16,34,46,.03)}
+.vidrow:hover{border-color:var(--blue);box-shadow:0 10px 24px rgba(16,34,46,.08)}
+.vidrow .vidthumb{flex:0 0 230px;border-radius:10px;overflow:hidden}
+.vidrow .vidbody{padding:0;flex:1}
+@media(max-width:680px){.vidrow{flex-direction:column;align-items:stretch}.vidrow .vidthumb{flex:none}}
+/* shorts strip */
+.shortgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:26px}
+@media(max-width:900px){.shortgrid{grid-template-columns:repeat(3,1fr)}} @media(max-width:620px){.shortgrid{grid-template-columns:1fr 1fr}}
+.shortcard{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;text-decoration:none;transition:.18s}
+.shortcard:hover{box-shadow:0 10px 22px rgba(16,34,46,.07);border-color:var(--blue)}
+.shortcard .vidthumb .play span{width:36px;height:36px}
+.shortcard .sbody{padding:10px 12px 12px}
+.shortcard h3{font-size:12.5px;margin:0;color:var(--navy);line-height:1.35}
 .vidthumb{position:relative;aspect-ratio:16/9;background:var(--navy)}
 .vidthumb img{width:100%;height:100%;object-fit:cover;display:block}
 .vidthumb .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 .vidthumb .play span{width:52px;height:52px;border-radius:50%;background:rgba(0,37,63,.78);display:flex;align-items:center;justify-content:center;transition:.18s}
-.vidcard:hover .play span{background:var(--cyan)}
+.vidrow:hover .play span,.shortcard:hover .play span{background:var(--cyan)}
 .vidthumb .play svg{width:20px;height:20px;fill:#fff;margin-left:3px}
 .vidbody{padding:18px 20px 20px;display:flex;flex-direction:column;flex:1}
 .vidbody .vmeta{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
@@ -157,7 +173,7 @@ footer a{color:#9fd4ec}
       <div class="jump">
         <a href="#press" class="btn ghost">News &amp; media</a>
         <a href="#videos" class="btn ghost">Videos</a>
-        <a href="https://www.finos.org/OSERA_Prospectus" class="btn ghost" target="_blank" rel="noopener">Prospectus</a>
+        <a href="https://www.finos.org/OSERA_Prospectus" class="btn gold-ghost" target="_blank" rel="noopener">Prospectus ↗</a>
       </div>
     </div>
     <div>
@@ -177,73 +193,83 @@ footer a{color:#9fd4ec}
     <div class="eyebrow">In the press</div>
     <h2>OSERA Coverage</h2>
     <p class="lead">What the industry press is saying about OSERA — most recent coverage first.</p>
-    <div class="grid g3">
-      <a class="card presscard" href="https://diginomica.com/what-osera-why-six-global-banks-pooling-cost-patching-open-source-software" target="_blank" rel="noopener">
+    <div class="presslist">
+      <a class="pressrow" href="https://diginomica.com/what-osera-why-six-global-banks-pooling-cost-patching-open-source-software" target="_blank" rel="noopener">
         <div class="outlet">diginomica · 15 October 2026</div>
         <h3>What is OSERA, and why are six global banks pooling the cost of patching open source software?</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://www.heise.de/en/news/Why-open-source-patches-often-don-t-reach-banks-11482005.html" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://lucaberton.com/blog/oss-europe-2026-ai-speed-exploits-open-secure-ai-alliance-osera/" target="_blank" rel="noopener">
+        <div class="outlet">Luca Berton · 10 October 2026</div>
+        <h3>AI-Speed Exploits: Open Secure AI Alliance and OSERA</h3>
+        <span class="more">Read →</span>
+      </a>
+      <a class="pressrow" href="https://www.heise.de/en/news/Why-open-source-patches-often-don-t-reach-banks-11482005.html" target="_blank" rel="noopener">
         <div class="outlet">heise online · 9 October 2026</div>
         <h3>Why open-source patches often don't reach banks</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://www.efficientlyconnected.com/finos-osera-open-source-security-patching-financial-services/" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://www.efficientlyconnected.com/finos-osera-open-source-security-patching-financial-services/" target="_blank" rel="noopener">
         <div class="outlet">Efficiently Connected · 8 October 2026</div>
         <h3>FINOS OSERA: Backport Patching for Financial Services Security</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://www.finos.org/press/major-banks-back-osera-open-source-security-standards-and-fixes" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://www.finos.org/press/major-banks-back-osera-open-source-security-standards-and-fixes" target="_blank" rel="noopener">
         <div class="outlet">FINOS · 7 October 2026</div>
         <h3>Major Banks Back OSERA Open Source Security Standards and Fixes</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://www.infosecurity-magazine.com/news-features/industry-coalitions-secure-open/" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://runtimewire.com/article/osera-banks-fund-open-source-remediation" target="_blank" rel="noopener">
+        <div class="outlet">Runtime Wire · 7 October 2026</div>
+        <h3>Banks fund OSERA to patch the Java versions their systems still run</h3>
+        <span class="more">Read →</span>
+      </a>
+      <a class="pressrow" href="https://www.infosecurity-magazine.com/news-features/industry-coalitions-secure-open/" target="_blank" rel="noopener">
         <div class="outlet">Infosecurity Magazine · 2 September 2026</div>
         <h3>How Industry Coalitions Are Rallying to Secure Open Source Software for the AI Era</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://www.ftfnews.com/finos-ai-cyber-risk-governance-open-source-osera/" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://www.ftfnews.com/finos-ai-cyber-risk-governance-open-source-osera/" target="_blank" rel="noopener">
         <div class="outlet">FTF News · 19 August 2026</div>
         <h3>FINOS Takes Aim at A.I.-Based Cyber Threats</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://www.sonatype.com/blog/ai-is-forcing-a-new-open-source-security-model" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://www.sonatype.com/blog/ai-is-forcing-a-new-open-source-security-model" target="_blank" rel="noopener">
         <div class="outlet">Sonatype · 6 July 2026</div>
         <h3>AI Is Forcing a New Open Source Security Model</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://thepaypers.com/fintech/news/finos-announces-plan-to-launch-open-source-resiliency-alliance" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://thepaypers.com/fintech/news/finos-announces-plan-to-launch-open-source-resiliency-alliance" target="_blank" rel="noopener">
         <div class="outlet">The Paypers · 29 June 2026</div>
         <h3>FINOS announces plan to launch open source resiliency alliance</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://www.comparethecloud.net/news/six-global-banks-complete-open-source-security-pilot-as-finos-announces-project-osera" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://www.comparethecloud.net/news/six-global-banks-complete-open-source-security-pilot-as-finos-announces-project-osera" target="_blank" rel="noopener">
         <div class="outlet">Compare the Cloud · 29 June 2026</div>
         <h3>Six global banks complete open source security pilot as FINOS announces Project OSERA</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://www.ithome.com.tw/news/176958" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://www.ithome.com.tw/news/176958" target="_blank" rel="noopener">
         <div class="outlet">iThome · June 2026</div>
         <h3>Linux 基金會旗下 FINOS 規畫成立開源企業韌性聯盟 OSERA，協助金融業修補開源套件</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://ffnews.com/news/global-banking-giants-launch-project-osera-to-secure-open-source-supply-chains-against-ai-threats" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://ffnews.com/news/global-banking-giants-launch-project-osera-to-secure-open-source-supply-chains-against-ai-threats" target="_blank" rel="noopener">
         <div class="outlet">FF News · 26 June 2026</div>
         <h3>Global Banking Giants Launch Project OSERA to Secure Open Source Supply Chains Against AI Threats</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://www.finextra.com/pressarticle/110258/global-banks-back-project-to-strengthen-open-source-resilience" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://www.finextra.com/pressarticle/110258/global-banks-back-project-to-strengthen-open-source-resilience" target="_blank" rel="noopener">
         <div class="outlet">Finextra · 26 June 2026</div>
         <h3>Global banks back project to strengthen open source resilience</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://www.linuxfoundation.org/press/finos-announces-intent-to-form-osera-a-global-financial-services-led-alliance-for-open-source-supply-chain-resiliency-in-the-era-of-ai" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://www.linuxfoundation.org/press/finos-announces-intent-to-form-osera-a-global-financial-services-led-alliance-for-open-source-supply-chain-resiliency-in-the-era-of-ai" target="_blank" rel="noopener">
         <div class="outlet">The Linux Foundation · 26 June 2026</div>
         <h3>FINOS Announces Intent to Form OSERA for Open Source Supply-Chain Resiliency in the Era of AI</h3>
         <span class="more">Read →</span>
       </a>
-      <a class="card presscard" href="https://www.finos.org/press/intent-to-form-osera-open-source-supply-chain-resiliency" target="_blank" rel="noopener">
+      <a class="pressrow" href="https://www.finos.org/press/intent-to-form-osera-open-source-supply-chain-resiliency" target="_blank" rel="noopener">
         <div class="outlet">FINOS · 26 June 2026</div>
         <h3>FINOS Announces Intent to Form OSERA, a Global Financial Services-Led Alliance for Open Source Supply-Chain Resiliency</h3>
         <span class="more">Read →</span>
@@ -258,34 +284,40 @@ footer a{color:#9fd4ec}
     <div class="eyebrow">Videos &amp; shorts</div>
     <h2>OSERA on video</h2>
     <p class="lead">Explainers and shorts on why OSERA exists and how the model works — from the <a href="https://www.youtube.com/@FINOS" target="_blank" rel="noopener">FINOS YouTube channel</a>.</p>
-    <div class="vidgrid">
-      <a class="vidcard" href="https://www.youtube.com/watch?v=S_AyS-74jog" target="_blank" rel="noopener">
+    <div class="vidlist">
+      <a class="vidrow" href="https://www.finos.org/osff-london-2026-videos" target="_blank" rel="noopener">
+        <div class="vidthumb"><img src="https://www.finos.org/hubfs/maxresdefault%20(9).jpg" alt="" loading="lazy"><div class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div></div>
+        <div class="vidbody"><div class="vmeta">Keynote · OSFF London · June 2026</div><h3>Announcing OSERA, the Open Source Enterprise Resiliency Alliance — Dov Katz (Morgan Stanley) &amp; Eric Baran (Moderne)</h3><span class="more">Watch on finos.org →</span></div>
+      </a>
+      <a class="vidrow" href="https://www.youtube.com/watch?v=S_AyS-74jog" target="_blank" rel="noopener">
         <div class="vidthumb"><img src="https://img.youtube.com/vi/S_AyS-74jog/hqdefault.jpg" alt="" loading="lazy"><div class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div></div>
         <div class="vidbody"><div class="vmeta">Video · August 2026</div><h3>The End of Manual Remediation? OSERA Standards for Open Source</h3><span class="more">Watch →</span></div>
       </a>
-      <a class="vidcard" href="https://www.youtube.com/watch?v=ujCotgLoaSc" target="_blank" rel="noopener">
+      <a class="vidrow" href="https://www.youtube.com/watch?v=ujCotgLoaSc" target="_blank" rel="noopener">
         <div class="vidthumb"><img src="https://img.youtube.com/vi/ujCotgLoaSc/hqdefault.jpg" alt="" loading="lazy"><div class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div></div>
         <div class="vidbody"><div class="vmeta">Video · August 2026</div><h3>Why You Should Stop Forking Open Source Projects</h3><span class="more">Watch →</span></div>
       </a>
-      <a class="vidcard" href="https://www.youtube.com/shorts/Mc8S92vWwr8" target="_blank" rel="noopener">
+    </div>
+    <div class="shortgrid">
+      <a class="shortcard" href="https://www.youtube.com/shorts/Mc8S92vWwr8" target="_blank" rel="noopener">
         <div class="vidthumb"><img src="https://img.youtube.com/vi/Mc8S92vWwr8/hqdefault.jpg" alt="" loading="lazy"><div class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div></div>
-        <div class="vidbody"><div class="vmeta">Short</div><h3>A Better Way to Fund Open Source Patches</h3><span class="more">Watch →</span></div>
+        <div class="sbody"><h3>A Better Way to Fund Open Source Patches</h3></div>
       </a>
-      <a class="vidcard" href="https://www.youtube.com/shorts/rGnFA3FVYXw" target="_blank" rel="noopener">
+      <a class="shortcard" href="https://www.youtube.com/shorts/rGnFA3FVYXw" target="_blank" rel="noopener">
         <div class="vidthumb"><img src="https://img.youtube.com/vi/rGnFA3FVYXw/hqdefault.jpg" alt="" loading="lazy"><div class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div></div>
-        <div class="vidbody"><div class="vmeta">Short</div><h3>How to Fix the Open Source Patching Mess</h3><span class="more">Watch →</span></div>
+        <div class="sbody"><h3>How to Fix the Open Source Patching Mess</h3></div>
       </a>
-      <a class="vidcard" href="https://www.youtube.com/shorts/ODRs7UbVgzo" target="_blank" rel="noopener">
+      <a class="shortcard" href="https://www.youtube.com/shorts/ODRs7UbVgzo" target="_blank" rel="noopener">
         <div class="vidthumb"><img src="https://img.youtube.com/vi/ODRs7UbVgzo/hqdefault.jpg" alt="" loading="lazy"><div class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div></div>
-        <div class="vidbody"><div class="vmeta">Short</div><h3>Why Your Open Source Dependencies Are Finally Safe</h3><span class="more">Watch →</span></div>
+        <div class="sbody"><h3>Why Your Open Source Dependencies Are Finally Safe</h3></div>
       </a>
-      <a class="vidcard" href="https://www.youtube.com/shorts/9Y-CupZ1Jtk" target="_blank" rel="noopener">
+      <a class="shortcard" href="https://www.youtube.com/shorts/9Y-CupZ1Jtk" target="_blank" rel="noopener">
         <div class="vidthumb"><img src="https://img.youtube.com/vi/9Y-CupZ1Jtk/hqdefault.jpg" alt="" loading="lazy"><div class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div></div>
-        <div class="vidbody"><div class="vmeta">Short</div><h3>How Financial Enterprises Tackle Critical CVEs</h3><span class="more">Watch →</span></div>
+        <div class="sbody"><h3>How Financial Enterprises Tackle Critical CVEs</h3></div>
       </a>
-      <a class="vidcard" href="https://www.youtube.com/shorts/hAO_qESzBAU" target="_blank" rel="noopener">
+      <a class="shortcard" href="https://www.youtube.com/shorts/hAO_qESzBAU" target="_blank" rel="noopener">
         <div class="vidthumb"><img src="https://img.youtube.com/vi/hAO_qESzBAU/hqdefault.jpg" alt="" loading="lazy"><div class="play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div></div>
-        <div class="vidbody"><div class="vmeta">Short</div><h3>How OSERA Fixes Security Flaws Instantly</h3><span class="more">Watch →</span></div>
+        <div class="sbody"><h3>How OSERA Fixes Security Flaws Instantly</h3></div>
       </a>
     </div>
     <p class="body" style="margin-top:26px">More on the way — subscribe to <a href="https://www.youtube.com/@FINOS" target="_blank" rel="noopener">FINOS on YouTube</a> for new OSERA videos and shorts.</p>
